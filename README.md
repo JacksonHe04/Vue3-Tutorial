@@ -21,9 +21,9 @@
 │   ├── store               # 状态管理
 │   ├── views               # 页面视图
 │   ├── App.vue             # 根组件
-│   └── main.js             # 项目入口文件
+│   └── main.ts             # 项目入口文件
 ├── node_modules            # 项目的依赖库
-└── vite.config.js          # Vite 配置文件
+└── vite.config.ts          # Vite 配置文件
 ```
 
 ## 安装和运行
@@ -64,7 +64,7 @@ npm run dev
     - **store**: Vuex 状态管理目录，用于管理全局状态。
     - **views**: 存放页面视图，每个视图代表一个页面或功能模块。
     - **App.vue**: 根组件，Vue 应用的入口组件。
-    - **main.js**: 项目的入口文件，初始化 Vue 实例。
+    - **main.ts**: 项目的入口文件，初始化 Vue 实例。
 
 - **public**: 静态文件目录，存放不需要经过构建处理的静态资源。
 - **docs**: 存放 Vue 3 教程文档，详细介绍 Vue 3 的各项知识点，帮助你逐步深入学习 Vue 3。
