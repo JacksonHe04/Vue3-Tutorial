@@ -42,7 +42,7 @@ const navs = [
   {
     path: "/03",
     meta: {
-      title: "组件化开发",
+      title: "组合式API",
     },
   },
   {
@@ -54,7 +54,7 @@ const navs = [
   {
     path: "/05",
     meta: {
-      title: "Vue Router",
+      title: "组件通信",
     },
   },
   {
@@ -66,7 +66,7 @@ const navs = [
   {
     path: "/07",
     meta: {
-      title: "组件式API",
+      title: "Vue Router",
     },
   },
   {
@@ -115,11 +115,26 @@ const navs = [
 }
 
 .header nav a {
-  margin-left: 1rem;
-  color: inherit;
+  margin-left: 2rem; // 增加间距
+  color: grey;
   text-decoration: none;
   transition: color 0.3s;
+  font-weight: bold;
+  position: relative; // 添加相对定位以便伪元素定位
 }
+
+.header nav a:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  left: -1rem; // 调整竖线的位置以适应新的间距
+  top: 50%;
+  transform: translateY(-50%);
+  width: 1px;
+  height: 1em;
+  background-color: #ccc; // 灰色竖分割线
+}
+
+
 
 .header nav a:hover {
   color: $vue; /* Vue green */

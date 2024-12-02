@@ -40,7 +40,7 @@ export default createRouter({
           path: "03",
           component: () => import("@/views/03/index.vue"),
           meta: {
-            title: "组件化开发",
+            title: "组合式API",
           },
         },
         {
@@ -56,7 +56,7 @@ export default createRouter({
           path: "05",
           component: () => import("@/views/05/index.vue"),
           meta: {
-            title: "Vue Router",
+            title: "组件通信",
           },
         },
         {
@@ -72,7 +72,7 @@ export default createRouter({
           path: "07",
           component: () => import("@/views/07/index.vue"),
           meta: {
-            title: "组件式API",
+            title: "Vue Router",
           },
         },
         {

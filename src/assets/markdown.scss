@@ -1,0 +1,288 @@
+.markdown-content {
+  /* 默认文本靠左对齐 */
+  body,
+  p,
+  ul,
+  ol,
+  li,
+  blockquote,
+  table,
+  td,
+  th,
+  pre,
+  code {
+    text-align: left;
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  /* 标题样式：标题居中对齐 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-align: left;
+    margin: 1em 0;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #333;
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 0.3em;
+  }
+
+  h2 {
+    font-size: 2rem;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 0.3em;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+  }
+
+  h5 {
+    font-size: 1.25rem;
+  }
+
+  h6 {
+    font-size: 1rem;
+    color: #777;
+  }
+
+  /* 段落和文本 */
+  p {
+    margin: 1em 0;
+    font-size: 1rem;
+    color: #333;
+  }
+
+  /* 强调文本 */
+  em {
+    font-style: italic;
+    color: #e60000; /* 红色 */
+  }
+
+  /* 加粗文本 */
+  strong {
+    font-weight: bold;
+  }
+
+  /* 列表样式 */
+  ul,
+  ol {
+    margin: 1em 0;
+    padding-left: 2em;
+  }
+
+  li {
+    margin: 0.5em 0;
+    font-size: 1rem;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  /* 链接样式 */
+  a {
+    color: #007bff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  /* 图片样式 */
+  img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin: 1em 0;
+  }
+
+  /* 块引用 */
+  blockquote {
+    border-left: 4px solid #ddd;
+    padding-left: 1em;
+    color: #666;
+    font-style: italic;
+    margin: 1em 0;
+  }
+
+  /* 代码块样式 */
+  pre {
+    background-color: #f5f5f5;
+    padding: 1em;
+    border-radius: 4px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 1em 0;
+    color: #333;
+  }
+
+  code {
+    background-color: #f5f5f5;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: $vue;
+  }
+
+  /* 代码高亮 */
+  pre code {
+    background: none;
+    padding: 0;
+  }
+
+  pre code span {
+    display: inline-block;
+    padding: 0;
+    margin: 0;
+    color: inherit;
+    font-size: inherit;
+  }
+
+  pre code .hljs {
+    display: block;
+    padding: 1em;
+    color: #f8f8f2;
+    background-color: #2d2d2d;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+
+  pre code .hljs-keyword {
+    color: $vue;
+  }
+
+  pre code .hljs-string {
+    color: #a6e22e;
+  }
+
+  pre code .hljs-comment {
+    color: #75715e;
+  }
+
+  /* 代码复制按钮（来自 markdown-it-code-copy 插件） */
+  .markdown-it-code-copy {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 2px 6px;
+    font-size: 0.8rem;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+
+  .markdown-it-code-copy:hover {
+    background-color: #0056b3;
+  }
+
+  /* 分割线 */
+  hr {
+    border: 0;
+    border-top: 1px solid #ddd;
+    margin: 2em 0;
+  }
+
+  /* 表格样式 */
+  table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    padding: 8px;
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f5f5f5;
+  }
+
+  tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  /* 行内代码 */
+  code {
+    background-color: #f5f5f5;
+    padding: 0 4px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: $vue;
+  }
+
+  /* 代码块复制按钮的基础样式 */
+  .markdown-it-code-copy {
+    display: inline-block;
+    margin-left: 10px;
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    background-color: #28a745; /* 按钮背景色，绿色 */
+    color: #fff; /* 按钮文字颜色 */
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* 鼠标悬停时背景色平滑过渡 */
+    border: none; /* 去掉默认边框 */
+  }
+
+  .markdown-it-code-copy:hover {
+    background-color: #218838; /* 鼠标悬停时按钮变色 */
+  }
+
+  .markdown-it-code-copy:active {
+    background-color: #1e7e34; /* 鼠标点击时按钮变色 */
+  }
+
+  .markdown-it-code-copy:focus {
+    outline: none; /* 去除按钮点击时的焦点边框 */
+  }
+
+  /* 提示文字（如果有） */
+  .markdown-it-code-copy-tooltip {
+    display: none; /* 默认隐藏提示 */
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 0.8rem;
+    border-radius: 4px;
+  }
+
+  /* 复制成功提示 */
+  .markdown-it-code-copy-copied {
+    background-color: #17a2b8; /* 已复制后的按钮颜色 */
+    background-color: #17a2b8;
+  }
+
+  .markdown-it-code-copy-copied:hover {
+    background-color: #138496;
+  }
+
+}

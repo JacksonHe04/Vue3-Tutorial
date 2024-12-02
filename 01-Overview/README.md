@@ -56,7 +56,7 @@ Vue 3 的核心源码经历了重构，引入现代 JavaScript 特性，为开�
 
 ## **Vue 3 的新特性**
 
-### [1. Composition API（组合式 API）](../07-Composition-API/README.md)
+### [1. Composition API（组合式 API）](../03-Composition-API/README.md)
 
 
 `Composition API` 提供了一种全新的方式来组织和复用代码，是 Vue 3 最具代表性的特性之一。核心概念包括：
