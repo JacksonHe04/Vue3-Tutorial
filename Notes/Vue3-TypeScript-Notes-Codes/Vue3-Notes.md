@@ -50,8 +50,6 @@
 
      ......
 
-
-
 # 2. 创建Vue3工程
 
 ## 2.1. 【基于 vue-cli 创建】
@@ -191,7 +189,6 @@ npm create vue@latest
 </script>
 ```
 
-
 # 3. Vue3核心语法
 ## 3.1.  【OptionsAPI 与 CompositionAPI】
 
@@ -210,7 +207,6 @@ npm create vue@latest
 <img src="images/1696662249851-db6403a1-acb5-481a-88e0-e1e34d2ef53a.gif" alt="3.gif" style="height:300px;border-radius:10px"  /><img src="images/1696662256560-7239b9f9-a770-43c1-9386-6cc12ef1e9c0.gif" alt="4.gif" style="height:300px;border-radius:10px"  />
 
 > 说明：以上四张动图原创作者：大帅老猿
-
 ## 3.2. 【拉开序幕的 setup】
 ### setup 概述
 `setup`是`Vue3`中一个新的配置项，值是一个函数，它是 `Composition API` **“表演的舞台**_**”**_，组件中所用到的：数据、方法、计算属性、监视......等等，均配置在`setup`中。
@@ -497,7 +493,6 @@ function test(){
 > 1. 若需要一个基本类型的响应式数据，必须使用`ref`。
 > 2. 若需要一个响应式对象，层级不深，`ref`、`reactive`都可以。
 > 3. 若需要一个响应式对象，且层级较深，推荐使用`reactive`。
-
 ## 3.7. 【toRefs 与 toRef】
 
 - 作用：将一个响应式对象中的每一个属性，转换为`ref`对象。
@@ -909,9 +904,6 @@ function test(){
     })
   </script>
   ```
-  
-  
-
 ## 3.11. 【标签的 ref 属性】
 
 作用：用于注册模板引用。
@@ -992,9 +984,6 @@ function test(){
   defineExpose({name,age})
 </script>
 ```
-
-
-
 ## 3.12. 【props】
 
 > ```js
@@ -1060,8 +1049,7 @@ function test(){
 >    console.log(props)
 >   </script>
 >   ```
-> 
-
+>
 ## 3.13. 【生命周期】
 
 * 概念：`Vue`组件实例在创建时要经历一系列的初始化步骤，在此过程中`Vue`会在合适的时机，调用特定的函数，从而让开发者有机会在特定阶段运行自己的代码，这些特定的函数统称为：生命周期钩子
@@ -1142,7 +1130,6 @@ function test(){
     })
   </script>
   ```
-
 ## 3.14. 【自定义hook】
 
 - 什么是`hook`？—— 本质是一个函数，把`setup`函数中使用的`Composition API`进行了封装，类似于`vue2.x`中的`mixin`。
@@ -1620,13 +1607,11 @@ console.log(router.replace)
    }
    ```
 
-
-
 # 5. pinia 
 
 ## 5.1【准备一个效果】
 
-<img src="./images/pinia_example.gif" alt="pinia_example" style="zoom:30%;border:3px solid" /> 
+<img src="./images/pinia_example.gif" alt="pinia_example" style="zoom:30%;border:3px solid" />
 
 ## 5.2【搭建 pinia 环境】
 
@@ -1738,9 +1723,6 @@ app.mount('#app')
      const talkStore = useTalkStore()
    </script>
    ```
-
-   
-
 ## 5.4.【修改数据】(三种方式)
 
 1. 第一种修改方式，直接修改
@@ -1793,8 +1775,6 @@ app.mount('#app')
    // 调用对应action
    countStore.incrementOdd(n.value)
    ```
-
-
 ## 5.5.【storeToRefs】
 
 - 借助`storeToRefs`将`store`中的数据转为`ref`对象，方便在模板中使用。
@@ -1819,7 +1799,6 @@ app.mount('#app')
 </script>
 
 ```
-
 ## 5.6.【getters】
 
   1. 概念：当`state`中的数据，需要经过处理后再使用时，可以使用`getters`配置。
@@ -1859,9 +1838,6 @@ app.mount('#app')
      const {increment,decrement} = countStore
      let {sum,school,bigSum,upperSchool} = storeToRefs(countStore)
      ```
-
-     
-
 ## 5.7.【$subscribe】
 
 通过 store 的 `$subscribe()` 方法侦听 `state` 及其变化
@@ -1872,9 +1848,6 @@ talkStore.$subscribe((mutate,state)=>{
   localStorage.setItem('talk',JSON.stringify(talkList.value))
 })
 ```
-
-
-
 ## 5.8. 【store组合式写法】
 
 ```ts
@@ -1902,10 +1875,9 @@ export const useTalkStore = defineStore('talk',()=>{
 })
 ```
 
-
-
 # 6. 组件通信
 
+## 6.0. 概述
 **`Vue3`组件通信和`Vue2`的区别：**
 
 * 移出事件总线，使用`mitt`代替。
@@ -1970,7 +1942,6 @@ export const useTalkStore = defineStore('talk',()=>{
 	defineProps(['car','getToy'])
 </script>
 ```
-
 ## 6.2. 【自定义事件】
 
 1. 概述：自定义事件常用于：**子 => 父。**
@@ -1997,7 +1968,6 @@ export const useTalkStore = defineStore('talk',()=>{
    //子组件中，触发事件：
    this.$emit('send-toy', 具体数据)
    ```
-
 ## 6.3. 【mitt】
 
 概述：与消息订阅与发布（`pubsub`）功能类似，可以实现任意组件间通信。
@@ -2071,7 +2041,6 @@ function sendToy(){
 ```
 
 **注意这个重要的内置关系，总线依赖着这个内置关系**
-
 ## 6.4.【v-model】
 
 1. 概述：实现 **父↔子** 之间相互通信。
@@ -2159,10 +2128,6 @@ function sendToy(){
    ```vue
    <AtguiguInput v-model:abc="userName" v-model:xyz="password"/>
    ```
-
-   
-
-
 ## 6.5.【$attrs 】
 
 1. 概述：`$attrs`用于实现**当前组件的父组件**，向**当前组件的子组件**通信（**祖→孙**）。
@@ -2230,7 +2195,6 @@ function sendToy(){
 	defineProps(['a','b','c','d','x','y','updateA'])
 </script>
 ```
-
 ## 6.6. 【$refs、$parent】
 
 1. 概述：
@@ -2244,7 +2208,6 @@ function sendToy(){
    | --------- | -------------------------------------------------------- |
    | `$refs`   | 值为对象，包含所有被`ref`属性标识的`DOM`元素或组件实例。 |
    | `$parent` | 值为对象，当前组件的父组件实例对象。                     |
-
 ## 6.7. 【provide、inject】
 
 1. 概述：实现**祖孙组件**直接通信
@@ -2310,12 +2273,9 @@ function sendToy(){
      let car = inject('car')
    </script>
    ```
-
-
 ## 6.8. 【pinia】
 
 参考之前`pinia`部分的讲解
-
 ## 6.9. 【slot】
 
 ### 1. 默认插槽
@@ -2399,7 +2359,6 @@ function sendToy(){
    ```
 
 
-
 # 7. 其它 API
 
 ## 7.1.【shallowRef 与 shallowReactive 】
@@ -2431,9 +2390,6 @@ function sendToy(){
 ### 总结
 
 > 通过使用 [`shallowRef()`](https://cn.vuejs.org/api/reactivity-advanced.html#shallowref) 和 [`shallowReactive()`](https://cn.vuejs.org/api/reactivity-advanced.html#shallowreactive) 来绕开深度响应。浅层式 `API` 创建的状态只在其顶层是响应式的，对所有深层的对象不会做任何处理，避免了对每一个内部属性做响应式所带来的性能成本，这使得属性的访问变得更快，可提升性能。
-
-
-
 ## 7.2.【readonly 与 shallowReadonly】
 
 ### **`readonly`**
@@ -2472,9 +2428,6 @@ function sendToy(){
    * 只将对象的顶层属性设置为只读，对象内部的嵌套属性仍然是可变的。
 
    * 适用于只需保护对象顶层属性的场景。
-
-     
-
 ## 7.3.【toRaw 与 markRaw】
 
 ### `toRaw`
@@ -2531,7 +2484,6 @@ function sendToy(){
    // 根据原始对象citys去创建响应式对象citys2 —— 创建失败，因为citys被markRaw标记了
    let citys2 = reactive(citys)
    ```
-
 ## 7.4.【customRef】
 
 作用：创建一个自定义的`ref`，并对其依赖项跟踪和更新触发进行逻辑控制。
@@ -2564,10 +2516,6 @@ export default function(initValue:string,delay:number){
 
 组件中使用：
 
-
-
-
-
 # 8. Vue3新组件
 
 ## 8.1. 【Teleport】
@@ -2583,7 +2531,6 @@ export default function(initValue:string,delay:number){
     </div>
 </teleport>
 ```
-
 ## 8.2. 【Suspense】
 
 -  等待异步组件时渲染一些额外内容，让应用有更好的用户体验 
@@ -2611,9 +2558,6 @@ const Child = defineAsyncComponent(()=>import('./Child.vue'))
     </div>
 </template>
 ```
-
-
-
 ## 8.3.【全局API转移到应用对象】
 
 - `app.component`
@@ -2622,7 +2566,6 @@ const Child = defineAsyncComponent(()=>import('./Child.vue'))
 - `app.mount`
 - `app.unmount`
 - `app.use`
-
 ## 8.4.【其他】
 
 - 过渡类名 `v-enter` 修改为 `v-enter-from`、过渡类名 `v-leave` 修改为 `v-leave-from`。
