@@ -1,7 +1,9 @@
 <template>
   <div class="layout">
     <header class="header">
-      <h1>Vue3 Tutorial</h1>
+      <RouterLink to="/">
+        <h1>Vue3 Tutorial</h1>
+      </RouterLink>
       <nav>
         <RouterLink v-for="item in navs" :key="item.path" :to="item.path" class="nav-link">
           {{ item.meta.title }}
