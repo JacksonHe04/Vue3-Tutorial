@@ -26,7 +26,8 @@ jobs:
 
       - name: Checkout gh-pages branch
         run: |
-          git fetch origin gh-pages || git checkout --orphan gh-pages
+          git fetch origin gh-pages
+          git checkout gh-pages
           git reset --hard
 
       - name: Copy dist files
