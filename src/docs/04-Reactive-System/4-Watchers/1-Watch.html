@@ -1,0 +1,539 @@
+<h1><code>watch</code>的五种应用场景</h1>
+<h2>作用</h2>
+<p><code>watch</code> 是 Vue 3 中用来监视数据变化的一个特性，与 Vue 2 中的 <code>watch</code> 作用一致。它可以帮助我们在数据发生变化时执行一些操作，常用于执行异步任务或复杂的操作，或是需要在数据变化时执行某些副作用（如获取新的数据、更新 UI 等）。</p>
+<h3>特点</h3>
+<p>在 Vue 3 中，<code>watch</code> 只能监视以下四种数据类型：</p>
+<ol>
+<li><code>ref</code> 定义的数据。</li>
+<li><code>reactive</code> 定义的数据。</li>
+<li>函数返回一个值（<code>getter</code> 函数）。</li>
+<li>包含以上数据类型的数组。</li>
+</ol>
+<h2>使用场景</h2>
+<p>在 Vue 3 中，使用 <code>watch</code> 时通常会遇到以下几种常见情况。</p>
+<h3>情况一：监视 <code>ref</code> 定义的【基本类型】数据</h3>
+<p>当 <code>ref</code> 定义的是基本数据类型（如数字、字符串、布尔值等）时，监视的是其 <code>value</code> 值的变化。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1&gt;情况一：监视【ref】定义的【基本类型】数据&lt;/h1&gt;
+    &lt;h2&gt;当前求和为：{{ sum }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeSum&quot;&gt;点我sum+1&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup&gt;
+  import { ref, watch } from 'vue'
+
+  // 数据
+  let sum = ref(0)
+
+  // 方法
+  function changeSum() {
+    sum.value += 1
+  }
+
+  // 监视，情况一：监视【ref】定义的【基本类型】数据
+  const stopWatch = watch(sum, (newValue, oldValue) =&gt; {
+    console.log('sum变化了', newValue, oldValue)
+    if (newValue &gt;= 10) {
+      stopWatch()  // 停止监视
+    }
+  })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h1>情况一：监视【ref】定义的【基本类型】数据</h1>
+    <h2>当前求和为：{{ sum }}</h2>
+    <button @click=&quot;changeSum&quot;>点我sum+1</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup>
+  import { ref, watch } from &apos;vue&apos;
+
+  // 数据
+  let sum = ref(0)
+
+  // 方法
+  function changeSum() {
+    sum.value += 1
+  }
+
+  // 监视，情况一：监视【ref】定义的【基本类型】数据
+  const stopWatch = watch(sum, (newValue, oldValue) => {
+    console.log(&apos;sum变化了&apos;, newValue, oldValue)
+    if (newValue >= 10) {
+      stopWatch()  // 停止监视
+    }
+  })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>情况二：监视 <code>ref</code> 定义的【对象类型】数据</h3>
+<p>对于对象类型的数据，<code>watch</code> 监视的是对象的地址值。如果修改对象内部的某个属性，需要手动开启深度监视。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1&gt;情况二：监视【ref】定义的【对象类型】数据&lt;/h1&gt;
+    &lt;h2&gt;姓名：{{ person.name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ person.age }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;修改年龄&lt;/button&gt;
+    &lt;button @click=&quot;changePerson&quot;&gt;修改整个人&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup&gt;
+  import { ref, watch } from 'vue'
+
+  // 数据
+  let person = ref({
+    name: '张三',
+    age: 18
+  })
+
+  // 方法
+  function changeName() {
+    person.value.name += '~'
+  }
+
+  function changeAge() {
+    person.value.age += 1
+  }
+
+  function changePerson() {
+    person.value = { name: '李四', age: 90 }
+  }
+
+  // 监视，情况二：监视【ref】定义的【对象类型】数据
+  watch(person, (newValue, oldValue) =&gt; {
+    console.log('person变化了', newValue, oldValue)
+  }, { deep: true })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h1>情况二：监视【ref】定义的【对象类型】数据</h1>
+    <h2>姓名：{{ person.name }}</h2>
+    <h2>年龄：{{ person.age }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>修改年龄</button>
+    <button @click=&quot;changePerson&quot;>修改整个人</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup>
+  import { ref, watch } from &apos;vue&apos;
+
+  // 数据
+  let person = ref({
+    name: &apos;张三&apos;,
+    age: 18
+  })
+
+  // 方法
+  function changeName() {
+    person.value.name += &apos;~&apos;
+  }
+
+  function changeAge() {
+    person.value.age += 1
+  }
+
+  function changePerson() {
+    person.value = { name: &apos;李四&apos;, age: 90 }
+  }
+
+  // 监视，情况二：监视【ref】定义的【对象类型】数据
+  watch(person, (newValue, oldValue) => {
+    console.log(&apos;person变化了&apos;, newValue, oldValue)
+  }, { deep: true })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>情况三：监视 <code>reactive</code> 定义的【对象类型】数据</h3>
+<p>当使用 <code>reactive</code> 定义对象时，<code>watch</code> 默认会开启深度监视，即监视对象内部的所有属性。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">
+&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1&gt;情况三：监视【reactive】定义的【对象类型】数据&lt;/h1&gt;
+    &lt;h2&gt;姓名：{{ person.name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ person.age }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;修改年龄&lt;/button&gt;
+    &lt;button @click=&quot;changePerson&quot;&gt;修改整个人&lt;/button&gt;
+    &lt;hr&gt;
+    &lt;h2&gt;测试：{{ obj.a.b.c }}&lt;/h2&gt;
+    &lt;button @click=&quot;test&quot;&gt;修改obj.a.b.c&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup&gt;
+  import {reactive, watch} from 'vue'
+
+  // 数据
+  let person = reactive({
+    name: '张三',
+    age: 18
+  })
+
+  let obj = reactive({
+    room: {
+      floor: {
+        dust: 666
+      }
+    }
+  })
+
+  // 方法
+  function changeName() {
+    person.name += '~'
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changePerson() {
+    Object.assign(person, {name: '李四', age: 80})
+  }
+
+  function test() {
+    obj.room.floor.c = 888
+  }
+
+  // 监视，情况三：监视【reactive】定义的【对象类型】数据，默认开启深度监视
+  watch(person, (newValue, oldValue) =&gt; {
+    console.log('person变化了', newValue, oldValue)
+  })
+
+  watch(obj, (newValue, oldValue) =&gt; {
+    console.log('obj变化了', newValue, oldValue)
+  })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="
+<template>
+  <div class=&quot;person&quot;>
+    <h1>情况三：监视【reactive】定义的【对象类型】数据</h1>
+    <h2>姓名：{{ person.name }}</h2>
+    <h2>年龄：{{ person.age }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>修改年龄</button>
+    <button @click=&quot;changePerson&quot;>修改整个人</button>
+    <hr>
+    <h2>测试：{{ obj.a.b.c }}</h2>
+    <button @click=&quot;test&quot;>修改obj.a.b.c</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup>
+  import {reactive, watch} from &apos;vue&apos;
+
+  // 数据
+  let person = reactive({
+    name: &apos;张三&apos;,
+    age: 18
+  })
+
+  let obj = reactive({
+    room: {
+      floor: {
+        dust: 666
+      }
+    }
+  })
+
+  // 方法
+  function changeName() {
+    person.name += &apos;~&apos;
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changePerson() {
+    Object.assign(person, {name: &apos;李四&apos;, age: 80})
+  }
+
+  function test() {
+    obj.room.floor.c = 888
+  }
+
+  // 监视，情况三：监视【reactive】定义的【对象类型】数据，默认开启深度监视
+  watch(person, (newValue, oldValue) => {
+    console.log(&apos;person变化了&apos;, newValue, oldValue)
+  })
+
+  watch(obj, (newValue, oldValue) => {
+    console.log(&apos;obj变化了&apos;, newValue, oldValue)
+  })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>情况四：监视 <code>ref</code> 或 <code>reactive</code> 定义的【对象类型】数据中的某个属性</h3>
+<p>对于对象中的某个属性，建议将其写成函数形式，以确保能正确地监视该属性的变化。若是对象类型的属性，通常要手动开启深度监视。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1&gt;情况四：监视【ref】或【reactive】定义的【对象类型】数据中的某个属性&lt;/h1&gt;
+    &lt;h2&gt;姓名：{{ person.name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ person.age }}&lt;/h2&gt;
+    &lt;h2&gt;汽车：{{ person.car.c1 }}、{{ person.car.c2 }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;修改年龄&lt;/button&gt;
+    &lt;button @click=&quot;changeC1&quot;&gt;修改第一台车&lt;/button&gt;
+    &lt;button @click=&quot;changeC2&quot;&gt;修改第二台车&lt;/button&gt;
+    &lt;button @click=&quot;changeCar&quot;&gt;修改整个车&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup&gt;
+  import { reactive, watch } from 'vue'
+
+  // 数据
+  let person = reactive({
+    name: '张三',
+    age: 18,
+    car: {
+      c1: '奔驰',
+      c2: '宝马'
+    }
+  })
+
+  // 方法
+  function changeName() {
+    person.name += '~'
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changeC1() {
+    person.car.c1 = '奥迪'
+  }
+
+  function changeC2() {
+    person.car.c2 = '大众'
+  }
+
+  function changeCar() {
+    person.car = { c1: '雅迪', c2: '爱玛' }
+  }
+
+  // 监视，情况四：监视响应式对象中的某个属性，且该属性是基本类型的，要写成函数式
+  watch(() =&gt; person.name, (newValue, oldValue) =&gt; {
+    console.log('person.name变化了', newValue, oldValue)
+  })
+
+  // 监视，情况四：监视响应式对象中的某个属性，且该属性是对象类型的，可以直接写，也能写函数，更推荐写函数
+  watch(() =&gt; person.car, (newValue, oldValue) =&gt; {
+    console.log('person.car变化了', newValue, oldValue)
+  }, { deep: true })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h1>情况四：监视【ref】或【reactive】定义的【对象类型】数据中的某个属性</h1>
+    <h2>姓名：{{ person.name }}</h2>
+    <h2>年龄：{{ person.age }}</h2>
+    <h2>汽车：{{ person.car.c1 }}、{{ person.car.c2 }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>修改年龄</button>
+    <button @click=&quot;changeC1&quot;>修改第一台车</button>
+    <button @click=&quot;changeC2&quot;>修改第二台车</button>
+    <button @click=&quot;changeCar&quot;>修改整个车</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup>
+  import { reactive, watch } from &apos;vue&apos;
+
+  // 数据
+  let person = reactive({
+    name: &apos;张三&apos;,
+    age: 18,
+    car: {
+      c1: &apos;奔驰&apos;,
+      c2: &apos;宝马&apos;
+    }
+  })
+
+  // 方法
+  function changeName() {
+    person.name += &apos;~&apos;
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changeC1() {
+    person.car.c1 = &apos;奥迪&apos;
+  }
+
+  function changeC2() {
+    person.car.c2 = &apos;大众&apos;
+  }
+
+  function changeCar() {
+    person.car = { c1: &apos;雅迪&apos;, c2: &apos;爱玛&apos; }
+  }
+
+  // 监视，情况四：监视响应式对象中的某个属性，且该属性是基本类型的，要写成函数式
+  watch(() => person.name, (newValue, oldValue) => {
+    console.log(&apos;person.name变化了&apos;, newValue, oldValue)
+  })
+
+  // 监视，情况四：监视响应式对象中的某个属性，且该属性是对象类型的，可以直接写，也能写函数，更推荐写函数
+  watch(() => person.car, (newValue, oldValue) => {
+    console.log(&apos;person.car变化了&apos;, newValue, oldValue)
+  }, { deep: true })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>情况五：监视多个数据</h3>
+<p><code>watch</code> 也可以同时监视多个数据，传入一个包含多个数据的数组。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1&gt;情况五：监视上述的多个数据&lt;/h1&gt;
+    &lt;h2&gt;姓名：{{ person.name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ person.age }}&lt;/h2&gt;
+    &lt;h2&gt;汽车：{{ person.car.c1 }}、{{ person.car.c2 }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;修改年龄&lt;/button&gt;
+    &lt;button @click=&quot;changeC1&quot;&gt;修改第一台车&lt;/button&gt;
+    &lt;button @click=&quot;changeC2&quot;&gt;修改第二台车&lt;/button&gt;
+    &lt;button @click=&quot;changeCar&quot;&gt;修改整个车&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup&gt;
+  import { reactive, watch } from 'vue'
+
+  // 数据
+  let person = reactive({
+    name: '张三',
+    age: 18,
+    car: {
+      c1: '奔驰',
+      c2: '宝马'
+    }
+  })
+
+  // 方法
+  function changeName() {
+   
+
+ person.name += '~'
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changeC1() {
+    person.car.c1 = '奥迪'
+  }
+
+  function changeC2() {
+    person.car.c2 = '大众'
+  }
+
+  function changeCar() {
+    person.car = { c1: '雅迪', c2: '爱玛' }
+  }
+
+  // 监视，情况五：监视多个数据
+  watch([() =&gt; person.name, () =&gt; person.age], ([newName, newAge], [oldName, oldAge]) =&gt; {
+    console.log(`name变化了：${newName} -&gt; ${oldName}`)
+    console.log(`age变化了：${newAge} -&gt; ${oldAge}`)
+  })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h1>情况五：监视上述的多个数据</h1>
+    <h2>姓名：{{ person.name }}</h2>
+    <h2>年龄：{{ person.age }}</h2>
+    <h2>汽车：{{ person.car.c1 }}、{{ person.car.c2 }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>修改年龄</button>
+    <button @click=&quot;changeC1&quot;>修改第一台车</button>
+    <button @click=&quot;changeC2&quot;>修改第二台车</button>
+    <button @click=&quot;changeCar&quot;>修改整个车</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup>
+  import { reactive, watch } from &apos;vue&apos;
+
+  // 数据
+  let person = reactive({
+    name: &apos;张三&apos;,
+    age: 18,
+    car: {
+      c1: &apos;奔驰&apos;,
+      c2: &apos;宝马&apos;
+    }
+  })
+
+  // 方法
+  function changeName() {
+   
+
+ person.name += &apos;~&apos;
+  }
+
+  function changeAge() {
+    person.age += 1
+  }
+
+  function changeC1() {
+    person.car.c1 = &apos;奥迪&apos;
+  }
+
+  function changeC2() {
+    person.car.c2 = &apos;大众&apos;
+  }
+
+  function changeCar() {
+    person.car = { c1: &apos;雅迪&apos;, c2: &apos;爱玛&apos; }
+  }
+
+  // 监视，情况五：监视多个数据
+  watch([() => person.name, () => person.age], ([newName, newAge], [oldName, oldAge]) => {
+    console.log(`name变化了：${newName} -> ${oldName}`)
+    console.log(`age变化了：${newAge} -> ${oldAge}`)
+  })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>结论</h2>
+<p>Vue 3 的 <code>watch</code> 提供了一种灵活的方式来监视数据的变化，可以根据不同的使用场景来选择监视数据的方式。通过传入不同的参数，<code>watch</code> 允许我们精确地控制数据变化时要执行的操作。在需要响应某些数据变化时，使用 <code>watch</code> 可以帮助我们实现更复杂的逻辑，比如动态加载数据、调整 UI 状态、发起网络请求等。</p>

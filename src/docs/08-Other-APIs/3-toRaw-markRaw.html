@@ -1,0 +1,100 @@
+<h1><code>toRaw</code> 与 <code>markRaw</code> 的使用</h1>
+<p>在 Vue 3 的响应式系统中，<code>toRaw</code> 和 <code>markRaw</code> 是两种用于处理对象的 API。它们分别提供了获取原始对象和标记对象不参与响应式化的功能，适用于不同的场景。</p>
+<h2><code>toRaw</code></h2>
+<h3>作用</h3>
+<p><code>toRaw</code> 用于获取响应式对象的原始对象。当你使用 <code>toRaw</code> 获取一个对象时，它返回的是未经过代理的原始对象，这个对象不会被 Vue 的响应式系统处理，因此不再触发视图更新。</p>
+<ul>
+<li><strong>用途</strong>：常用于需要将响应式对象传递给非 Vue 库或外部系统时，确保它们接收到的是普通对象，而非响应式对象。</li>
+</ul>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { reactive, toRaw } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+
+<span class="hljs-comment">// 创建响应式对象</span>
+<span class="hljs-keyword">let</span> person = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;tony&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> });
+
+<span class="hljs-comment">// 获取原始对象</span>
+<span class="hljs-keyword">let</span> rawPerson = <span class="hljs-title function_">toRaw</span>(person);
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(rawPerson); <span class="hljs-comment">// 输出的是普通对象，不会触发响应式更新</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive, toRaw } from &quot;vue&quot;;
+
+// 创建响应式对象
+let person = reactive({ name: &apos;tony&apos;, age: 18 });
+
+// 获取原始对象
+let rawPerson = toRaw(person);
+
+console.log(rawPerson); // 输出的是普通对象，不会触发响应式更新
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ul>
+<li><code>toRaw</code> 返回的对象是原始对象，不再是响应式对象。</li>
+<li>适用于在某些情况下需要避免响应式开销，或者将响应式对象传递给外部非 Vue 系统时。</li>
+</ul>
+<h3>注意</h3>
+<ul>
+<li><strong>不建议将原始对象存储为持久引用</strong>，因为它可能会与 Vue 的响应式系统脱离联系，从而导致更新的丧失。</li>
+</ul>
+<h2><code>markRaw</code></h2>
+<h3>作用</h3>
+<p><code>markRaw</code> 用于标记一个对象，使其<strong>永远不会变成响应式</strong>。当你使用 <code>markRaw</code> 标记一个对象时，Vue 的响应式系统会忽略该对象，不会对其进行代理处理。</p>
+<ul>
+<li><strong>用途</strong>：常用于你不希望某些对象成为响应式的场景。例如，使用 <code>mockjs</code> 时，如果你不想让生成的 mock 数据变成响应式对象，可以使用 <code>markRaw</code> 来避免 Vue 将它代理为响应式对象。</li>
+</ul>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { markRaw, reactive } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+
+<span class="hljs-comment">// 使用 markRaw 标记对象</span>
+<span class="hljs-keyword">let</span> citys = <span class="hljs-title function_">markRaw</span>([
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;asdda01&#x27;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;北京&#x27;</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;asdda02&#x27;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;上海&#x27;</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;asdda03&#x27;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;天津&#x27;</span> },
+  { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;asdda04&#x27;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;重庆&#x27;</span> }
+]);
+
+<span class="hljs-comment">// 尝试将被 markRaw 标记的对象转为响应式对象</span>
+<span class="hljs-keyword">let</span> citys2 = <span class="hljs-title function_">reactive</span>(citys); <span class="hljs-comment">// 会失败，因为 citys 被 markRaw 标记了</span>
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(citys); <span class="hljs-comment">// 输出原始对象</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(citys2); <span class="hljs-comment">// 输出 null 或 undefined（表示无法创建响应式对象）</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { markRaw, reactive } from &quot;vue&quot;;
+
+// 使用 markRaw 标记对象
+let citys = markRaw([
+  { id: &apos;asdda01&apos;, name: &apos;北京&apos; },
+  { id: &apos;asdda02&apos;, name: &apos;上海&apos; },
+  { id: &apos;asdda03&apos;, name: &apos;天津&apos; },
+  { id: &apos;asdda04&apos;, name: &apos;重庆&apos; }
+]);
+
+// 尝试将被 markRaw 标记的对象转为响应式对象
+let citys2 = reactive(citys); // 会失败，因为 citys 被 markRaw 标记了
+
+console.log(citys); // 输出原始对象
+console.log(citys2); // 输出 null 或 undefined（表示无法创建响应式对象）
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ul>
+<li>被 <code>markRaw</code> 标记的对象不会成为响应式对象，Vue 会直接忽略它们。</li>
+<li>适用于外部库的对象或你希望完全避免响应式化的场景。</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong><code>toRaw</code></strong>：用于获取响应式对象的原始对象，避免触发代理和响应式开销。适用于将响应式对象传递给外部系统时使用。</li>
+<li><strong><code>markRaw</code></strong>：标记对象为非响应式对象，确保该对象永远不会被 Vue 的响应式系统代理。适用于不希望某些对象参与响应式化的场景。</li>
+</ul>
+<p>这两个 API 使得开发者能够更精细地控制 Vue 的响应式系统，避免不必要的性能开销，并提供更大的灵活性来处理外部对象和特殊数据结构。</p>

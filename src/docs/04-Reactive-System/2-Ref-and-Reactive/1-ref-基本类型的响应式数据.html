@@ -1,0 +1,146 @@
+<h1>Vue 3 中 <code>ref</code> 创建：基本类型的响应式数据</h1>
+<h2>作用</h2>
+<p><code>ref</code> 用于定义响应式的基本类型变量。在 Vue 3 中，<code>ref</code> 是一个非常常用的工具，能够使基本数据类型（如字符串、数字、布尔值等）变得响应式。</p>
+<h2>语法</h2>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> xxx = <span class="hljs-title function_">ref</span>(初始值)
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let xxx = ref(初始值)
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<ul>
+<li><code>xxx</code>：是一个响应式的基本数据类型变量。</li>
+<li><code>初始值</code>：是你希望赋给该响应式变量的初始值。</li>
+</ul>
+<h2>返回值</h2>
+<p><code>ref</code> 会返回一个 <code>RefImpl</code> 实例对象，通常称为 <code>ref</code> 对象。<code>ref</code> 对象的 <code>value</code> 属性才是响应式的。通过操作 <code>value</code> 来更新数据，并触发视图更新。</p>
+<h2>注意点</h2>
+<ol>
+<li>
+<p><strong>操作方式：</strong> 在 JavaScript 中，我们需要通过 <code>.value</code> 来访问或修改 <code>ref</code> 对象的值。<br>
+例如：<code>name.value = '李四'</code>。</p>
+</li>
+<li>
+<p><strong>模板中的简化使用：</strong> 在 Vue 的模板中，直接使用 <code>name</code> 即可，不需要加 <code>.value</code>。<br>
+例如：<code>{{ name }}</code> 会自动读取 <code>name.value</code> 的值。</p>
+</li>
+<li>
+<p><strong>对象本身不是响应式的：</strong> 对于 <code>let name = ref('张三')</code>，<code>name</code> 本身不是响应式的，只有 <code>name.value</code> 才是响应式的。</p>
+</li>
+</ol>
+<h2>示例代码</h2>
+<p>下面是一个示例，演示了如何使用 <code>ref</code> 定义响应式变量以及如何在代码中操作它们。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h2&gt;姓名：{{ name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ age }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;年龄+1&lt;/button&gt;
+    &lt;button @click=&quot;showTel&quot;&gt;点我查看联系方式&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Person&quot;&gt;
+  import { ref } from 'vue'
+  
+  // 定义响应式变量
+  let name = ref('张三')
+  let age = ref(18)
+  
+  // 普通变量，不是响应式的
+  let tel = '13888888888'
+
+  // 修改名字的方法
+  function changeName() {
+    // 需要通过.value访问和修改值
+    name.value = '李四'
+    console.log(name.value)
+
+    // 如果直接修改name变量本身，并不会触发视图更新
+    // name = ref('zhang-san') // 这样不会更新视图
+  }
+
+  // 增加年龄的方法
+  function changeAge() {
+    age.value += 1
+    console.log(age.value)
+  }
+
+  // 显示电话的方法
+  function showTel() {
+    alert(tel)
+  }
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h2>姓名：{{ name }}</h2>
+    <h2>年龄：{{ age }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>年龄+1</button>
+    <button @click=&quot;showTel&quot;>点我查看联系方式</button>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Person&quot;>
+  import { ref } from &apos;vue&apos;
+  
+  // 定义响应式变量
+  let name = ref(&apos;张三&apos;)
+  let age = ref(18)
+  
+  // 普通变量，不是响应式的
+  let tel = &apos;13888888888&apos;
+
+  // 修改名字的方法
+  function changeName() {
+    // 需要通过.value访问和修改值
+    name.value = &apos;李四&apos;
+    console.log(name.value)
+
+    // 如果直接修改name变量本身，并不会触发视图更新
+    // name = ref(&apos;zhang-san&apos;) // 这样不会更新视图
+  }
+
+  // 增加年龄的方法
+  function changeAge() {
+    age.value += 1
+    console.log(age.value)
+  }
+
+  // 显示电话的方法
+  function showTel() {
+    alert(tel)
+  }
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>代码解析</h2>
+<ol>
+<li>
+<p><strong><code>ref('张三')</code> 和 <code>ref(18)</code>：</strong><br>
+<code>name</code> 和 <code>age</code> 是通过 <code>ref</code> 创建的响应式变量，其 <code>value</code> 属性会在数据变化时自动更新视图。</p>
+</li>
+<li>
+<p><strong>模板中的数据绑定：</strong><br>
+在模板中，使用 <code>{{ name }}</code> 和 <code>{{ age }}</code> 来绑定变量，不需要显式使用 <code>.value</code>，Vue 会自动处理。</p>
+</li>
+<li>
+<p><strong>修改变量值：</strong><br>
+使用 <code>.value</code> 修改响应式变量时，Vue 会触发视图的更新。例如，点击 &quot;修改名字&quot; 按钮会将 <code>name.value</code> 设置为 <code>李四</code>，视图会随之更新。</p>
+</li>
+<li>
+<p><strong>注意：</strong><br>
+如果直接修改 <code>name</code> 变量本身（如：<code>name = ref('zhang-san')</code>），视图不会更新，因为 <code>name</code> 本身并不是响应式的。</p>
+</li>
+</ol>
+<p>通过上述方式，你可以轻松地使用 <code>ref</code> 创建和管理响应式数据，使得基本类型变量也能享受 Vue 的响应式特性。</p>

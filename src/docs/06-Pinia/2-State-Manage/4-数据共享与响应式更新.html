@@ -1,0 +1,194 @@
+<h1>使用 Pinia 实现组件间数据共享与响应式更新</h1>
+<p>在 Vue 3 中，通过使用 Pinia 状态管理库，可以在不同的组件之间实现数据的响应式共享。本示例展示了如何使用 Pinia 创建和管理共享的状态，并在多个组件中进行访问和操作。以下文档将逐步介绍如何实现这一过程。</p>
+<h2>1. 创建 Pinia Store</h2>
+<p>首先，我们需要创建一个 Pinia store，存储共享的数据及相关操作。</p>
+<h3><code>src/store/count.ts</code></h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { defineStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useCountStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;count&#x27;</span>, {
+  <span class="hljs-comment">// state 定义共享的数据</span>
+  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> ({
+    <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
+  }),
+  
+  <span class="hljs-comment">// actions 定义对数据的修改方法</span>
+  <span class="hljs-attr">actions</span>: {
+    <span class="hljs-title function_">increment</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span>++;
+    },
+    <span class="hljs-title function_">decrement</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span>--;
+    },
+    <span class="hljs-title function_">setCount</span>(<span class="hljs-params"><span class="hljs-attr">newCount</span>: <span class="hljs-built_in">number</span></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span> = newCount;
+    },
+  },
+  
+  <span class="hljs-comment">// getters 定义计算属性（只读）</span>
+  <span class="hljs-attr">getters</span>: {
+    <span class="hljs-attr">doubleCount</span>: <span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.<span class="hljs-property">count</span> * <span class="hljs-number">2</span>,
+  },
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { defineStore } from &apos;pinia&apos;;
+
+export const useCountStore = defineStore(&apos;count&apos;, {
+  // state 定义共享的数据
+  state: () => ({
+    count: 0,
+  }),
+  
+  // actions 定义对数据的修改方法
+  actions: {
+    increment() {
+      this.count++;
+    },
+    decrement() {
+      this.count--;
+    },
+    setCount(newCount: number) {
+      this.count = newCount;
+    },
+  },
+  
+  // getters 定义计算属性（只读）
+  getters: {
+    doubleCount: (state) => state.count * 2,
+  },
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个 store 中，我们做了以下几个操作：</p>
+<ul>
+<li><strong>state</strong>: 用来存储共享的数据，<code>count</code> 初始化为 0。</li>
+<li><strong>actions</strong>: 定义了可以修改 <code>count</code> 的方法，如 <code>increment</code>、<code>decrement</code> 和 <code>setCount</code>。</li>
+<li><strong>getters</strong>: 定义了计算属性 <code>doubleCount</code>，它返回 <code>count</code> 的双倍值，<code>getters</code> 是只读的，可以方便地进行派生计算。</li>
+</ul>
+<h2>2. 在组件中使用 Pinia Store</h2>
+<h3><code>Couter.vue</code></h3>
+<p>这个组件将会显示计数器的当前值，并提供操作按钮来增加、减少或设置计数值。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div&gt;
+    &lt;h2&gt;计数器&lt;/h2&gt;
+    &lt;p&gt;当前计数: {{ countStore.count }}&lt;/p&gt;
+    &lt;button @click=&quot;increment&quot;&gt;增加&lt;/button&gt;
+    &lt;button @click=&quot;decrement&quot;&gt;减少&lt;/button&gt;
+    &lt;button @click=&quot;setCount(10)&quot;&gt;设置为 10&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { useCountStore } from '@/store/count';
+
+// 获取 Pinia store
+const countStore = useCountStore();
+
+// 绑定 store 中的 state 和 actions
+const { count, increment, decrement, setCount } = countStore;
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div>
+    <h2>计数器</h2>
+    <p>当前计数: {{ countStore.count }}</p>
+    <button @click=&quot;increment&quot;>增加</button>
+    <button @click=&quot;decrement&quot;>减少</button>
+    <button @click=&quot;setCount(10)&quot;>设置为 10</button>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot;>
+import { useCountStore } from &apos;@/store/count&apos;;
+
+// 获取 Pinia store
+const countStore = useCountStore();
+
+// 绑定 store 中的 state 和 actions
+const { count, increment, decrement, setCount } = countStore;
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>解释</h3>
+<ul>
+<li>在 <code>Couter.vue</code> 组件中，我们使用 <code>useCountStore</code> 函数获取 Pinia store 的实例 <code>countStore</code>，并通过解构赋值将 store 中的 <code>state</code> 和 <code>actions</code> 绑定到组件中。</li>
+<li>通过模板绑定，组件会自动响应 <code>count</code> 的变化，实时显示计数值。</li>
+<li>通过点击按钮调用 <code>increment</code>、<code>decrement</code> 或 <code>setCount(10)</code> 方法，可以修改 <code>count</code> 的值。</li>
+</ul>
+<h3><code>DoubleCounter.vue</code></h3>
+<p>此组件展示了如何使用 <code>getters</code> 获取派生数据，并监听 <code>count</code> 的变化。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div&gt;
+    &lt;h2&gt;双倍计数&lt;/h2&gt;
+    &lt;p&gt;当前双倍计数: {{ countStore.doubleCount }}&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import { useCountStore } from '@/store/count';
+import { watch } from &quot;vue&quot;;
+
+// 获取 Pinia store
+const countStore = useCountStore();
+
+// 监听 count 的变化
+watch(() =&gt; countStore.count, (newVal) =&gt; {
+  console.log('Count changed:', newVal);
+});
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div>
+    <h2>双倍计数</h2>
+    <p>当前双倍计数: {{ countStore.doubleCount }}</p>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot;>
+import { useCountStore } from &apos;@/store/count&apos;;
+import { watch } from &quot;vue&quot;;
+
+// 获取 Pinia store
+const countStore = useCountStore();
+
+// 监听 count 的变化
+watch(() => countStore.count, (newVal) => {
+  console.log(&apos;Count changed:&apos;, newVal);
+});
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>解释</h3>
+<ul>
+<li>在 <code>DoubleCounter.vue</code> 组件中，我们使用 <code>countStore.doubleCount</code> 来访问 <code>count</code> 的双倍值。</li>
+<li>通过 <code>watch</code> API，我们监听 <code>count</code> 的变化，每当 <code>count</code> 改变时，都会触发回调函数并打印新的值。</li>
+</ul>
+<h2>3. 响应式数据共享</h2>
+<p>在这个示例中，<code>countStore.count</code> 是响应式的，这意味着：</p>
+<ul>
+<li>当 <code>Couter.vue</code> 中的计数值改变时，<code>DoubleCounter.vue</code> 中的 <code>doubleCount</code> 也会自动更新。</li>
+<li>组件间的数据共享是通过 Pinia store 实现的，无论是通过 <code>state</code>、<code>actions</code> 还是 <code>getters</code>，不同组件之间的数据始终保持同步。</li>
+</ul>
+<h2>4. 总结</h2>
+<p>通过使用 Pinia 管理应用的全局状态，我们可以轻松地实现组件间的响应式数据共享。在本示例中：</p>
+<ul>
+<li>我们创建了一个 <code>count</code> 状态，并通过 <code>increment</code>、<code>decrement</code> 和 <code>setCount</code> 方法修改它。</li>
+<li>在不同的组件中，使用 Pinia store 获取数据并响应式地更新视图。</li>
+<li><code>getters</code> 可以派生数据，简化了计算逻辑。</li>
+<li>使用 <code>watch</code> 监听数据变化，做出相应的操作。</li>
+</ul>
+<p>Pinia 提供了强大的状态管理功能，使得在 Vue 3 中共享和管理数据变得简单而高效。</p>

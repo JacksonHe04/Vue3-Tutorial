@@ -1,0 +1,184 @@
+<h1>Vue 3 中的 <code>props</code> 传值与类型定义</h1>
+<p>在 Vue 3 中，<code>props</code> 用于父组件与子组件之间传递数据。为了增强类型安全性，我们可以使用 TypeScript 来限制传入的 <code>props</code> 的数据类型，确保组件间的数据传递符合预期。本文将介绍如何在 Vue 3 中使用 <code>props</code>，并结合 TypeScript 进行类型定义和限制。</p>
+<h2>1. 定义数据接口与类型</h2>
+<p>首先，我们需要定义一个接口来限制传入数据的格式。以 <code>Person</code> 为例，假设每个人对象具有 <code>id</code>、<code>name</code> 和 <code>age</code> 属性。</p>
+<h3>定义 <code>PersonInter</code> 接口</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 定义一个接口，限制每个Person对象的格式</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">PersonInter</span> {
+  <span class="hljs-attr">id</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">name</span>: <span class="hljs-built_in">string</span>;
+  <span class="hljs-attr">age</span>: <span class="hljs-built_in">number</span>;
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 定义一个接口，限制每个Person对象的格式
+export interface PersonInter {
+  id: string;
+  name: string;
+  age: number;
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>接着，我们定义一个类型 <code>Persons</code>，它表示由多个 <code>PersonInter</code> 类型构成的数组。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 定义一个自定义类型Persons</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">type</span> <span class="hljs-title class_">Persons</span> = <span class="hljs-title class_">Array</span>&lt;<span class="hljs-title class_">PersonInter</span>&gt;;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 定义一个自定义类型Persons
+export type Persons = Array<PersonInter>;
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>2. 在父组件中使用 <code>props</code></h2>
+<p>在父组件 <code>App.vue</code> 中，我们需要向子组件传递数据。这里我们使用了 <code>reactive</code> 来创建响应式的数据，并使用 <code>Persons</code> 类型来定义 <code>persons</code> 数组。</p>
+<h3><code>App.vue</code> 代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;Person :list=&quot;persons&quot;/&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup name=&quot;App&quot;&gt;
+  import Person from './components/Person.vue';
+  import { reactive } from 'vue';
+  import { type Persons } from './types';
+
+  // 使用reactive创建响应式数据，类型为Persons
+  let persons = reactive&lt;Persons&gt;([
+    { id: 'e98219e12', name: '张三', age: 18 },
+    { id: 'e98219e13', name: '李四', age: 19 },
+    { id: 'e98219e14', name: '王五', age: 20 },
+  ]);
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <Person :list=&quot;persons&quot;/>
+</template>
+
+<script lang=&quot;ts&quot; setup name=&quot;App&quot;>
+  import Person from &apos;./components/Person.vue&apos;;
+  import { reactive } from &apos;vue&apos;;
+  import { type Persons } from &apos;./types&apos;;
+
+  // 使用reactive创建响应式数据，类型为Persons
+  let persons = reactive<Persons>([
+    { id: &apos;e98219e12&apos;, name: &apos;张三&apos;, age: 18 },
+    { id: &apos;e98219e13&apos;, name: &apos;李四&apos;, age: 19 },
+    { id: &apos;e98219e14&apos;, name: &apos;王五&apos;, age: 20 },
+  ]);
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上述代码中，<code>persons</code> 数组包含了三个 <code>PersonInter</code> 类型的对象，并将其通过 <code>:list=&quot;persons&quot;</code> 传递给子组件 <code>Person</code>。</p>
+<h2>3. 在子组件中接收和使用 <code>props</code></h2>
+<p>在子组件 <code>Person.vue</code> 中，我们通过 <code>defineProps</code> 来接收父组件传递的 <code>props</code>。有三种常见的写法来定义和限制 <code>props</code> 的类型。</p>
+<h3>第一种写法：仅接收 <code>props</code></h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 第一种写法：仅接收</span>
+<span class="hljs-keyword">const</span> props = <span class="hljs-title function_">defineProps</span>([<span class="hljs-string">&#x27;list&#x27;</span>]);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 第一种写法：仅接收
+const props = defineProps([&apos;list&apos;]);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>此方法简单地接收 <code>list</code> 作为 <code>props</code>，但是它没有类型约束，适用于没有类型需求的场景。</p>
+<h3>第二种写法：接收并限制类型</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 第二种写法：接收+限制类型</span>
+defineProps&lt;{ <span class="hljs-attr">list</span>: <span class="hljs-title class_">Persons</span> }&gt;();
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 第二种写法：接收+限制类型
+defineProps<{ list: Persons }>();
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这种写法明确指定 <code>list</code> 为 <code>Persons</code> 类型，确保父组件传递的数据符合预期的结构。</p>
+<h3>第三种写法：接收、限制类型、指定默认值和必要性</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 第三种写法：接收+限制类型+指定默认值+限制必要性</span>
+<span class="hljs-keyword">let</span> props = <span class="hljs-title function_">withDefaults</span>(defineProps&lt;{ list?: <span class="hljs-title class_">Persons</span> }&gt;(), {
+  <span class="hljs-attr">list</span>: <span class="hljs-function">() =&gt;</span> [{ <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;asdasg01&#x27;</span>, <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;小猪佩奇&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> }],
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 第三种写法：接收+限制类型+指定默认值+限制必要性
+let props = withDefaults(defineProps<{ list?: Persons }>(), {
+  list: () => [{ id: &apos;asdasg01&apos;, name: &apos;小猪佩奇&apos;, age: 18 }],
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这种写法中，除了接收 <code>list</code> 作为 <code>props</code> 并限制其类型外，我们还指定了一个默认值。并且通过 <code>?</code> 符号将 <code>list</code> 设置为可选。如果父组件没有传递 <code>list</code>，则会使用默认值。<code>withDefaults</code> 使得我们可以为 <code>props</code> 提供默认值。</p>
+<h3><code>Person.vue</code> 代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;ul&gt;
+      &lt;li v-for=&quot;item in list&quot; :key=&quot;item.id&quot;&gt;
+        {{ item.name }} -- {{ item.age }}
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup name=&quot;Person&quot;&gt;
+  import { defineProps, withDefaults } from 'vue';
+  import { type PersonInter } from '@/types';
+
+  // 第三种写法：接收+限制类型+指定默认值+限制必要性
+  let props = withDefaults(defineProps&lt;{ list?: Persons }&gt;(), {
+    list: () =&gt; [{ id: 'asdasg01', name: '小猪佩奇', age: 18 }],
+  });
+
+  console.log(props);
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <ul>
+      <li v-for=&quot;item in list&quot; :key=&quot;item.id&quot;>
+        {{ item.name }} -- {{ item.age }}
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup name=&quot;Person&quot;>
+  import { defineProps, withDefaults } from &apos;vue&apos;;
+  import { type PersonInter } from &apos;@/types&apos;;
+
+  // 第三种写法：接收+限制类型+指定默认值+限制必要性
+  let props = withDefaults(defineProps<{ list?: Persons }>(), {
+    list: () => [{ id: &apos;asdasg01&apos;, name: &apos;小猪佩奇&apos;, age: 18 }],
+  });
+
+  console.log(props);
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 <code>Person.vue</code> 中，我们定义了 <code>props</code> 并使用 <code>v-for</code> 指令循环渲染每个人的名字和年龄。</p>
+<h2>4. 总结</h2>
+<p>在 Vue 3 中使用 <code>props</code> 配合 TypeScript，可以提高代码的可读性和类型安全性。通过定义接口和类型，我们能够确保父子组件传递的数据符合预期格式。我们可以通过 <code>defineProps</code> 来接收 <code>props</code>，并通过类型定义、默认值和必要性限制来精确控制传入数据的格式。</p>

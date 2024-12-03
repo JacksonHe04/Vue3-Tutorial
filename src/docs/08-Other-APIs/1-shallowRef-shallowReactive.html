@@ -1,0 +1,62 @@
+<h1>Vue 3 中的 <code>shallowRef</code> 与 <code>shallowReactive</code></h1>
+<p>在 Vue 3 的响应式系统中，<code>shallowRef</code> 和 <code>shallowReactive</code> 是两种常用的创建浅层响应式数据的方法，它们的作用是让数据的顶层属性变得响应式，但不会追踪嵌套对象内部的变化。这种浅层响应式的设计可以避免不必要的性能开销，特别是在处理深层嵌套对象时。</p>
+<h2><code>shallowRef</code></h2>
+<h3>作用</h3>
+<p><code>shallowRef</code> 用于创建一个响应式数据，但仅对数据的顶层引用进行响应式处理。也就是说，如果这个响应式变量指向一个对象或数组，只有这个对象/数组本身的引用变化会被追踪，而对象/数组内部的值的变化不会成为响应式。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { shallowRef } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">let</span> myVar = <span class="hljs-title function_">shallowRef</span>(initialValue);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { shallowRef } from &apos;vue&apos;;
+
+let myVar = shallowRef(initialValue);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<ul>
+<li><code>initialValue</code> 是初始化的值，<code>myVar</code> 现在是一个响应式对象，只有顶层的引用变化会触发视图更新。</li>
+</ul>
+<h3>特点</h3>
+<ul>
+<li>只会跟踪引用的变化。</li>
+<li>如果 <code>myVar</code> 是一个对象或数组，修改对象内部的属性不会触发更新。</li>
+<li>用于避免深度响应式所带来的性能开销。</li>
+</ul>
+<h2><code>shallowReactive</code></h2>
+<h3>作用</h3>
+<p><code>shallowReactive</code> 用于创建一个浅层响应式对象，只会让对象的最顶层属性变成响应式的。对象内部的嵌套属性不会变成响应式，这与 <code>shallowRef</code> 类似，但是 <code>shallowReactive</code> 适用于整个对象，而不仅仅是引用值。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { shallowReactive } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> myObj = <span class="hljs-title function_">shallowReactive</span>({ <span class="hljs-attr">key1</span>: <span class="hljs-string">&#x27;value1&#x27;</span>, <span class="hljs-attr">key2</span>: { <span class="hljs-attr">nestedKey</span>: <span class="hljs-string">&#x27;nestedValue&#x27;</span> } });
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { shallowReactive } from &apos;vue&apos;;
+
+const myObj = shallowReactive({ key1: &apos;value1&apos;, key2: { nestedKey: &apos;nestedValue&apos; } });
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<ul>
+<li><code>myObj</code> 是一个响应式对象，<code>key1</code> 会变成响应式，但 <code>key2</code> 内部的 <code>nestedKey</code> 不会变成响应式。</li>
+</ul>
+<h3>特点</h3>
+<ul>
+<li>对象的顶层属性会变成响应式，但嵌套对象的属性不会。</li>
+<li>适用于你不需要追踪深层属性变化的场景。</li>
+</ul>
+<h2>总结</h2>
+<p><code>shallowRef</code> 和 <code>shallowReactive</code> 都是 Vue 3 响应式系统中的浅层响应式 API。它们通过仅追踪顶层属性的变化，而避免了对嵌套对象每一层都进行响应式处理，从而有效提升性能。选择使用哪一个取决于你的需求：</p>
+<ul>
+<li><strong><code>shallowRef</code></strong>：适用于引用类型的响应式，特别是对于对象、数组等结构的引用变化。</li>
+<li><strong><code>shallowReactive</code></strong>：适用于整个对象的浅层响应式，但不追踪嵌套对象的属性变化。</li>
+</ul>
+<p>通过这些 API，开发者可以在需要时更灵活地控制响应式的深度，从而优化性能。</p>

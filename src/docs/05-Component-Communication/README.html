@@ -1,0 +1,60 @@
+<h1>05-Component-Communication: Vue 组件通信</h1>
+<p><strong><code>Vue3</code>组件通信和<code>Vue2</code>的区别：</strong></p>
+<ul>
+<li>移出事件总线，使用<code>mitt</code>代替。</li>
+</ul>
+<ul>
+<li><code>vuex</code>换成了<code>pinia</code>。</li>
+<li>把<code>.sync</code>优化到了<code>v-model</code>里面了。</li>
+<li>把<code>$listeners</code>所有的东西，合并到<code>$attrs</code>中了。</li>
+<li><code>$children</code>被砍掉了。</li>
+</ul>
+<h2>目录结构</h2>
+<h3>1. 基础通信</h3>
+<p>介绍 Vue 组件通信的基础方法，涵盖父子组件之间的通信方式。</p>
+<ul>
+<li>
+<p><a href="01-Basic-Communication/1-Props%E4%BC%A0%E5%80%BC%E4%B8%8E%E7%B1%BB%E5%9E%8B%E5%AE%9A%E4%B9%89.md">Props 传值与类型定义</a><br>
+讲解如何通过 <code>props</code> 在父组件和子组件之间传递数据，并介绍如何为 <code>props</code> 定义类型。</p>
+</li>
+<li>
+<p><a href="01-Basic-Communication/2-%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84Props%E9%80%9A%E4%BF%A1.md">父子组件的 Props 通信</a><br>
+详细介绍父子组件之间的 <code>props</code> 传值方式以及如何进行父子组件的通信。</p>
+</li>
+<li>
+<p><a href="01-Basic-Communication/3-%E7%88%B6%E5%AD%90%E7%BB%84%E4%BB%B6%E7%9A%84v-model%E5%8F%8C%E5%90%91%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A.md">父子组件的 v-model 双向数据绑定</a><br>
+探讨如何使用 <code>v-model</code> 实现父子组件之间的双向绑定，提升交互体验。</p>
+</li>
+</ul>
+<h3>2. 高级通信</h3>
+<p>介绍 Vue 中的一些高级通信方法，适用于复杂的组件间数据传递。</p>
+<ul>
+<li>
+<p><a href="02-Advanced-Communication/1-Provide%E5%92%8CInject%E5%AE%9E%E7%8E%B0%E7%A5%96%E5%AD%99%E7%BB%84%E4%BB%B6%E9%80%9A%E4%BF%A1.md">Provide 和 Inject 实现祖孙组件通信</a><br>
+讲解如何使用 <code>provide</code> 和 <code>inject</code> 实现祖孙组件之间的数据共享，避免过多的层级传递。</p>
+</li>
+<li>
+<p><a href="02-Advanced-Communication/2-%E8%87%AA%E5%AE%9A%E4%B9%89%E4%BA%8B%E4%BB%B6.md">自定义事件</a><br>
+介绍如何通过自定义事件在 Vue 中实现跨组件的通信，适用于非父子关系的组件。</p>
+</li>
+<li>
+<p><a href="02-Advanced-Communication/3-Mitt.md">Mitt</a><br>
+探讨如何使用 <code>Mitt</code> 库进行全局事件处理，简化跨组件间的事件通信。</p>
+</li>
+</ul>
+<h3>3. 附加功能</h3>
+<p>介绍 Vue 中一些常见的附加功能，增强组件间的交互性。</p>
+<ul>
+<li>
+<p><a href="03-Additional-Features/1-Slot%E6%8F%92%E6%A7%BD%E8%AF%A6%E8%A7%A3.md">Slot 插槽详解</a><br>
+深入讲解 Vue 中的插槽，如何通过插槽实现组件的内容分发和布局。</p>
+</li>
+<li>
+<p><a href="./03-Additional-Features/2-$attrs.md">$attrs</a><br>
+介绍 <code>$attrs</code> 对象的使用，如何获取父组件传递给子组件的属性。</p>
+</li>
+<li>
+<p><a href="./03-Additional-Features/3-$refs%E4%B8%8E$parent.md">$refs 与 $parent</a><br>
+探讨如何使用 <code>$refs</code> 和 <code>$parent</code> 获取子组件引用及访问父组件实例。</p>
+</li>
+</ul>

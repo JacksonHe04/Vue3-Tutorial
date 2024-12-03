@@ -1,0 +1,222 @@
+<h1>路由组件和一般组件</h1>
+<p>在Vue 3的项目中，组织组件的方式有助于提升代码的可维护性和可扩展性。通常情况下，我们会将路由组件和一般组件放置在不同的文件夹中，并通过项目的文件结构来区分它们。</p>
+<h2>组件的文件夹命名和区分</h2>
+<p>一般来说，组件可以按功能或用途进行分类。例如：</p>
+<ul>
+<li><strong>一般组件</strong>：通常是页面中复用的UI组件、功能组件，存放在 <code>src/components/</code> 文件夹下。</li>
+<li><strong>路由组件</strong>：用于页面级的路由组件，通常放在 <code>src/views/</code> 文件夹下。</li>
+</ul>
+<p>例如，项目结构可以是这样的：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs"><span class="hljs-attribute">src</span>/
+  components/
+    Header<span class="hljs-selector-class">.vue</span>
+    Footer<span class="hljs-selector-class">.vue</span>
+  views/
+    Home<span class="hljs-selector-class">.vue</span>
+    About<span class="hljs-selector-class">.vue</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="src/
+  components/
+    Header.vue
+    Footer.vue
+  views/
+    Home.vue
+    About.vue
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>路由组件和一般组件的特点</h3>
+<ol>
+<li>
+<p><strong>路由组件</strong>：</p>
+<ul>
+<li>路由组件通常对应于每一个页面（或视图），并且与路由配置紧密相关。</li>
+<li>每个路由组件在路由切换时会被挂载和卸载。</li>
+<li>路由组件一般存放在 <code>views</code> 文件夹中，方便根据路由路径进行匹配。</li>
+</ul>
+</li>
+<li>
+<p><strong>一般组件</strong>：</p>
+<ul>
+<li>一般组件用于页面中的局部功能，通常是UI组件，如按钮、表单、列表等。</li>
+<li>它们不会直接与路由挂钩，而是由其他组件（如路由组件）引入使用。</li>
+<li>一般组件存放在 <code>components</code> 文件夹中。</li>
+</ul>
+</li>
+</ol>
+<h3>示例</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-comment">// routes.js</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">Home</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./views/Home.vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">About</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./views/About.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> routes = [
+  {
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/&#x27;</span>,
+    <span class="hljs-attr">component</span>: <span class="hljs-title class_">Home</span>
+  },
+  {
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/about&#x27;</span>,
+    <span class="hljs-attr">component</span>: <span class="hljs-title class_">About</span>
+  }
+];
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// routes.js
+import Home from &apos;./views/Home.vue&apos;;
+import About from &apos;./views/About.vue&apos;;
+
+const routes = [
+  {
+    path: &apos;/&apos;,
+    component: Home
+  },
+  {
+    path: &apos;/about&apos;,
+    component: About
+  }
+];
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>引入和使用Header组件</h2>
+<p>假设我们有一个 <code>Header.vue</code> 组件，它可能是一个通用的头部组件，在多个页面中都需要使用。那么我们可以在任何需要的页面（如 <code>Home.vue</code> 或 <code>About.vue</code>）中引入这个组件。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;!-- Home.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;Header /&gt;
+    &lt;h1&gt;Welcome to Home Page&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import Header from '../components/Header.vue';
+
+export default {
+  components: {
+    Header
+  }
+};
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- Home.vue -->
+<template>
+  <div>
+    <Header />
+    <h1>Welcome to Home Page</h1>
+  </div>
+</template>
+
+<script>
+import Header from &apos;../components/Header.vue&apos;;
+
+export default {
+  components: {
+    Header
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>路由组件的存放位置以及如何使用生命周期钩子来验证组件的挂载和卸载</h2>
+<p>在Vue 3项目中，路由组件会随着路由的切换而进行挂载和卸载。你可以使用生命周期钩子函数来验证这一过程。</p>
+<h3>项目中的文件夹结构和组件放置位置</h3>
+<p>在Vue项目中，通常将路由组件放在 <code>views</code> 文件夹，将其他一般组件放在 <code>components</code> 文件夹中。这样可以确保路由组件与其他功能组件有清晰的区分。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs"><span class="hljs-attribute">src</span>/
+  components/
+    Header<span class="hljs-selector-class">.vue</span>
+    Footer<span class="hljs-selector-class">.vue</span>
+  views/
+    Home<span class="hljs-selector-class">.vue</span>
+    About<span class="hljs-selector-class">.vue</span>
+  router/
+    index<span class="hljs-selector-class">.js</span>  <span class="hljs-comment">// 路由配置</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="src/
+  components/
+    Header.vue
+    Footer.vue
+  views/
+    Home.vue
+    About.vue
+  router/
+    index.js  // 路由配置
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>使用生命周期钩子函数实现组件的挂载和卸载</h3>
+<p>在Vue的路由组件中，可以使用 <code>onMounted</code> 和 <code>onBeforeUnmount</code> 钩子函数来验证组件的挂载和卸载过程。例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;!-- Home.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;Home Page&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import { onMounted, onBeforeUnmount } from 'vue';
+
+export default {
+  setup() {
+    onMounted(() =&gt; {
+      console.log('Home component mounted');
+    });
+
+    onBeforeUnmount(() =&gt; {
+      console.log('Home component will unmount');
+    });
+  }
+};
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- Home.vue -->
+<template>
+  <div>
+    <h1>Home Page</h1>
+  </div>
+</template>
+
+<script>
+import { onMounted, onBeforeUnmount } from &apos;vue&apos;;
+
+export default {
+  setup() {
+    onMounted(() => {
+      console.log(&apos;Home component mounted&apos;);
+    });
+
+    onBeforeUnmount(() => {
+      console.log(&apos;Home component will unmount&apos;);
+    });
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在切换路由时，<code>onMounted</code> 会在组件挂载时触发，<code>onBeforeUnmount</code> 会在组件即将卸载时触发。</p>
+<h2>组件的挂载和卸载过程</h2>
+<ul>
+<li><strong>挂载</strong>：当路由匹配到一个新的组件时，Vue会将该组件挂载到页面上。</li>
+<li><strong>卸载</strong>：当用户导航到其他路由时，当前的组件将被卸载，生命周期钩子中的 <code>onBeforeUnmount</code> 会触发。</li>
+</ul>
+<p>通过这种方式，你可以在Vue中有效地管理组件的生命周期，确保组件的挂载和卸载过程按照需求进行。</p>

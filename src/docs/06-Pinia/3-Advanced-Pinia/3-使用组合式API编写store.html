@@ -1,0 +1,138 @@
+<h1>Vue 3 中的 Pinia 状态管理：使用组合式 API 编写 <code>store</code></h1>
+<h2>1. 概念</h2>
+<p>在 Pinia 中，除了传统的选项式写法（通过对象配置 <code>state</code>、<code>getters</code> 和 <code>actions</code>），我们还可以使用组合式 API 来定义 <code>store</code>，这种方式更符合 Vue 3 的响应式设计理念。组合式写法通过 <code>defineStore</code> 函数并传入一个工厂函数来创建 <code>store</code>，使得代码更加灵活和模块化。</p>
+<h2>2. 使用组合式 API 定义 <code>store</code></h2>
+<p>在组合式写法中，我们可以像在组件的 <code>setup</code> 函数中那样，使用 <code>reactive</code>、<code>ref</code> 等响应式 API 来定义状态，并使用普通函数来处理业务逻辑。这样可以实现更加灵活的 <code>store</code> 结构，并让状态管理与组件逻辑更加贴合。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { defineStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+<span class="hljs-keyword">import</span> axios <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;axios&#x27;</span>
+<span class="hljs-keyword">import</span> { nanoid } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;nanoid&#x27;</span>
+<span class="hljs-keyword">import</span> { reactive } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useTalkStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;talk&#x27;</span>, <span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-comment">// talkList 就是 state</span>
+  <span class="hljs-keyword">const</span> talkList = <span class="hljs-title function_">reactive</span>(
+    <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">parse</span>(<span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">getItem</span>(<span class="hljs-string">&#x27;talkList&#x27;</span>) <span class="hljs-keyword">as</span> <span class="hljs-built_in">string</span>) || []
+  )
+
+  <span class="hljs-comment">// getATalk 函数相当于 action</span>
+  <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getATalk</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// 发请求，下面这行的写法是：连续解构赋值 + 重命名</span>
+    <span class="hljs-keyword">let</span> { <span class="hljs-attr">data</span>: { <span class="hljs-attr">content</span>: title } } = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;https://api.uomg.com/api/rand.qinghua?format=json&#x27;</span>)
+
+    <span class="hljs-comment">// 把请求回来的字符串，包装成一个对象</span>
+    <span class="hljs-keyword">let</span> obj = { <span class="hljs-attr">id</span>: <span class="hljs-title function_">nanoid</span>(), title }
+
+    <span class="hljs-comment">// 放到数组中</span>
+    talkList.<span class="hljs-title function_">unshift</span>(obj)
+
+    <span class="hljs-comment">// 更新到 localStorage 中</span>
+    <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&#x27;talkList&#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(talkList))
+  }
+
+  <span class="hljs-comment">// 返回 state 和 action</span>
+  <span class="hljs-keyword">return</span> { talkList, getATalk }
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { defineStore } from &apos;pinia&apos;
+import axios from &apos;axios&apos;
+import { nanoid } from &apos;nanoid&apos;
+import { reactive } from &apos;vue&apos;
+
+export const useTalkStore = defineStore(&apos;talk&apos;, () => {
+  // talkList 就是 state
+  const talkList = reactive(
+    JSON.parse(localStorage.getItem(&apos;talkList&apos;) as string) || []
+  )
+
+  // getATalk 函数相当于 action
+  async function getATalk() {
+    // 发请求，下面这行的写法是：连续解构赋值 + 重命名
+    let { data: { content: title } } = await axios.get(&apos;https://api.uomg.com/api/rand.qinghua?format=json&apos;)
+
+    // 把请求回来的字符串，包装成一个对象
+    let obj = { id: nanoid(), title }
+
+    // 放到数组中
+    talkList.unshift(obj)
+
+    // 更新到 localStorage 中
+    localStorage.setItem(&apos;talkList&apos;, JSON.stringify(talkList))
+  }
+
+  // 返回 state 和 action
+  return { talkList, getATalk }
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>代码解释</h3>
+<ul>
+<li>
+<p><strong><code>state</code>（<code>talkList</code>）</strong>：使用 Vue 3 的 <code>reactive</code> API 来定义 <code>talkList</code>，它会根据 <code>localStorage</code> 中的存储值初始化，如果没有存储值则默认是一个空数组。</p>
+</li>
+<li>
+<p><strong><code>action</code>（<code>getATalk</code>）</strong>：这是一个异步函数，使用 <code>axios</code> 请求数据并将获取到的数据（如 <code>title</code>）包装成一个对象，生成一个唯一的 <code>id</code>，然后将这个对象插入到 <code>talkList</code> 数组的前面。</p>
+</li>
+<li>
+<p><strong><code>localStorage</code> 持久化</strong>：每次更新 <code>talkList</code> 后，都把最新的状态存储到 <code>localStorage</code> 中，以便页面刷新后依然可以保持数据。</p>
+</li>
+</ul>
+<h3>使用组合式 API 的优势</h3>
+<ul>
+<li><strong>灵活性</strong>：组合式 API 让你可以像在 Vue 组件中一样使用响应式数据和函数，这样的结构更符合 Vue 3 的设计哲学，代码更加简洁易懂。</li>
+<li><strong>模块化</strong>：每个 <code>store</code> 都是一个独立的功能单元，可以通过工厂函数来定义和组合，便于拆分和维护。</li>
+<li><strong>方便管理副作用</strong>：通过 <code>setup</code> 中定义的函数（如 <code>getATalk</code>），可以轻松管理异步操作或其他副作用，逻辑更加清晰。</li>
+</ul>
+<h2>3. 组件中使用组合式 <code>store</code></h2>
+<p>在组件中，我们可以通过调用 <code>useTalkStore</code> 获取到 <code>store</code>，然后直接访问 <code>state</code> 和 <code>action</code>，以进行数据操作或显示。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { useTalkStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./stores/talkStore&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> { talkList, getATalk } = <span class="hljs-title function_">useTalkStore</span>()
+
+    <span class="hljs-comment">// 调用 getATalk 获取新的数据</span>
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">fetchTalk</span> = <span class="hljs-keyword">async</span> (<span class="hljs-params"></span>) =&gt; {
+      <span class="hljs-keyword">await</span> <span class="hljs-title function_">getATalk</span>()
+    }
+
+    <span class="hljs-keyword">return</span> {
+      talkList,
+      fetchTalk
+    }
+  }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { useTalkStore } from &apos;./stores/talkStore&apos;
+
+export default {
+  setup() {
+    const { talkList, getATalk } = useTalkStore()
+
+    // 调用 getATalk 获取新的数据
+    const fetchTalk = async () => {
+      await getATalk()
+    }
+
+    return {
+      talkList,
+      fetchTalk
+    }
+  }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，我们在组件中使用 <code>useTalkStore</code> 获取 <code>store</code>，并通过 <code>talkList</code> 获取状态数据，调用 <code>fetchTalk</code> 函数来触发异步获取数据的操作。</p>
+<h2>4. 总结</h2>
+<p>使用 Pinia 的组合式 API 来定义 <code>store</code> 是一种灵活、简洁的写法，它让我们能够充分利用 Vue 3 的响应式系统，并且使得 <code>state</code>、<code>action</code> 和副作用处理更加模块化。在大型应用中，这种写法可以帮助我们将每个功能单元进行清晰地分离和管理。</p>

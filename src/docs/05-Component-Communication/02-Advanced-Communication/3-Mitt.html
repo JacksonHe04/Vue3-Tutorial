@@ -1,0 +1,153 @@
+<h1>【mitt】</h1>
+<h2>1. 概述</h2>
+<p><code>mitt</code> 是一个轻量级的事件总线库，通常用于实现组件之间的消息订阅与发布（<code>pubsub</code>）功能。它能够帮助我们在任意组件之间传递数据，而无需通过父子组件的方式进行传递。</p>
+<p>这种方式常用于跨组件的通信场景，尤其是当组件之间没有直接关系时。通过事件总线，任意组件可以通过订阅和发布事件来实现通信。</p>
+<h2>2. 安装 <code>mitt</code></h2>
+<p>在项目中使用 <code>mitt</code> 之前，需要先安装它：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-shell">npm i mitt
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="npm i mitt
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>3. 配置事件总线</h2>
+<h3>创建事件总线</h3>
+<p>在 <code>src/utils/emitter.ts</code> 文件中创建事件总线 <code>emitter</code>，并对外暴露：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-comment">// 引入mitt</span>
+<span class="hljs-keyword">import</span> mitt <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;mitt&quot;</span>;
+
+<span class="hljs-comment">// 创建emitter</span>
+<span class="hljs-keyword">const</span> emitter = <span class="hljs-title function_">mitt</span>()
+
+<span class="hljs-comment">/*
+  // 绑定事件
+  emitter.on(&#x27;abc&#x27;, (value) =&gt; {
+    console.log(&#x27;abc事件被触发&#x27;, value)
+  })
+  
+  emitter.on(&#x27;xyz&#x27;, (value) =&gt; {
+    console.log(&#x27;xyz事件被触发&#x27;, value)
+  })
+
+  setInterval(() =&gt; {
+    // 触发事件
+    emitter.emit(&#x27;abc&#x27;, 666)
+    emitter.emit(&#x27;xyz&#x27;, 777)
+  }, 1000);
+
+  setTimeout(() =&gt; {
+    // 清理事件
+    emitter.all.clear()
+  }, 3000);
+*/</span>
+
+<span class="hljs-comment">// 创建并暴露mitt</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> emitter
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 引入mitt
+import mitt from &quot;mitt&quot;;
+
+// 创建emitter
+const emitter = mitt()
+
+/*
+  // 绑定事件
+  emitter.on(&apos;abc&apos;, (value) => {
+    console.log(&apos;abc事件被触发&apos;, value)
+  })
+  
+  emitter.on(&apos;xyz&apos;, (value) => {
+    console.log(&apos;xyz事件被触发&apos;, value)
+  })
+
+  setInterval(() => {
+    // 触发事件
+    emitter.emit(&apos;abc&apos;, 666)
+    emitter.emit(&apos;xyz&apos;, 777)
+  }, 1000);
+
+  setTimeout(() => {
+    // 清理事件
+    emitter.all.clear()
+  }, 3000);
+*/
+
+// 创建并暴露mitt
+export default emitter
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上面的代码中，我们创建了 <code>emitter</code> 实例，并绑定了两个事件 <code>abc</code> 和 <code>xyz</code>。通过 <code>setInterval</code> 来周期性地触发这些事件。同时，我们还通过 <code>setTimeout</code> 来清理所有的事件。</p>
+<h2>4. 组件中使用事件总线</h2>
+<h3>4.1. 接收数据的组件</h3>
+<p>在接收数据的组件中，我们需要绑定事件并在组件销毁前解绑事件：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> emitter <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@/utils/emitter&quot;</span>;
+<span class="hljs-keyword">import</span> { onUnmounted } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+
+<span class="hljs-comment">// 绑定事件</span>
+emitter.<span class="hljs-title function_">on</span>(<span class="hljs-string">&#x27;send-toy&#x27;</span>, <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;send-toy事件被触发&#x27;</span>, value)
+})
+
+<span class="hljs-title function_">onUnmounted</span>(<span class="hljs-function">() =&gt;</span> {
+  <span class="hljs-comment">// 解绑事件</span>
+  emitter.<span class="hljs-title function_">off</span>(<span class="hljs-string">&#x27;send-toy&#x27;</span>)
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import emitter from &quot;@/utils/emitter&quot;;
+import { onUnmounted } from &quot;vue&quot;;
+
+// 绑定事件
+emitter.on(&apos;send-toy&apos;, (value) => {
+  console.log(&apos;send-toy事件被触发&apos;, value)
+})
+
+onUnmounted(() => {
+  // 解绑事件
+  emitter.off(&apos;send-toy&apos;)
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，当 <code>send-toy</code> 事件被触发时，组件会打印出相关数据。当组件卸载时，通过 <code>onUnmounted</code> 钩子来解绑事件，避免内存泄漏。</p>
+<h3>4.2. 触发事件的组件</h3>
+<p>在提供数据的组件中，我们可以在合适的时机触发事件：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> emitter <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;@/utils/emitter&quot;</span>;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">sendToy</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-comment">// 触发事件</span>
+  emitter.<span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;send-toy&#x27;</span>, toy.<span class="hljs-property">value</span>)
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import emitter from &quot;@/utils/emitter&quot;;
+
+function sendToy() {
+  // 触发事件
+  emitter.emit(&apos;send-toy&apos;, toy.value)
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>sendToy</code> 函数通过 <code>emitter.emit</code> 触发了 <code>send-toy</code> 事件，并将 <code>toy.value</code> 作为事件数据传递出去。</p>
+<h2>5. 注意事项</h2>
+<ul>
+<li><strong>事件总线依赖关系</strong>：<code>mitt</code> 的事件总线依赖于组件之间的事件绑定和解绑。在适当的生命周期钩子中进行解绑（如 <code>onUnmounted</code>）非常重要，以避免潜在的内存泄漏问题。</li>
+<li><strong>事件命名</strong>：事件名是任意的，但应遵循一定的命名规范，以避免命名冲突。</li>
+</ul>
+<p><code>mitt</code> 提供了一个简洁的方式来进行跨组件的通信，特别适用于非父子关系的组件间数据传递。</p>

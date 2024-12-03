@@ -1,0 +1,59 @@
+<h1>自定义事件</h1>
+<h2>1. 概述</h2>
+<p>自定义事件常用于子组件向父组件传递数据的场景，通常以 <strong>子 =&gt; 父</strong> 的形式进行事件通信。</p>
+<h2>2. 原生事件与自定义事件的区别</h2>
+<h3>原生事件</h3>
+<ul>
+<li><strong>事件名是特定的</strong>：如 <code>click</code>、<code>mouseenter</code> 等，具有固定的名称。</li>
+<li><strong>事件对象</strong>：原生事件中的事件对象 <code>$event</code> 包含事件相关的各种信息，如：
+<ul>
+<li><code>pageX</code>、<code>pageY</code>：鼠标点击的页面坐标</li>
+<li><code>target</code>：触发事件的目标元素</li>
+<li><code>keyCode</code>：键盘事件中的按键编码</li>
+</ul>
+</li>
+</ul>
+<h3>自定义事件</h3>
+<ul>
+<li>
+<p><strong>事件名是任意名称</strong>：可以根据需要自定义事件名。</p>
+</li>
+<li>
+<p><strong>事件对象</strong>：自定义事件中的 <code>$event</code> 是触发 <code>emit</code> 时传递的自定义数据，可以是任意类型的数据，如字符串、对象、数组等。</p>
+<p><strong>注意：</strong> 事件对象 <code>$event</code> 是自定义数据类型，不同于原生事件中的标准事件对象。</p>
+</li>
+</ul>
+<h2>3. 示例</h2>
+<h3>在父组件中，给子组件绑定自定义事件</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-comment">&lt;!-- 在父组件中，给子组件绑定自定义事件： --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">Child</span> @<span class="hljs-attr">send-toy</span>=<span class="hljs-string">&quot;toy = $event&quot;</span> /&gt;</span>
+
+<span class="hljs-comment">&lt;!-- 注意区分原生事件与自定义事件中的$event --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;toy = $event&quot;</span>&gt;</span>测试<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- 在父组件中，给子组件绑定自定义事件： -->
+<Child @send-toy=&quot;toy = $event&quot; />
+
+<!-- 注意区分原生事件与自定义事件中的$event -->
+<button @click=&quot;toy = $event&quot;>测试</button>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>在子组件中，触发自定义事件</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-comment">// 子组件中，触发事件：</span>
+<span class="hljs-variable language_">this</span>.$emit(<span class="hljs-string">&#x27;send-toy&#x27;</span>, <span class="hljs-string">&#x27;具体数据&#x27;</span>)
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 子组件中，触发事件：
+this.$emit(&apos;send-toy&apos;, &apos;具体数据&apos;)
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上述代码中，父组件通过 <code>@send-toy=&quot;toy = $event&quot;</code> 来监听子组件发出的 <code>send-toy</code> 事件，并将事件对象（即 <code>$event</code>）赋值给 <code>toy</code>。子组件通过 <code>this.$emit('send-toy', 具体数据)</code> 来触发该事件，并将 <code>'具体数据'</code> 作为事件对象传递给父组件。</p>

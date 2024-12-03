@@ -1,0 +1,195 @@
+<h1>存储+读取数据</h1>
+<p>在 Pinia 中，<code>Store</code> 是一个保存 <strong>状态</strong>、<strong>业务逻辑</strong> 的实体，它不仅可以让每个组件读取数据，还能写入数据。通过 Pinia，可以很方便地管理 Vue 应用中的全局状态。</p>
+<h2>Store 的三个概念</h2>
+<p>在 Pinia 中，<code>Store</code> 由三个主要部分组成：</p>
+<ol>
+<li><strong>state</strong>：保存数据的地方，类似于 Vue 组件中的 <code>data</code>。</li>
+<li><strong>getter</strong>：用于计算派生状态，类似于 Vue 组件中的 <code>computed</code>。</li>
+<li><strong>action</strong>：包含业务逻辑，通常是操作 <code>state</code> 数据的方法，类似于 Vue 组件中的 <code>methods</code>。</li>
+</ol>
+<h2>编写 <code>Store</code></h2>
+<h3>示例 1：创建一个计数器 Store</h3>
+<p>在 <code>src/store/count.ts</code> 中，定义一个名为 <code>useCountStore</code> 的 Store。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 引入 defineStore 用于创建 store</span>
+<span class="hljs-keyword">import</span> { defineStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-comment">// 定义并暴露一个 store</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useCountStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;count&#x27;</span>, {
+  <span class="hljs-comment">// 动作</span>
+  <span class="hljs-attr">actions</span>: {
+    <span class="hljs-title function_">increment</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">sum</span> += <span class="hljs-number">1</span>
+    },
+    <span class="hljs-title function_">decrement</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">sum</span> -= <span class="hljs-number">1</span>
+    }
+  },
+  <span class="hljs-comment">// 状态</span>
+  <span class="hljs-title function_">state</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">sum</span>: <span class="hljs-number">6</span>
+    }
+  },
+  <span class="hljs-comment">// 计算</span>
+  <span class="hljs-attr">getters</span>: {}
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 引入 defineStore 用于创建 store
+import { defineStore } from &apos;pinia&apos;
+
+// 定义并暴露一个 store
+export const useCountStore = defineStore(&apos;count&apos;, {
+  // 动作
+  actions: {
+    increment() {
+      this.sum += 1
+    },
+    decrement() {
+      this.sum -= 1
+    }
+  },
+  // 状态
+  state() {
+    return {
+      sum: 6
+    }
+  },
+  // 计算
+  getters: {}
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>示例 2：创建一个聊天记录 Store</h3>
+<p>在 <code>src/store/talk.ts</code> 中，定义一个名为 <code>useTalkStore</code> 的 Store。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 引入 defineStore 用于创建 store</span>
+<span class="hljs-keyword">import</span> { defineStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-comment">// 定义并暴露一个 store</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useTalkStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;talk&#x27;</span>, {
+  <span class="hljs-comment">// 动作</span>
+  <span class="hljs-attr">actions</span>: {
+    <span class="hljs-title function_">addTalk</span>(<span class="hljs-params"><span class="hljs-attr">content</span>: <span class="hljs-built_in">string</span></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">talkList</span>.<span class="hljs-title function_">push</span>({ <span class="hljs-attr">id</span>: <span class="hljs-string">`yuysada0<span class="hljs-subst">${<span class="hljs-variable language_">this</span>.talkList.length + <span class="hljs-number">1</span>}</span>`</span>, content })
+    }
+  },
+  <span class="hljs-comment">// 状态</span>
+  <span class="hljs-title function_">state</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">talkList</span>: [
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;yuysada01&#x27;</span>, <span class="hljs-attr">content</span>: <span class="hljs-string">&#x27;你今天有点怪，哪里怪？怪好看的！&#x27;</span> },
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;yuysada02&#x27;</span>, <span class="hljs-attr">content</span>: <span class="hljs-string">&#x27;草莓、蓝莓、蔓越莓，你想我了没？&#x27;</span> },
+        { <span class="hljs-attr">id</span>: <span class="hljs-string">&#x27;yuysada03&#x27;</span>, <span class="hljs-attr">content</span>: <span class="hljs-string">&#x27;心里给你留了一块地，我的死心塌地&#x27;</span> }
+      ]
+    }
+  },
+  <span class="hljs-comment">// 计算</span>
+  <span class="hljs-attr">getters</span>: {}
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 引入 defineStore 用于创建 store
+import { defineStore } from &apos;pinia&apos;
+
+// 定义并暴露一个 store
+export const useTalkStore = defineStore(&apos;talk&apos;, {
+  // 动作
+  actions: {
+    addTalk(content: string) {
+      this.talkList.push({ id: `yuysada0${this.talkList.length + 1}`, content })
+    }
+  },
+  // 状态
+  state() {
+    return {
+      talkList: [
+        { id: &apos;yuysada01&apos;, content: &apos;你今天有点怪，哪里怪？怪好看的！&apos; },
+        { id: &apos;yuysada02&apos;, content: &apos;草莓、蓝莓、蔓越莓，你想我了没？&apos; },
+        { id: &apos;yuysada03&apos;, content: &apos;心里给你留了一块地，我的死心塌地&apos; }
+      ]
+    }
+  },
+  // 计算
+  getters: {}
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>在组件中使用 <code>Store</code></h2>
+<h3>示例 1：使用计数器 Store</h3>
+<p>在 Vue 组件中，使用 Pinia 提供的 <code>useCountStore</code> 获取计数器的状态，并显示求和结果。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;h2&gt;当前求和为：{{ sumStore.sum }}&lt;/h2&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Count&quot;&gt;
+  // 引入对应的 store
+  import { useCountStore } from '@/store/count'
+  
+  // 调用 useCountStore 获取 store 实例
+  const sumStore = useCountStore()
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <h2>当前求和为：{{ sumStore.sum }}</h2>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Count&quot;>
+  // 引入对应的 store
+  import { useCountStore } from &apos;@/store/count&apos;
+  
+  // 调用 useCountStore 获取 store 实例
+  const sumStore = useCountStore()
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>示例 2：使用聊天记录 Store</h3>
+<p>同样的方式，可以在 Vue 组件中使用 <code>useTalkStore</code> 获取聊天记录并渲染在页面中。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;ul&gt;
+    &lt;li v-for=&quot;talk in talkStore.talkList&quot; :key=&quot;talk.id&quot;&gt;
+      {{ talk.content }}
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Talk&quot;&gt;
+  import { useTalkStore } from '@/store/talk'
+  
+  const talkStore = useTalkStore()
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <ul>
+    <li v-for=&quot;talk in talkStore.talkList&quot; :key=&quot;talk.id&quot;>
+      {{ talk.content }}
+    </li>
+  </ul>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Talk&quot;>
+  import { useTalkStore } from &apos;@/store/talk&apos;
+  
+  const talkStore = useTalkStore()
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>小结</h2>
+<p>通过 Pinia 的 <code>state</code>、<code>getter</code> 和 <code>action</code>，我们能够在全局范围内管理应用的状态。组件中通过 <code>useStore</code> 函数来访问和更新状态，避免了 Vuex 的复杂配置和写法，同时保持了简单和清晰的状态管理模式。</p>

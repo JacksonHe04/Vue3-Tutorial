@@ -1,0 +1,185 @@
+<h1>自定义 Hook</h1>
+<p>在 Vue 3 中，<code>hook</code> 是一个函数，它封装了 <code>setup</code> 函数中使用的 Composition API。自定义 <code>hook</code> 主要目的是为了复用代码、提高可维护性，并使 <code>setup</code> 中的逻辑更加清晰易懂。自定义 <code>hook</code> 的思想类似于 Vue 2.x 中的 <code>mixin</code>，但更加灵活和清晰。</p>
+<h2>什么是 <code>hook</code>？</h2>
+<p><code>hook</code> 本质上是一个普通的 JavaScript 函数，它可以在 <code>setup</code> 中使用并返回响应式的数据或方法。<code>hook</code> 允许我们将某些逻辑或功能抽象成一个函数，便于在多个组件之间复用。</p>
+<h2>自定义 <code>hook</code> 的优势</h2>
+<ul>
+<li><strong>复用代码</strong>：通过抽象逻辑到独立的 <code>hook</code> 中，可以在不同的组件之间复用代码，避免重复编写相似的逻辑。</li>
+<li><strong>提高代码清晰度</strong>：将复杂的逻辑拆分成多个自定义 <code>hook</code>，让每个 <code>setup</code> 函数中的逻辑更加简洁和易于理解。</li>
+<li><strong>解耦</strong>：将与组件功能无关的逻辑提取到 <code>hook</code> 中，使得组件更加专注于其展示和交互功能。</li>
+</ul>
+<h2>示例代码</h2>
+<h3>示例 1: <code>useSum.ts</code></h3>
+<p>这个示例展示了一个简单的 <code>hook</code>，它管理一个数字的加减操作。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { ref, onMounted } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">let</span> sum = <span class="hljs-title function_">ref</span>(<span class="hljs-number">0</span>)
+
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">increment</span> = (<span class="hljs-params"></span>) =&gt; {
+    sum.<span class="hljs-property">value</span> += <span class="hljs-number">1</span>
+  }
+  
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">decrement</span> = (<span class="hljs-params"></span>) =&gt; {
+    sum.<span class="hljs-property">value</span> -= <span class="hljs-number">1</span>
+  }
+
+  <span class="hljs-comment">// 在组件挂载时自动增加 1</span>
+  <span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">increment</span>()
+  })
+
+  <span class="hljs-comment">// 向外部暴露数据和方法</span>
+  <span class="hljs-keyword">return</span> { sum, increment, decrement }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { ref, onMounted } from &apos;vue&apos;
+
+export default function() {
+  let sum = ref(0)
+
+  const increment = () => {
+    sum.value += 1
+  }
+  
+  const decrement = () => {
+    sum.value -= 1
+  }
+
+  // 在组件挂载时自动增加 1
+  onMounted(() => {
+    increment()
+  })
+
+  // 向外部暴露数据和方法
+  return { sum, increment, decrement }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>示例 2: <code>useDog.ts</code></h3>
+<p>这个示例展示了如何使用 <code>hook</code> 来获取并展示狗狗图片数据。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { reactive, onMounted } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> axios, { <span class="hljs-title class_">AxiosError</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;axios&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">let</span> dogList = reactive&lt;<span class="hljs-built_in">string</span>[]&gt;([])
+
+  <span class="hljs-comment">// 方法：请求随机狗狗图片</span>
+  <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">getDog</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">let</span> { data } = <span class="hljs-keyword">await</span> axios.<span class="hljs-title function_">get</span>(<span class="hljs-string">&#x27;https://dog.ceo/api/breed/pembroke/images/random&#x27;</span>)
+      dogList.<span class="hljs-title function_">push</span>(data.<span class="hljs-property">message</span>)
+    } <span class="hljs-keyword">catch</span> (error) {
+      <span class="hljs-keyword">const</span> err = &lt;<span class="hljs-title class_">AxiosError</span>&gt;error
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(err.<span class="hljs-property">message</span>)
+    }
+  }
+
+  <span class="hljs-comment">// 在组件挂载时获取狗狗图片</span>
+  <span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> {
+    <span class="hljs-title function_">getDog</span>()
+  })
+
+  <span class="hljs-comment">// 向外部暴露数据和方法</span>
+  <span class="hljs-keyword">return</span> { dogList, getDog }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive, onMounted } from &apos;vue&apos;
+import axios, { AxiosError } from &apos;axios&apos;
+
+export default function() {
+  let dogList = reactive<string[]>([])
+
+  // 方法：请求随机狗狗图片
+  async function getDog() {
+    try {
+      let { data } = await axios.get(&apos;https://dog.ceo/api/breed/pembroke/images/random&apos;)
+      dogList.push(data.message)
+    } catch (error) {
+      const err = <AxiosError>error
+      console.log(err.message)
+    }
+  }
+
+  // 在组件挂载时获取狗狗图片
+  onMounted(() => {
+    getDog()
+  })
+
+  // 向外部暴露数据和方法
+  return { dogList, getDog }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>在组件中使用自定义 <code>hook</code></h2>
+<p>在 Vue 3 中使用自定义 <code>hook</code> 时，我们可以通过 <code>import</code> 引入并在 <code>setup</code> 函数中调用它。以下是一个组件使用多个 <code>hook</code> 的示例：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;h2&gt;当前求和为：{{ sum }}&lt;/h2&gt;
+  &lt;button @click=&quot;increment&quot;&gt;点我+1&lt;/button&gt;
+  &lt;button @click=&quot;decrement&quot;&gt;点我-1&lt;/button&gt;
+  &lt;hr&gt;
+  &lt;img v-for=&quot;(u, index) in dogList&quot; :key=&quot;index&quot; :src=&quot;u&quot;&gt; 
+  &lt;span v-show=&quot;dogList.isLoading&quot;&gt;加载中......&lt;/span&gt;&lt;br&gt;
+  &lt;button @click=&quot;getDog&quot;&gt;再来一只狗&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+  name: 'App',
+})
+&lt;/script&gt;
+
+&lt;script setup lang=&quot;ts&quot;&gt;
+import useSum from './hooks/useSum'
+import useDog from './hooks/useDog'
+
+let { sum, increment, decrement } = useSum()
+let { dogList, getDog } = useDog()
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <h2>当前求和为：{{ sum }}</h2>
+  <button @click=&quot;increment&quot;>点我+1</button>
+  <button @click=&quot;decrement&quot;>点我-1</button>
+  <hr>
+  <img v-for=&quot;(u, index) in dogList&quot; :key=&quot;index&quot; :src=&quot;u&quot;> 
+  <span v-show=&quot;dogList.isLoading&quot;>加载中......</span><br>
+  <button @click=&quot;getDog&quot;>再来一只狗</button>
+</template>
+
+<script lang=&quot;ts&quot;>
+import { defineComponent } from &apos;vue&apos;
+
+export default defineComponent({
+  name: &apos;App&apos;,
+})
+</script>
+
+<script setup lang=&quot;ts&quot;>
+import useSum from &apos;./hooks/useSum&apos;
+import useDog from &apos;./hooks/useDog&apos;
+
+let { sum, increment, decrement } = useSum()
+let { dogList, getDog } = useDog()
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>总结</h2>
+<p>自定义 <code>hook</code> 是 Vue 3 中提升代码复用性和清晰度的有力工具。通过将组件中常用的逻辑抽离到独立的 <code>hook</code> 中，既能减少代码冗余，又能提升代码的可维护性和可读性。</p>

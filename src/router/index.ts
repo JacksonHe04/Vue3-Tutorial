@@ -113,18 +113,28 @@ const router = createRouter({
           component: MarkdownPage,
         },
         {
-          path: ":folder/:file.md", // 匹配所有以 .md 结尾的路径
+          path: ":folder/:file.html", // 匹配所有以 .md 结尾的路径
           name: "MarkdownPage",
           component: MarkdownPage,
         },
         {
-          path: ":folder/:subFolder/:file.md", // 匹配所有以 .md 结尾的路径，且路径中有两个文件夹层级
+          path: ":folder/:subFolder/:file.html", // 匹配所有以 .md 结尾的路径，且路径中有两个文件夹层级
           name: "NestedMarkdownPage",
           component: MarkdownPage,
         },
       ],
     },
   ],
+});
+
+router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
+  const mdPattern = /\.md$/;
+  if (mdPattern.test(to.path)) {
+    const newPath = to.path.replace(mdPattern, '.html');
+    next(newPath);
+  } else {
+    next();
+  }
 });
 
 export default router;

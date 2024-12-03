@@ -1,0 +1,209 @@
+<h1>01-Overview: Vue 3 概览</h1>
+<p>Vue 3 是一款轻量级、高效的前端框架，为开发者提供声明式渲染、组件化开发、响应式数据绑定等现代化开发工具。它结合了简单易用的 API 和强大的性能优化，是构建用户界面的理想选择。</p>
+<hr>
+<h2><strong>Vue 3 简介</strong></h2>
+<p><code>Vue 3</code> 于 <strong>2020年9月18日</strong> 正式发布，代号为 <strong><code>One Piece</code></strong>，代表了 Vue 框架的一次重要升级。其发展历程充满了开源社区的努力与智慧：</p>
+<ul>
+<li><strong>提交数</strong>：超过 <a href="https://github.com/vuejs/core/commits/main">4800 次提交</a>。</li>
+<li><strong>提案审议</strong>：完成 <a href="https://github.com/vuejs/rfcs/tree/master/active-rfcs">40 多个 RFC</a>。</li>
+<li><strong>代码贡献</strong>：合并了 <a href="https://github.com/vuejs/vue-next/pulls?q=is%3Apr+is%3Amerged+-author%3Aapp%2Fdependabot-preview+">600 多次 PR</a>。</li>
+<li><strong>贡献者</strong>：300 多位社区开发者参与了贡献。</li>
+<li><strong>发布地址</strong>：<a href="https://github.com/vuejs/core/releases/tag/v3.0.0">Release v3.0.0 One Piece · vuejs/core</a>。</li>
+<li><strong>最新版本</strong>：截至 2023 年 10 月，<code>Vue 3</code> 的最新公开版本为 <strong><code>3.3.4</code></strong>。</li>
+</ul>
+<hr>
+<h2><strong>Vue 3 的性能提升</strong></h2>
+<p>Vue 3 在性能上做出了显著优化，使得开发者能够以更高效的方式构建复杂的应用：</p>
+<ul>
+<li><strong>打包大小减少</strong>：相比 Vue 2，减少了 <strong>41%</strong>。</li>
+<li><strong>初次渲染速度</strong>：提高了 <strong>55%</strong>。</li>
+<li><strong>更新渲染速度</strong>：提高了 <strong>133%</strong>。</li>
+<li><strong>内存占用</strong>：减少了 <strong>54%</strong>。</li>
+</ul>
+<p>这些改进使 Vue 3 在性能上处于前端框架的领先地位。</p>
+<hr>
+<h2><strong>源码升级</strong></h2>
+<p>Vue 3 的核心源码经历了重构，引入现代 JavaScript 特性，为开发者带来更灵活、更高效的开发体验：</p>
+<ul>
+<li><strong>响应式系统</strong>：
+<ul>
+<li>使用 <code>Proxy</code> 替代 Vue 2 中的 <code>Object.defineProperty</code>。</li>
+<li>提高了响应式性能，支持动态属性添加和删除。</li>
+</ul>
+</li>
+<li><strong>虚拟 DOM 的优化</strong>：
+<ul>
+<li>重写了虚拟 DOM 的实现，进一步提升渲染效率。</li>
+</ul>
+</li>
+<li><strong>支持 Tree-Shaking</strong>：
+<ul>
+<li>通过模块化设计，按需加载功能，减少最终打包体积。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><strong>拥抱 TypeScript</strong></h2>
+<p><code>Vue 3</code> 对 <code>TypeScript</code> 的支持更加完善，开发者可以更轻松地编写类型安全的代码。具体改进包括：</p>
+<ul>
+<li>提供全面的类型定义文件。</li>
+<li><code>Composition API</code> 的使用使得类型推导更直观。</li>
+<li>增强了对 IDE（如 VSCode）的支持，带来更好的开发体验。</li>
+</ul>
+<hr>
+<h2><strong>Vue 3 的新特性</strong></h2>
+<h3><a href="../03-Composition-API/README.md">1. Composition API（组合式 API）</a></h3>
+<p><code>Composition API</code> 提供了一种全新的方式来组织和复用代码，是 Vue 3 最具代表性的特性之一。核心概念包括：</p>
+<ul>
+<li><strong><code>setup</code> 函数</strong>：用来替代 <code>data</code>、<code>methods</code>、<code>computed</code> 等选项，可以在一个地方集中管理逻辑。</li>
+<li><strong><code>ref</code> 与 <code>reactive</code></strong>：
+<ul>
+<li><code>ref</code>：用于定义基本类型的响应式数据。</li>
+<li><code>reactive</code>：用于定义复杂对象的响应式数据。</li>
+</ul>
+</li>
+<li><strong><code>computed</code> 与 <code>watch</code></strong>：
+<ul>
+<li><code>computed</code>：定义计算属性。</li>
+<li><code>watch</code>：监听响应式数据的变化，执行副作用。</li>
+</ul>
+</li>
+</ul>
+<h4>示例代码：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript">&lt;script setup&gt;
+<span class="hljs-keyword">import</span> { ref, reactive, computed } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-comment">// 使用 ref</span>
+<span class="hljs-keyword">const</span> count = <span class="hljs-title function_">ref</span>(<span class="hljs-number">0</span>);
+
+<span class="hljs-comment">// 使用 reactive</span>
+<span class="hljs-keyword">const</span> user = <span class="hljs-title function_">reactive</span>({
+  <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;Alice&#x27;</span>,
+  <span class="hljs-attr">age</span>: <span class="hljs-number">25</span>
+});
+
+<span class="hljs-comment">// 计算属性</span>
+<span class="hljs-keyword">const</span> doubleCount = <span class="hljs-title function_">computed</span>(<span class="hljs-function">() =&gt;</span> count.<span class="hljs-property">value</span> * <span class="hljs-number">2</span>);
+
+<span class="hljs-comment">// 方法</span>
+<span class="hljs-keyword">const</span> <span class="hljs-title function_">increment</span> = (<span class="hljs-params"></span>) =&gt; {
+  count.<span class="hljs-property">value</span>++;
+};
+&lt;/script&gt;
+
+<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Count: {{ count }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Double Count: {{ doubleCount }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;increment&quot;</span>&gt;</span>Increment<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>User: {{ user.name }}, Age: {{ user.age }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span></span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<script setup>
+import { ref, reactive, computed } from &apos;vue&apos;;
+
+// 使用 ref
+const count = ref(0);
+
+// 使用 reactive
+const user = reactive({
+  name: &apos;Alice&apos;,
+  age: 25
+});
+
+// 计算属性
+const doubleCount = computed(() => count.value * 2);
+
+// 方法
+const increment = () => {
+  count.value++;
+};
+</script>
+
+<template>
+  <div>
+    <p>Count: {{ count }}</p>
+    <p>Double Count: {{ doubleCount }}</p>
+    <button @click=&quot;increment&quot;>Increment</button>
+    <p>User: {{ user.name }}, Age: {{ user.age }}</p>
+  </div>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h3><a href="../09-Vue3-Features/README.md"><strong>2. 新的内置组件</strong></a></h3>
+<p>Vue 3 提供了多种新的内置组件，进一步提升了开发体验：</p>
+<ul>
+<li><strong><code>Fragment</code></strong>：
+<ul>
+<li>支持无根节点的模板内容，减少不必要的 DOM 层级。</li>
+</ul>
+</li>
+<li><strong><code>Teleport</code></strong>：
+<ul>
+<li>可以将子组件渲染到指定的 DOM 节点中，常用于模态框、弹出菜单等场景。</li>
+</ul>
+</li>
+<li><strong><code>Suspense</code></strong>：
+<ul>
+<li>用于处理异步组件的加载状态，支持加载指示器或占位内容。</li>
+</ul>
+</li>
+</ul>
+<h4>示例代码：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">Suspense</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">default</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">AsyncComponent</span> /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">template</span> #<span class="hljs-attr">fallback</span>&gt;</span>
+      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Loading...<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">Suspense</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <Suspense>
+    <template #default>
+      <AsyncComponent />
+    </template>
+    <template #fallback>
+      <p>Loading...</p>
+    </template>
+  </Suspense>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h3><strong>3. 其他改变</strong></h3>
+<ul>
+<li><strong>新的生命周期钩子</strong>：
+<ul>
+<li>例如：<code>onMounted</code>、<code>onUpdated</code>、<code>onUnmounted</code> 等，更加函数化。</li>
+</ul>
+</li>
+<li><strong><code>data</code> 选项的声明方式</strong>：
+<ul>
+<li>必须始终是一个函数，避免多个实例共享数据。</li>
+</ul>
+</li>
+<li><strong>移除 <code>keyCode</code> 支持</strong>：
+<ul>
+<li>鼓励使用更语义化的键值表示，例如 <code>@keyup.enter</code>。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2><strong>总结</strong></h2>
+<p>Vue 3 是现代前端框架中的重要成员，它通过性能优化、源码升级、对 TypeScript 的全面支持以及新增的特性，为开发者提供了更高效、更灵活的开发方式。通过 <code>Composition API</code> 和其他改进，Vue 3 进一步巩固了其在前端开发中的地位，为构建复杂的现代应用提供了坚实基础。</p>

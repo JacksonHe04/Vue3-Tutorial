@@ -1,0 +1,103 @@
+<h1>Vue 3 中的 Pinia 状态管理：使用 <code>$subscribe</code> 方法侦听 <code>state</code> 变化</h1>
+<h2>1. 概念</h2>
+<p>在 Pinia 中，<code>$subscribe()</code> 方法允许我们侦听 <code>store</code> 的状态 (<code>state</code>) 以及它的变化。这个方法可以帮助我们在状态改变时执行某些副作用操作，比如更新本地存储、发送日志等。通过这种方式，我们能够跟踪 <code>store</code> 中数据的变化。</p>
+<h2>2. 使用 <code>$subscribe</code> 侦听 <code>state</code> 变化</h2>
+<p><code>$subscribe</code> 方法接收一个回调函数，这个函数会在 <code>store</code> 的状态发生变化时被调用。回调函数会接收到两个参数：</p>
+<ul>
+<li><code>mutate</code>：表示当前的变更对象，包含了具体的变动信息。</li>
+<li><code>state</code>：表示变更后的整个 <code>store</code> 的最新状态。</li>
+</ul>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 假设talkStore是一个Pinia store</span>
+talkStore.$subscribe(<span class="hljs-function">(<span class="hljs-params">mutate, state</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;LoveTalk&#x27;</span>, mutate, state)
+
+  <span class="hljs-comment">// 将更新后的 talkList 保存到localStorage中</span>
+  <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&#x27;talk&#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(talkList.<span class="hljs-property">value</span>))
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 假设talkStore是一个Pinia store
+talkStore.$subscribe((mutate, state) => {
+  console.log(&apos;LoveTalk&apos;, mutate, state)
+
+  // 将更新后的 talkList 保存到localStorage中
+  localStorage.setItem(&apos;talk&apos;, JSON.stringify(talkList.value))
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>代码解释</h3>
+<ul>
+<li><code>talkStore.$subscribe()</code>：用于侦听 <code>talkStore</code> 的状态变化。</li>
+<li>回调函数 <code>(mutate, state)</code>：
+<ul>
+<li><code>mutate</code>：包含了此次状态变更的详细信息，通常包括 <code>type</code>（操作类型，如添加或删除）和 <code>payload</code>（操作的具体数据）。</li>
+<li><code>state</code>：变更后的完整状态对象，表示 <code>store</code> 中所有的数据。</li>
+</ul>
+</li>
+<li><code>localStorage.setItem()</code>：在每次状态变化时，将更新后的 <code>talkList</code> 保存到本地存储中。</li>
+</ul>
+<h2>3. 订阅 <code>state</code> 的变化</h2>
+<p>通过 <code>$subscribe</code> 方法，您可以监控 <code>store</code> 中所有状态的变化。这样可以确保在任何状态变化后执行必要的操作，比如数据持久化、同步等。</p>
+<h3>示例：持久化数据</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-comment">// 假设我们有一个 store 管理用户的登录信息</span>
+<span class="hljs-keyword">const</span> userStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;user&#x27;</span>, {
+  <span class="hljs-attr">state</span>: <span class="hljs-function">() =&gt;</span> ({
+    <span class="hljs-attr">loggedIn</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">userData</span>: {}
+  }),
+  <span class="hljs-attr">actions</span>: {
+    <span class="hljs-title function_">login</span>(<span class="hljs-params">data</span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">loggedIn</span> = <span class="hljs-literal">true</span>
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">userData</span> = data
+    },
+    <span class="hljs-title function_">logout</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">loggedIn</span> = <span class="hljs-literal">false</span>
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">userData</span> = {}
+    }
+  }
+})
+
+<span class="hljs-comment">// 订阅 store 变化，将状态存入 localStorage</span>
+userStore.$subscribe(<span class="hljs-function">(<span class="hljs-params">mutate, state</span>) =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;User Store Change:&#x27;</span>, mutate, state)
+  <span class="hljs-variable language_">localStorage</span>.<span class="hljs-title function_">setItem</span>(<span class="hljs-string">&#x27;user&#x27;</span>, <span class="hljs-title class_">JSON</span>.<span class="hljs-title function_">stringify</span>(state))
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 假设我们有一个 store 管理用户的登录信息
+const userStore = defineStore(&apos;user&apos;, {
+  state: () => ({
+    loggedIn: false,
+    userData: {}
+  }),
+  actions: {
+    login(data) {
+      this.loggedIn = true
+      this.userData = data
+    },
+    logout() {
+      this.loggedIn = false
+      this.userData = {}
+    }
+  }
+})
+
+// 订阅 store 变化，将状态存入 localStorage
+userStore.$subscribe((mutate, state) => {
+  console.log(&apos;User Store Change:&apos;, mutate, state)
+  localStorage.setItem(&apos;user&apos;, JSON.stringify(state))
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>userStore</code> 会被侦听，每次状态发生变化时，都会更新 <code>localStorage</code> 中的用户数据。</p>
+<h2>4. 总结</h2>
+<p>通过 Pinia 的 <code>$subscribe()</code> 方法，您可以轻松地监听 <code>store</code> 中 <code>state</code> 的变化，并对这些变化做出响应。常见的应用场景包括将状态持久化到 <code>localStorage</code> 或 <code>sessionStorage</code>，或者在状态变化时执行一些副作用操作。</p>

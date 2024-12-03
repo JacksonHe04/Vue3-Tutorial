@@ -1,0 +1,69 @@
+<h1><code>readonly</code> 与 <code>shallowReadonly</code> 的使用</h1>
+<p>在 Vue 3 中，<code>readonly</code> 和 <code>shallowReadonly</code> 是两种创建只读响应式对象的 API。它们的区别在于对对象的嵌套属性的处理，<code>readonly</code> 会使对象的所有属性都变为只读，而 <code>shallowReadonly</code> 只会使对象的顶层属性变为只读。</p>
+<h2><code>readonly</code></h2>
+<h3>作用</h3>
+<p><code>readonly</code> 用于创建一个对象的深只读副本。它会使对象及其所有嵌套的属性都变为只读，禁止对这些属性进行修改。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { reactive, readonly } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> original = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">nested</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;value&#x27;</span> }, <span class="hljs-attr">other</span>: <span class="hljs-string">&#x27;data&#x27;</span> });
+<span class="hljs-keyword">const</span> readOnlyCopy = <span class="hljs-title function_">readonly</span>(original);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive, readonly } from &apos;vue&apos;;
+
+const original = reactive({ nested: { key: &apos;value&apos; }, other: &apos;data&apos; });
+const readOnlyCopy = readonly(original);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ul>
+<li>对象的所有嵌套属性都将变为只读。</li>
+<li>尝试修改任何属性时，会在开发模式下触发警告并阻止修改。</li>
+<li>适用于创建不可变的状态或配置，确保数据不会被意外修改。</li>
+</ul>
+<h3>应用场景</h3>
+<ul>
+<li>创建不可变的状态快照。</li>
+<li>保护全局状态或配置不被修改。</li>
+</ul>
+<h2><code>shallowReadonly</code></h2>
+<h3>作用</h3>
+<p><code>shallowReadonly</code> 与 <code>readonly</code> 类似，但它只作用于对象的顶层属性，嵌套属性仍然是可修改的。这个 API 适用于只需保护对象顶层属性的场景。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { reactive, shallowReadonly } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> original = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">nested</span>: { <span class="hljs-attr">key</span>: <span class="hljs-string">&#x27;value&#x27;</span> }, <span class="hljs-attr">other</span>: <span class="hljs-string">&#x27;data&#x27;</span> });
+<span class="hljs-keyword">const</span> shallowReadOnlyCopy = <span class="hljs-title function_">shallowReadonly</span>(original);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive, shallowReadonly } from &apos;vue&apos;;
+
+const original = reactive({ nested: { key: &apos;value&apos; }, other: &apos;data&apos; });
+const shallowReadOnlyCopy = shallowReadonly(original);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ul>
+<li>只将对象的顶层属性设置为只读。</li>
+<li>对象内部的嵌套属性仍然是可变的。</li>
+<li>可以用于只保护顶层属性不被修改，而不干涉深层次的修改。</li>
+</ul>
+<h3>应用场景</h3>
+<ul>
+<li>只需保护对象的顶层属性的场景，例如，保护配置对象的顶层键，但仍然允许修改深层数据。</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong><code>readonly</code></strong>：创建一个深只读对象，禁止修改对象及其嵌套属性，适用于确保整个对象不被修改的情况。</li>
+<li><strong><code>shallowReadonly</code></strong>：只将对象的顶层属性设为只读，嵌套属性仍然可修改，适用于只需要保护顶层数据的情况。</li>
+</ul>
+<p>这两种 API 都是用来增加数据的不可变性，在应用开发中可以帮助开发者确保状态的完整性，减少意外修改数据的风险。</p>

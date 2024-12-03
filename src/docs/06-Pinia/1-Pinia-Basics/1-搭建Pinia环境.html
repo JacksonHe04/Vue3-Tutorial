@@ -1,0 +1,61 @@
+<h1>搭建 Pinia 环境</h1>
+<p>本文将介绍如何在 Vue 3 项目中搭建 Pinia 环境。Pinia 是 Vue 3 官方推荐的状态管理库，具有更简洁和高效的 API。通过以下步骤，可以轻松地在项目中引入并配置 Pinia。</p>
+<h2>第一步：安装 Pinia</h2>
+<p>首先，需要安装 Pinia。打开终端，进入项目文件夹并执行以下命令：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-bash">npm install pinia
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="npm install pinia
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这将会安装 Pinia 库及其依赖。</p>
+<h2>第二步：配置 Pinia</h2>
+<p>在安装完成后，我们需要在 Vue 3 项目中配置 Pinia。在 <code>src/main.ts</code> 文件中引入并创建 Pinia 实例。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-ts"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>
+
+<span class="hljs-comment">/* 引入 createPinia，用于创建 pinia */</span>
+<span class="hljs-keyword">import</span> { createPinia } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-comment">/* 创建 pinia */</span>
+<span class="hljs-keyword">const</span> pinia = <span class="hljs-title function_">createPinia</span>()
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>)
+
+<span class="hljs-comment">/* 使用插件 */</span>
+app.<span class="hljs-title function_">use</span>(pinia)
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>)
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;
+import App from &apos;./App.vue&apos;
+
+/* 引入 createPinia，用于创建 pinia */
+import { createPinia } from &apos;pinia&apos;
+
+/* 创建 pinia */
+const pinia = createPinia()
+const app = createApp(App)
+
+/* 使用插件 */
+app.use(pinia)
+app.mount(&apos;#app&apos;)
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明：</h3>
+<ol>
+<li>我们首先引入 <code>createPinia</code> 函数，并在应用中创建一个 Pinia 实例。</li>
+<li>使用 <code>app.use(pinia)</code> 将 Pinia 插件注册到 Vue 实例中。</li>
+<li>最后，通过 <code>app.mount('#app')</code> 将 Vue 应用挂载到 DOM 元素中。</li>
+</ol>
+<p>完成以上操作后，开发者工具中会自动出现 <code>pinia</code> 选项，您可以在这里查看和调试状态管理相关的内容。</p>
+<h3>开发者工具界面</h3>
+<p>此时，打开浏览器的开发者工具，您将能够看到 <code>pinia</code> 选项，表示 Pinia 已成功集成到项目中。</p>
+<p>通过这些步骤，您已经完成了在 Vue 3 项目中搭建 Pinia 环境的基本配置。接下来，您可以开始使用 Pinia 来管理全局状态，创建和操作 Store。</p>

@@ -15,7 +15,9 @@
        },
        "typeRoots": ["./node_modules/@types", "./types"],
        "skipLibCheck": true,
-       "allowSyntheticDefaultImports": true
+       "allowSyntheticDefaultImports": true,
+       "forceConsistentCasingInFileNames": true,
+       "outDir": "./dist"
      },
      "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/declarations.d.ts", "vite.config.ts"]
    }

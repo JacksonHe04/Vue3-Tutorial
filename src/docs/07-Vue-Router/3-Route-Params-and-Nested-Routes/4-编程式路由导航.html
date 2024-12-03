@@ -1,0 +1,223 @@
+<h1>编程式路由导航</h1>
+<p>在Vue中，路由的跳转通常通过 <code>&lt;router-link&gt;</code> 组件来完成。<code>&lt;router-link&gt;</code> 的本质是通过渲染一个 <code>a</code> 标签来完成路由的跳转，但是有时我们需要在一些交互行为中进行路由跳转，比如点击一个按钮。这时，编程式路由导航提供了一个灵活的解决方案，它允许我们在 JavaScript 函数中控制路由的跳转，而不是依赖于模板中的 <code>router-link</code>。</p>
+<p>以下是如何在 <code>News.vue</code> 的新闻列表中，为每条新闻添加一个按钮，点击按钮后跳转到对应的新闻详情页面的示例。</p>
+<h2>1. 路由配置</h2>
+<p>与之前的例子相同，我们配置了一个父路由 <code>/news</code>，并在其下配置了一个嵌套路由 <code>/news/:id/detail</code>，用于展示新闻的详细内容。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-typescript"><span class="hljs-comment">// router/index.ts</span>
+<span class="hljs-keyword">import</span> { createRouter, createWebHistory } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue-router&#x27;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">News</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../views/News.vue&#x27;</span>
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">NewsDetail</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;../views/NewsDetail.vue&#x27;</span>
+
+<span class="hljs-keyword">const</span> routes = [
+  {
+    <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;/news&#x27;</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;news&#x27;</span>,
+    <span class="hljs-attr">component</span>: <span class="hljs-title class_">News</span>,
+    <span class="hljs-attr">children</span>: [
+      {
+        <span class="hljs-attr">path</span>: <span class="hljs-string">&#x27;:id/detail&#x27;</span>, <span class="hljs-comment">// 动态路由参数 :id</span>
+        <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;detail&#x27;</span>,
+        <span class="hljs-attr">component</span>: <span class="hljs-title class_">NewsDetail</span>,
+        <span class="hljs-attr">props</span>: <span class="hljs-literal">true</span>,  <span class="hljs-comment">// 开启props配置，params中的id会作为props传入</span>
+      }
+    ]
+  }
+]
+
+<span class="hljs-keyword">const</span> router = <span class="hljs-title function_">createRouter</span>({
+  <span class="hljs-attr">history</span>: <span class="hljs-title function_">createWebHistory</span>(),
+  routes
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> router
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// router/index.ts
+import { createRouter, createWebHistory } from &apos;vue-router&apos;
+import News from &apos;../views/News.vue&apos;
+import NewsDetail from &apos;../views/NewsDetail.vue&apos;
+
+const routes = [
+  {
+    path: &apos;/news&apos;,
+    name: &apos;news&apos;,
+    component: News,
+    children: [
+      {
+        path: &apos;:id/detail&apos;, // 动态路由参数 :id
+        name: &apos;detail&apos;,
+        component: NewsDetail,
+        props: true,  // 开启props配置，params中的id会作为props传入
+      }
+    ]
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+export default router
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>2. <code>News.vue</code> 组件</h2>
+<p>在 <code>News.vue</code> 中，我们为每条新闻添加一个按钮，点击按钮后执行一个函数，函数通过 <code>router.push</code> 进行路由跳转。<code>router.push</code> 方法是编程式路由导航的核心，它可以接收一个包含路由信息的对象，类似于 <code>router-link</code> 的 <code>to</code> 属性。</p>
+<h3>修改后的 <code>News.vue</code> 代码：</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;!-- News.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;新闻列表&lt;/h1&gt;
+    &lt;ul&gt;
+      &lt;li v-for=&quot;(news, index) in newsList&quot; :key=&quot;news.id&quot;&gt;
+        &lt;span&gt;{{ news.title }}&lt;/span&gt;
+        &lt;!-- 添加按钮，通过click事件触发编程式路由导航 --&gt;
+        &lt;button @click=&quot;goToDetail(news.id)&quot;&gt;查看详情&lt;/button&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+import { reactive } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const newsList = reactive([
+  { id: 1, title: '新闻 1', content: '新闻 1 内容' },
+  { id: 2, title: '新闻 2', content: '新闻 2 内容' },
+  { id: 3, title: '新闻 3', content: '新闻 3 内容' },
+])
+
+// 编程式路由导航，点击按钮时跳转到对应新闻的详情页
+const goToDetail = (id) =&gt; {
+  router.push({ name: 'detail', params: { id } })
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- News.vue -->
+<template>
+  <div>
+    <h1>新闻列表</h1>
+    <ul>
+      <li v-for=&quot;(news, index) in newsList&quot; :key=&quot;news.id&quot;>
+        <span>{{ news.title }}</span>
+        <!-- 添加按钮，通过click事件触发编程式路由导航 -->
+        <button @click=&quot;goToDetail(news.id)&quot;>查看详情</button>
+      </li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+import { reactive } from &apos;vue&apos;
+import { useRouter } from &apos;vue-router&apos;
+
+const router = useRouter()
+
+const newsList = reactive([
+  { id: 1, title: &apos;新闻 1&apos;, content: &apos;新闻 1 内容&apos; },
+  { id: 2, title: &apos;新闻 2&apos;, content: &apos;新闻 2 内容&apos; },
+  { id: 3, title: &apos;新闻 3&apos;, content: &apos;新闻 3 内容&apos; },
+])
+
+// 编程式路由导航，点击按钮时跳转到对应新闻的详情页
+const goToDetail = (id) => {
+  router.push({ name: &apos;detail&apos;, params: { id } })
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>解释：</h3>
+<ul>
+<li>在每个新闻列表项旁边，我们添加了一个按钮。按钮绑定了一个 <code>@click</code> 事件，当用户点击按钮时，会触发 <code>goToDetail</code> 函数。</li>
+<li><code>goToDetail</code> 函数使用了 <code>router.push</code> 来进行编程式的路由跳转。<code>router.push</code> 接受一个对象，里面包含了路由的 <code>name</code>（即路由的名称）和 <code>params</code>（即要传递的路由参数）。在这里，<code>params</code> 中传递的是新闻的 <code>id</code>。</li>
+<li><code>router.push({ name: 'detail', params: { id } })</code> 这行代码的作用与 <code>&lt;router-link :to=&quot;{ name: 'detail', params: { id: news.id } }&quot;&gt;</code> 相同。</li>
+</ul>
+<h2>3. <code>NewsDetail.vue</code> 组件</h2>
+<p>在 <code>NewsDetail.vue</code> 中，我们通过 <code>props</code> 接收路由参数 <code>id</code>，并根据 <code>id</code> 获取对应的新闻内容。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;!-- NewsDetail.vue --&gt;
+&lt;template&gt;
+  &lt;div&gt;
+    &lt;h1&gt;新闻详情&lt;/h1&gt;
+    &lt;ul&gt;
+      &lt;li&gt;新闻ID: {{ id }}&lt;/li&gt;
+      &lt;li&gt;内容: {{ getNewsContent(id) }}&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup&gt;
+defineProps({
+  id: { type: String, required: true }  // 通过props接收id
+})
+
+const getNewsContent = (id) =&gt; {
+  const newsList = [
+    { id: '1', content: '新闻 1 内容' },
+    { id: '2', content: '新闻 2 内容' },
+    { id: '3', content: '新闻 3 内容' },
+  ]
+  return newsList.find(news =&gt; news.id === id)?.content || '内容不存在'
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- NewsDetail.vue -->
+<template>
+  <div>
+    <h1>新闻详情</h1>
+    <ul>
+      <li>新闻ID: {{ id }}</li>
+      <li>内容: {{ getNewsContent(id) }}</li>
+    </ul>
+  </div>
+</template>
+
+<script setup>
+defineProps({
+  id: { type: String, required: true }  // 通过props接收id
+})
+
+const getNewsContent = (id) => {
+  const newsList = [
+    { id: &apos;1&apos;, content: &apos;新闻 1 内容&apos; },
+    { id: &apos;2&apos;, content: &apos;新闻 2 内容&apos; },
+    { id: &apos;3&apos;, content: &apos;新闻 3 内容&apos; },
+  ]
+  return newsList.find(news => news.id === id)?.content || &apos;内容不存在&apos;
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>解释：</h3>
+<ul>
+<li><code>NewsDetail.vue</code> 组件通过 <code>props</code> 接收 <code>id</code> 参数，<code>id</code> 是从路由传递过来的。</li>
+<li>使用 <code>getNewsContent</code> 函数，根据传递的 <code>id</code> 从新闻列表中找到对应的内容并显示。</li>
+</ul>
+<h2>4. 总结</h2>
+<ul>
+<li><strong>编程式路由导航</strong>：当我们需要通过 JavaScript 代码来控制路由跳转时，可以使用 <code>router.push</code> 或 <code>router.replace</code> 方法，这些方法允许我们在点击按钮或其他交互时进行路由导航。</li>
+<li><strong><code>router.push</code> 使用</strong>：通过传递一个包含 <code>name</code> 和 <code>params</code> 的对象，我们可以像使用 <code>&lt;router-link&gt;</code> 一样指定目标路由，并将参数传递到目标页面。</li>
+<li><strong><code>router-link</code> 与 <code>router.push</code> 的异同</strong>：
+<ul>
+<li><code>router-link</code> 是声明式的，直接在模板中定义。</li>
+<li><code>router.push</code> 是编程式的，通常用在需要通过 JavaScript 动态控制路由跳转的场景。</li>
+</ul>
+</li>
+</ul>
+<p>在本例中，我们使用编程式路由导航为每条新闻添加了一个按钮，通过点击按钮跳转到新闻的详细页面，这种方式比 <code>router-link</code> 更灵活，适用于按钮、表单提交等复杂交互场景。</p>

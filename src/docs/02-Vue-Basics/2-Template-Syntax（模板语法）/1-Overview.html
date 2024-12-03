@@ -1,0 +1,303 @@
+<h1>Vue 3 的模板语法</h1>
+<p>Vue 3 的模板语法用于将数据绑定到 HTML 结构上，通过指令动态更新 DOM 的显示和行为。以下是对常见指令和模板语法的详细说明。</p>
+<hr>
+<h2>基础语法概览</h2>
+<p>Vue 的模板语法允许使用 HTML 加入动态数据绑定和条件、循环等逻辑操作。核心是通过 <strong>双大括号插值语法</strong> 和 <strong>指令</strong> 来实现。</p>
+<h3>插值语法</h3>
+<h4>文本插值</h4>
+<p>使用 <code>{{}}</code> 插值来动态显示数据：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<p>{{ message }}</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>若 <code>message</code> 的值为 <code>Hello Vue!</code>，渲染结果为：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Hello Vue!<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<p>Hello Vue!</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>属性插值</h4>
+<p>通过 <code>v-bind</code> 或简写 <code>:</code> 绑定 HTML 属性：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">v-bind:src</span>=<span class="hljs-string">&quot;imageSrc&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Image&quot;</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- 简写 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">img</span> <span class="hljs-attr">:src</span>=<span class="hljs-string">&quot;imageSrc&quot;</span> <span class="hljs-attr">alt</span>=<span class="hljs-string">&quot;Image&quot;</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<img v-bind:src=&quot;imageSrc&quot; alt=&quot;Image&quot;>
+<!-- 简写 -->
+<img :src=&quot;imageSrc&quot; alt=&quot;Image&quot;>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>常见指令</h2>
+<h3>条件渲染：<code>v-if</code>、<code>v-else-if</code> 和 <code>v-else</code></h3>
+<p>用于根据条件动态显示或隐藏元素：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;show&quot;</span>&gt;</span>显示内容<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">v-else</span>&gt;</span>隐藏内容<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<p v-if=&quot;show&quot;>显示内容</p>
+<p v-else>隐藏内容</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>多个条件：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;type === &#x27;A&#x27;&quot;</span>&gt;</span>A 类型<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-else-if</span>=<span class="hljs-string">&quot;type === &#x27;B&#x27;&quot;</span>&gt;</span>B 类型<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-else</span>&gt;</span>其他类型<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<div v-if=&quot;type === &apos;A&apos;&quot;>A 类型</div>
+<div v-else-if=&quot;type === &apos;B&apos;&quot;>B 类型</div>
+<div v-else>其他类型</div>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4><code>v-show</code></h4>
+<p>与 <code>v-if</code> 类似，但使用 <code>CSS</code> 的 <code>display</code> 来切换显示状态：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">v-show</span>=<span class="hljs-string">&quot;isVisible&quot;</span>&gt;</span>显示或隐藏<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<p v-show=&quot;isVisible&quot;>显示或隐藏</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p><strong>区别</strong>：</p>
+<ul>
+<li><code>v-if</code> 彻底移除元素（性能较低，适合动态渲染）。</li>
+<li><code>v-show</code> 元素始终存在，只是控制可见性（性能较高，适合频繁切换）。</li>
+</ul>
+<hr>
+<h3>列表渲染：<code>v-for</code></h3>
+<p>循环渲染列表项：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in items&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;item.id&quot;</span>&gt;</span>{{ item.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<ul>
+  <li v-for=&quot;item in items&quot; :key=&quot;item.id&quot;>{{ item.name }}</li>
+</ul>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4><code>v-for</code> 的语法</h4>
+<ul>
+<li>
+<p><strong>数组</strong>：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;(item, index) in items&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;index&quot;</span>&gt;</span>{{ index }} - {{ item }}<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<div v-for=&quot;(item, index) in items&quot; :key=&quot;index&quot;>{{ index }} - {{ item }}</div>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>
+<p><strong>对象</strong>：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;(value, key, index) in obj&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;key&quot;</span>&gt;</span>
+  {{ index }}: {{ key }} = {{ value }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<div v-for=&quot;(value, key, index) in obj&quot; :key=&quot;key&quot;>
+  {{ index }}: {{ key }} = {{ value }}
+</div>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<hr>
+<h3>属性绑定：<code>v-bind</code></h3>
+<p>动态绑定 HTML 属性：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">v-bind:href</span>=<span class="hljs-string">&quot;url&quot;</span>&gt;</span>点击跳转<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- 简写 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">:href</span>=<span class="hljs-string">&quot;url&quot;</span>&gt;</span>点击跳转<span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<a v-bind:href=&quot;url&quot;>点击跳转</a>
+<!-- 简写 -->
+<a :href=&quot;url&quot;>点击跳转</a>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>绑定多个属性：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-bind</span>=<span class="hljs-string">&quot;{ id: dynamicId, class: dynamicClass }&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<div v-bind=&quot;{ id: dynamicId, class: dynamicClass }&quot;></div>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h3>事件绑定：<code>v-on</code></h3>
+<p>绑定事件处理器：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">v-on:click</span>=<span class="hljs-string">&quot;handleClick&quot;</span>&gt;</span>点击<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-comment">&lt;!-- 简写 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;handleClick&quot;</span>&gt;</span>点击<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<button v-on:click=&quot;handleClick&quot;>点击</button>
+<!-- 简写 -->
+<button @click=&quot;handleClick&quot;>点击</button>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>传递参数：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">click</span>=<span class="hljs-string">&quot;handleClick($event, &#x27;Hello&#x27;)&quot;</span>&gt;</span>点击<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<button @click=&quot;handleClick($event, &apos;Hello&apos;)&quot;>点击</button>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h3>双向绑定：<code>v-model</code></h3>
+<p>实现表单元素和数据的双向绑定：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;inputValue&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>输入值：{{ inputValue }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<input v-model=&quot;inputValue&quot;>
+<p>输入值：{{ inputValue }}</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>修饰符</h4>
+<ul>
+<li><code>.lazy</code>：仅在 <code>change</code> 事件时同步：
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.lazy</span>=<span class="hljs-string">&quot;inputValue&quot;</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<input v-model.lazy=&quot;inputValue&quot;>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li><code>.number</code>：自动将用户输入转换为数字：
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.number</span>=<span class="hljs-string">&quot;inputValue&quot;</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<input v-model.number=&quot;inputValue&quot;>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li><code>.trim</code>：自动去除输入的空格：
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.trim</span>=<span class="hljs-string">&quot;inputValue&quot;</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<input v-model.trim=&quot;inputValue&quot;>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<hr>
+<h2>条件与列表的结合</h2>
+<p>可以同时使用 <code>v-if</code> 和 <code>v-for</code>，但建议避免混用，提升可读性和性能。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in items&quot;</span> <span class="hljs-attr">:key</span>=<span class="hljs-string">&quot;item.id&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;item.isVisible&quot;</span>&gt;</span>
+  {{ item.name }}
+<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<li v-for=&quot;item in items&quot; :key=&quot;item.id&quot; v-if=&quot;item.isVisible&quot;>
+  {{ item.name }}
+</li>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>常用指令扩展</h2>
+<h3><code>v-slot</code></h3>
+<p>用于插槽内容的分发：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span> <span class="hljs-attr">v-slot:default</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>插槽内容<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template v-slot:default>
+  <p>插槽内容</p>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>模板语法进阶</h2>
+<h3>指令中的表达式</h3>
+<p>指令内部支持简单的 JavaScript 表达式：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">p</span> <span class="hljs-attr">:class</span>=<span class="hljs-string">&quot;isActive ? &#x27;active&#x27; : &#x27;&#x27;&quot;</span>&gt;</span>{{ isActive ? &#x27;激活&#x27; : &#x27;未激活&#x27; }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<p :class=&quot;isActive ? &apos;active&apos; : &apos;&apos;&quot;>{{ isActive ? &apos;激活&apos; : &apos;未激活&apos; }}</p>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p><strong>注意</strong>：不能使用复杂的语句如 <code>if</code> 或 <code>for</code>。</p>
+<hr>
+<h2>总结</h2>
+<p>掌握 Vue 的模板语法可以让我们更加高效地开发动态的、响应式的网页。通过对指令（如 <code>v-if</code>、<code>v-for</code>、<code>v-bind</code> 等）的灵活运用，可以方便地实现各种动态效果。结合 Vue 的组件系统，可以进一步提升代码的复用性和可维护性。</p>

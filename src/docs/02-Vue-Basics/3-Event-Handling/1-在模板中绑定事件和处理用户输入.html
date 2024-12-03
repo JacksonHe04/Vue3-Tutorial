@@ -1,0 +1,462 @@
+<h1>Vue 3 事件处理：如何在模板中绑定事件和处理用户输入</h1>
+<p>Vue 3 的事件处理是响应式的，允许开发者在模板中轻松绑定事件和处理用户输入。Vue 的事件绑定使用了简洁的语法和强大的功能，使得用户交互变得非常直观。下面我们来详细讲解如何在 Vue 3 中绑定事件和处理用户输入。</p>
+<h2>事件绑定基础</h2>
+<h3>1. 在模板中绑定事件</h3>
+<p>在 Vue 3 中，可以通过 <code>v-on</code> 指令或者简写 <code>@</code> 来绑定事件。</p>
+<h4>使用 <code>v-on</code> 绑定事件</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;button v-on:click=&quot;handleClick&quot;&gt;点击我&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleClick() {
+      alert('按钮被点击了！');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <button v-on:click=&quot;handleClick&quot;>点击我</button>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick() {
+      alert(&apos;按钮被点击了！&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>使用 <code>@</code> 绑定事件（简写）</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;button @click=&quot;handleClick&quot;&gt;点击我&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleClick() {
+      alert('按钮被点击了！');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <button @click=&quot;handleClick&quot;>点击我</button>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick() {
+      alert(&apos;按钮被点击了！&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上面的例子中，我们使用了 <code>@click</code> 来绑定 <code>click</code> 事件。当用户点击按钮时，会调用 <code>handleClick</code> 方法，弹出提示框。</p>
+<h3>2. 事件处理函数</h3>
+<p>事件处理函数通常定义在 <code>methods</code> 选项中，也可以是内联的 JavaScript 表达式。</p>
+<h4>内联事件处理</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;button @click=&quot;count++&quot;&gt;点击增加&lt;/button&gt;
+  &lt;p&gt;点击次数: {{ count }}&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <button @click=&quot;count++&quot;>点击增加</button>
+  <p>点击次数: {{ count }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      count: 0
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这里，我们在 <code>@click</code> 中直接增加 <code>count</code> 的值，点击按钮时，<code>count</code> 会增加，页面会实时显示更新的点击次数。</p>
+<h3>3. 事件修饰符</h3>
+<p>Vue 提供了一些事件修饰符来简化常见的事件处理需求，比如 <code>prevent</code>、<code>stop</code> 和 <code>capture</code> 等。</p>
+<h4><code>prevent</code> 修饰符</h4>
+<p><code>prevent</code> 修饰符用于调用 <code>event.preventDefault()</code> 来阻止默认行为。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;form @submit.prevent=&quot;handleSubmit&quot;&gt;提交表单&lt;/form&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleSubmit() {
+      alert('表单已提交');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <form @submit.prevent=&quot;handleSubmit&quot;>提交表单</form>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleSubmit() {
+      alert(&apos;表单已提交&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>@submit.prevent</code> 会阻止表单的默认提交行为，调用 <code>handleSubmit</code> 方法后，显示一个提示框。</p>
+<h4><code>stop</code> 修饰符</h4>
+<p><code>stop</code> 修饰符用于调用 <code>event.stopPropagation()</code> 来阻止事件冒泡。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div @click=&quot;handleDivClick&quot;&gt;
+    &lt;button @click.stop=&quot;handleButtonClick&quot;&gt;点击按钮&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleDivClick() {
+      console.log('div 被点击了');
+    },
+    handleButtonClick() {
+      console.log('button 被点击了');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div @click=&quot;handleDivClick&quot;>
+    <button @click.stop=&quot;handleButtonClick&quot;>点击按钮</button>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleDivClick() {
+      console.log(&apos;div 被点击了&apos;);
+    },
+    handleButtonClick() {
+      console.log(&apos;button 被点击了&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>@click.stop</code> 阻止了按钮点击事件的冒泡，因此点击按钮时，只有 <code>handleButtonClick</code> 会被调用，而 <code>handleDivClick</code> 不会被触发。</p>
+<h3>4. <code>once</code> 修饰符</h3>
+<p><code>once</code> 修饰符用于使事件监听器只触发一次。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;button @click.once=&quot;handleClick&quot;&gt;点击我一次&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleClick() {
+      alert('按钮只会触发一次');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <button @click.once=&quot;handleClick&quot;>点击我一次</button>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleClick() {
+      alert(&apos;按钮只会触发一次&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>5. <code>capture</code> 修饰符</h3>
+<p><code>capture</code> 修饰符将事件处理程序注册为捕获阶段的事件监听器，而不是冒泡阶段。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div @click.capture=&quot;handleDivClick&quot;&gt;
+    &lt;button @click=&quot;handleButtonClick&quot;&gt;点击按钮&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleDivClick() {
+      console.log('div 被点击了');
+    },
+    handleButtonClick() {
+      console.log('button 被点击了');
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div @click.capture=&quot;handleDivClick&quot;>
+    <button @click=&quot;handleButtonClick&quot;>点击按钮</button>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    handleDivClick() {
+      console.log(&apos;div 被点击了&apos;);
+    },
+    handleButtonClick() {
+      console.log(&apos;button 被点击了&apos;);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>@click.capture</code> 会在捕获阶段处理事件，<code>handleDivClick</code> 会先被触发，然后是 <code>handleButtonClick</code>。</p>
+<h2>处理用户输入</h2>
+<h3>1. 输入框事件绑定</h3>
+<p>Vue 3 允许你通过 <code>v-model</code> 或 <code>v-bind</code> 来处理表单元素的输入。</p>
+<h4>使用 <code>v-model</code> 双向绑定</h4>
+<p><code>v-model</code> 是 Vue 提供的双向数据绑定机制，它会自动处理输入框的事件监听和更新数据。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;input v-model=&quot;message&quot; placeholder=&quot;请输入消息&quot; /&gt;
+  &lt;p&gt;你输入的消息是: {{ message }}&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      message: ''
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input v-model=&quot;message&quot; placeholder=&quot;请输入消息&quot; />
+  <p>你输入的消息是: {{ message }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: &apos;&apos;
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上面的代码中，<code>v-model</code> 将 <code>message</code> 和输入框的值绑定在一起。当用户输入内容时，<code>message</code> 的值会自动更新，页面上的 <code>{{ message }}</code> 会实时显示用户输入的内容。</p>
+<h4>使用 <code>@input</code> 监听输入</h4>
+<p>除了 <code>v-model</code>，你还可以使用 <code>@input</code> 来显式地监听输入事件。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;input @input=&quot;handleInput&quot; placeholder=&quot;请输入消息&quot; /&gt;
+  &lt;p&gt;你输入的消息是: {{ message }}&lt;/p&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      message: ''
+    }
+  },
+  methods: {
+    handleInput(event) {
+      this.message = event.target.value;
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input @input=&quot;handleInput&quot; placeholder=&quot;请输入消息&quot; />
+  <p>你输入的消息是: {{ message }}</p>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: &apos;&apos;
+    }
+  },
+  methods: {
+    handleInput(event) {
+      this.message = event.target.value;
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，我们手动通过 <code>@input</code> 监听输入事件，并将输入的值更新到 <code>message</code>。</p>
+<h3>2. 处理输入框中的按键事件</h3>
+<p>可以使用 <code>@keydown</code>、<code>@keyup</code> 和 <code>@keypress</code> 等事件来处理键盘事件。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;input @keydown=&quot;handleKeydown&quot; placeholder=&quot;按键事件示例&quot; /&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  methods: {
+    handleKeydown(event) {
+      console.log('按下的键:', event.key);
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input @keydown=&quot;handleKeydown&quot; placeholder=&quot;按键事件示例&quot; />
+</template>
+
+<script>
+export default {
+  methods: {
+    handleKeydown(event) {
+      console.log(&apos;按下的键:&apos;, event.key);
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这个例子中，当用户按下键盘时，<code>handleKeydown</code> 方法会被调用，并在控制台输出按下的键名。</p>
+<h3>3. 输入验证和格式化</h3>
+<p>你可以结合事件处理程序来进行输入验证和格式化。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;input v-model=&quot;phoneNumber&quot; @blur=&quot;formatPhoneNumber&quot; placeholder=&quot;请输入电话号码&quot; /&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      phoneNumber: ''
+    }
+  },
+  methods: {
+    formatPhoneNumber() {
+      this.phoneNumber = this.phoneNumber.replace(/\D/g, ''); // 只保留数字
+    }
+  }
+}
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input v-model=&quot;phoneNumber&quot; @blur=&quot;formatPhoneNumber&quot; placeholder=&quot;请输入电话号码&quot; />
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      phoneNumber: &apos;&apos;
+    }
+  },
+  methods: {
+    formatPhoneNumber() {
+      this.phoneNumber = this.phoneNumber.replace(/\D/g, &apos;&apos;); // 只保留数字
+    }
+  }
+}
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>@blur</code> 事件在输入框失去焦点时触发，执行 <code>formatPhoneNumber</code> 方法，将输入的内容格式化为只包含数字。</p>
+<h2>总结</h2>
+<p>在 Vue 3 中，事件绑定非常简洁和灵活。你可以使用 <code>v-on</code> 或简写 <code>@</code> 来绑定事件，并通过修饰符简化常见的需求。对于用户输入的处理，可以使用 <code>v-model</code> 进行双向数据绑定，或者使用其他输入事件（如 <code>@input</code>、<code>@keydown</code>）来处理更复杂的交互逻辑。通过这些功能，Vue 3 使得事件处理和用户输入变得非常方便和高效。</p>

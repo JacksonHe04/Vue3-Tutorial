@@ -1,0 +1,54 @@
+<h1>Vue 3的响应式系统</h1>
+<p>Vue 3的响应式系统是Vue框架的核心特性之一，它通过 <strong>Proxy</strong> 实现数据的自动更新和视图的同步。当你在Vue中改变数据时，框架会自动追踪这些变化，并确保视图能够及时更新。这种机制背后的原理主要依赖于依赖收集、劫持数据访问和更新视图的过程。</p>
+<h2>1. 响应式的核心原理</h2>
+<p>在Vue 3中，响应式数据是通过 <strong>Proxy</strong> API来实现的。<code>Proxy</code> 能够拦截对对象属性的访问和修改，从而使得框架能够“监听”这些变化并做出响应。</p>
+<h3>代理 (Proxy) 与对象观察</h3>
+<p>在Vue 2中，数据是通过 <code>Object.defineProperty</code> 来进行劫持的。而在Vue 3中，采用了 <strong>Proxy</strong> 来代替这种方式。<code>Proxy</code> 可以代理整个对象，并能够更高效地监控对象的每个属性。每次访问或修改对象属性时，<code>Proxy</code> 会拦截这些操作并触发相应的回调，这就是所谓的“响应式”。</p>
+<h2>2. 依赖收集</h2>
+<p>每个响应式数据在发生变化时，都会通知视图进行更新。Vue 在这个过程中会对依赖该数据的组件进行收集。具体来说，当组件中的某个模板部分访问了某个响应式数据时，Vue会将该组件的渲染函数注册为该数据的“依赖”。这样，当数据发生变化时，所有依赖该数据的组件都会被重新渲染。</p>
+<h2>3. 数据更新</h2>
+<p>当你改变一个响应式数据的值时，Proxy 会拦截这个修改操作，并通知相应的依赖（即组件或视图）进行更新。Vue 通过 <strong>异步批量更新</strong> 的机制，避免了每次数据变化都触发一次视图更新，提升了性能。</p>
+<h2>4. <code>ref</code> 和 <code>reactive</code></h2>
+<p>Vue 3 提供了两种主要的 API 来定义响应式数据：</p>
+<ul>
+<li><strong><code>reactive</code></strong>：用于创建响应式对象。当你需要响应式的复杂对象或数组时，使用 <code>reactive</code> 会比较合适。</li>
+<li><strong><code>ref</code></strong>：用于创建响应式的原始数据类型（如数字、字符串、布尔值等）。它将基本类型的数据包装在一个对象中，使其具有响应性。</li>
+</ul>
+<h2>5. 响应式的优势</h2>
+<ul>
+<li><strong>自动同步更新</strong>：你不需要手动更新视图，Vue 会根据数据的变化自动更新 DOM。</li>
+<li><strong>更高效</strong>：通过 Proxy 和依赖收集机制，Vue 3 的响应式系统比 Vue 2 更加高效，能够处理更多复杂的数据结构。</li>
+<li><strong>更好的可扩展性</strong>：Vue 3 的响应式系统更加灵活，支持更复杂的场景，比如与第三方库的集成。</li>
+</ul>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { reactive } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> state = <span class="hljs-title function_">reactive</span>({
+  <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>
+});
+
+<span class="hljs-comment">// 视图中访问state.count，Vue会自动跟踪这个依赖</span>
+<span class="hljs-built_in">setInterval</span>(<span class="hljs-function">() =&gt;</span> {
+  state.<span class="hljs-property">count</span>++; <span class="hljs-comment">// 每秒增加1，视图会自动更新</span>
+}, <span class="hljs-number">1000</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive } from &apos;vue&apos;;
+
+const state = reactive({
+  count: 0
+});
+
+// 视图中访问state.count，Vue会自动跟踪这个依赖
+setInterval(() => {
+  state.count++; // 每秒增加1，视图会自动更新
+}, 1000);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>state</code> 是一个响应式对象，<code>state.count</code> 在每秒钟变化时，Vue会自动更新绑定该数据的视图。</p>
+<h2>总结</h2>
+<p>Vue 3 的响应式系统通过 <strong>Proxy</strong> 和 <strong>依赖收集</strong>，使得数据与视图之间的绑定更加自动化和高效。它帮助开发者减少了手动更新视图的工作，提高了开发效率。通过 <code>reactive</code> 和 <code>ref</code>，开发者可以轻松地创建响应式的数据结构，并且 Vue 会处理后续的更新操作。</p>

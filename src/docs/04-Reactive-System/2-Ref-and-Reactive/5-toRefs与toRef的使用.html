@@ -1,0 +1,159 @@
+<h1>Vue 3 中 <code>toRefs</code> 与 <code>toRef</code> 的使用</h1>
+<h2>作用</h2>
+<p><code>toRefs</code> 和 <code>toRef</code> 用于将一个响应式对象的每一个属性转换为 <code>ref</code> 对象，使得这些属性仍然保持响应式。</p>
+<ul>
+<li><strong><code>toRefs</code></strong>：可以批量转换一个响应式对象中的所有属性。</li>
+<li><strong><code>toRef</code></strong>：只转换一个响应式对象的单一属性。</li>
+</ul>
+<h2>语法</h2>
+<h3><code>toRefs</code></h3>
+<p><code>toRefs</code> 将响应式对象中的每个属性都转换成 <code>ref</code> 对象。这样，你可以在模板中以简洁的方式访问和修改每个属性，同时保持它们的响应式能力。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> { name, age, gender } = <span class="hljs-title function_">toRefs</span>(person)
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let { name, age, gender } = toRefs(person)
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这里 <code>name</code>、<code>age</code> 和 <code>gender</code> 都变成了 <code>ref</code> 类型，因此在 JavaScript 中你需要使用 <code>.value</code> 来访问它们的值。</p>
+<h3><code>toRef</code></h3>
+<p><code>toRef</code> 将响应式对象中的单个属性转换为 <code>ref</code> 对象。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> age = <span class="hljs-title function_">toRef</span>(person, <span class="hljs-string">&#x27;age&#x27;</span>)
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let age = toRef(person, &apos;age&apos;)
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p><code>toRef</code> 只转换 <code>person</code> 对象中的 <code>age</code> 属性。</p>
+<h2>区别</h2>
+<ul>
+<li><strong><code>toRefs</code></strong>：用于转换响应式对象中的所有属性，可以批量转换。</li>
+<li><strong><code>toRef</code></strong>：用于转换响应式对象中的单个属性，返回的是 <code>ref</code> 对象。</li>
+</ul>
+<h2>示例代码</h2>
+<p>以下是使用 <code>toRefs</code> 和 <code>toRef</code> 的示例，展示如何将响应式对象的属性转换为 <code>ref</code>，并保持响应式功能。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h2&gt;姓名：{{ person.name }}&lt;/h2&gt;
+    &lt;h2&gt;年龄：{{ person.age }}&lt;/h2&gt;
+    &lt;h2&gt;性别：{{ person.gender }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeName&quot;&gt;修改名字&lt;/button&gt;
+    &lt;button @click=&quot;changeAge&quot;&gt;修改年龄&lt;/button&gt;
+    &lt;button @click=&quot;changeGender&quot;&gt;修改性别&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup name=&quot;Person&quot;&gt;
+  import { ref, reactive, toRefs, toRef } from 'vue'
+
+  // 创建一个响应式对象
+  let person = reactive({ name: '张三', age: 18, gender: '男' })
+
+  // 使用 toRefs 批量转换 person 对象中的属性
+  let { name, age, gender } = toRefs(person)
+
+  // 使用 toRef 转换 person 中的单个属性
+  let ageRef = toRef(person, 'age')
+
+  // 修改名字的函数
+  function changeName() {
+    name.value += '~'  // 修改 name 属性
+  }
+
+  // 修改年龄的函数
+  function changeAge() {
+    ageRef.value += 1  // 修改 age 属性
+  }
+
+  // 修改性别的函数
+  function changeGender() {
+    gender.value = '女'  // 修改 gender 属性
+  }
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h2>姓名：{{ person.name }}</h2>
+    <h2>年龄：{{ person.age }}</h2>
+    <h2>性别：{{ person.gender }}</h2>
+    <button @click=&quot;changeName&quot;>修改名字</button>
+    <button @click=&quot;changeAge&quot;>修改年龄</button>
+    <button @click=&quot;changeGender&quot;>修改性别</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup name=&quot;Person&quot;>
+  import { ref, reactive, toRefs, toRef } from &apos;vue&apos;
+
+  // 创建一个响应式对象
+  let person = reactive({ name: &apos;张三&apos;, age: 18, gender: &apos;男&apos; })
+
+  // 使用 toRefs 批量转换 person 对象中的属性
+  let { name, age, gender } = toRefs(person)
+
+  // 使用 toRef 转换 person 中的单个属性
+  let ageRef = toRef(person, &apos;age&apos;)
+
+  // 修改名字的函数
+  function changeName() {
+    name.value += &apos;~&apos;  // 修改 name 属性
+  }
+
+  // 修改年龄的函数
+  function changeAge() {
+    ageRef.value += 1  // 修改 age 属性
+  }
+
+  // 修改性别的函数
+  function changeGender() {
+    gender.value = &apos;女&apos;  // 修改 gender 属性
+  }
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>代码解析</h2>
+<ol>
+<li>
+<p><strong>响应式对象</strong>：</p>
+<ul>
+<li><code>person</code> 是一个响应式对象，包含 <code>name</code>、<code>age</code> 和 <code>gender</code> 属性。</li>
+</ul>
+</li>
+<li>
+<p><strong>使用 <code>toRefs</code> 批量转换</strong>：</p>
+<ul>
+<li><code>let { name, age, gender } = toRefs(person)</code>：将 <code>person</code> 对象中的所有属性批量转换为 <code>ref</code> 对象。每个属性变为 <code>ref</code>，在 JavaScript 中可以通过 <code>.value</code> 来访问。</li>
+</ul>
+</li>
+<li>
+<p><strong>使用 <code>toRef</code> 转换单一属性</strong>：</p>
+<ul>
+<li><code>let ageRef = toRef(person, 'age')</code>：将 <code>person</code> 对象中的 <code>age</code> 属性转换为 <code>ref</code> 对象，使得 <code>ageRef</code> 成为响应式的，并可以通过 <code>.value</code> 访问。</li>
+</ul>
+</li>
+<li>
+<p><strong>修改属性</strong>：</p>
+<ul>
+<li><code>changeName</code>、<code>changeAge</code> 和 <code>changeGender</code> 方法分别通过 <code>.value</code> 修改对应属性的值。</li>
+</ul>
+</li>
+</ol>
+<h2>总结</h2>
+<ul>
+<li><strong><code>toRefs</code></strong> 用于将响应式对象中的所有属性批量转换为 <code>ref</code>，使得每个属性都具有响应式能力。</li>
+<li><strong><code>toRef</code></strong> 用于将响应式对象中的单个属性转换为 <code>ref</code>，可以更精细地控制哪些属性需要转换。</li>
+<li>转换后的属性依然保持响应式，因此可以继续在模板中直接使用，也可以在 JavaScript 代码中通过 <code>.value</code> 访问和修改。</li>
+</ul>
+<p>这两者的选择取决于你需要转换的对象属性数量。如果需要批量转换，使用 <code>toRefs</code>；如果只需转换一个属性，使用 <code>toRef</code>。</p>

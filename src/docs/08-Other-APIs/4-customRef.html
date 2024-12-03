@@ -1,0 +1,126 @@
+<h1><code>customRef</code> 的使用</h1>
+<p><code>customRef</code> 是 Vue 3 中提供的一个 API，允许开发者创建自定义的响应式引用。这种引用提供了更多的控制权，特别是在对响应式数据的依赖项跟踪和更新触发进行逻辑控制时。<code>customRef</code> 允许你自定义对数据的响应式处理，比如实现防抖、节流等优化。</p>
+<h2>作用</h2>
+<p><code>customRef</code> 使得开发者可以控制当数据变化时如何触发更新，它提供了 <code>get</code> 和 <code>set</code> 方法，允许你在数据访问和修改时加入额外的逻辑。</p>
+<h3>防抖效果实现</h3>
+<p>通过 <code>customRef</code> 创建一个具有防抖效果的响应式引用。以下是一个示例代码，它展示了如何用 <code>customRef</code> 实现一个带有防抖效果的 <code>msg</code> 引用。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-typescript"><span class="hljs-keyword">import</span> { customRef } <span class="hljs-keyword">from</span> <span class="hljs-string">&quot;vue&quot;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">useSumRef</span>(<span class="hljs-params"><span class="hljs-attr">initValue</span>: <span class="hljs-built_in">string</span>, <span class="hljs-attr">delay</span>: <span class="hljs-built_in">number</span></span>) {
+  <span class="hljs-keyword">let</span> msg = <span class="hljs-title function_">customRef</span>(<span class="hljs-function">(<span class="hljs-params">track, trigger</span>) =&gt;</span> {
+    <span class="hljs-keyword">let</span> <span class="hljs-attr">timer</span>: <span class="hljs-built_in">number</span>;
+
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-title function_">get</span>(<span class="hljs-params"></span>) {
+        <span class="hljs-title function_">track</span>(); <span class="hljs-comment">// 告诉 Vue 这个数据很重要，需要持续关注，一旦变化就更新</span>
+        <span class="hljs-keyword">return</span> initValue;
+      },
+      <span class="hljs-title function_">set</span>(<span class="hljs-params">value</span>) {
+        <span class="hljs-built_in">clearTimeout</span>(timer); <span class="hljs-comment">// 每次设置新值时，清除上一个定时器</span>
+        timer = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> {
+          initValue = value; <span class="hljs-comment">// 更新值</span>
+          <span class="hljs-title function_">trigger</span>(); <span class="hljs-comment">// 通知 Vue 数据已更新</span>
+        }, delay); <span class="hljs-comment">// 延时后触发更新</span>
+      }
+    };
+  });
+
+  <span class="hljs-keyword">return</span> { msg };
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { customRef } from &quot;vue&quot;;
+
+export default function useSumRef(initValue: string, delay: number) {
+  let msg = customRef((track, trigger) => {
+    let timer: number;
+
+    return {
+      get() {
+        track(); // 告诉 Vue 这个数据很重要，需要持续关注，一旦变化就更新
+        return initValue;
+      },
+      set(value) {
+        clearTimeout(timer); // 每次设置新值时，清除上一个定时器
+        timer = setTimeout(() => {
+          initValue = value; // 更新值
+          trigger(); // 通知 Vue 数据已更新
+        }, delay); // 延时后触发更新
+      }
+    };
+  });
+
+  return { msg };
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>组件中使用</h3>
+<p>在组件中使用自定义 <code>ref</code> 时，只需要调用 <code>useSumRef</code> 函数并传入初始值和延迟时间即可。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div&gt;
+    &lt;input v-model=&quot;msg&quot; placeholder=&quot;请输入内容&quot; /&gt;
+    &lt;p&gt;当前输入：{{ msg }}&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot;&gt;
+import { defineComponent, ref } from &quot;vue&quot;;
+import useSumRef from &quot;./useSumRef&quot;;
+
+export default defineComponent({
+  setup() {
+    const { msg } = useSumRef(&quot;初始值&quot;, 500); // 500ms 的防抖延迟
+
+    return { msg };
+  }
+});
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div>
+    <input v-model=&quot;msg&quot; placeholder=&quot;请输入内容&quot; />
+    <p>当前输入：{{ msg }}</p>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot;>
+import { defineComponent, ref } from &quot;vue&quot;;
+import useSumRef from &quot;./useSumRef&quot;;
+
+export default defineComponent({
+  setup() {
+    const { msg } = useSumRef(&quot;初始值&quot;, 500); // 500ms 的防抖延迟
+
+    return { msg };
+  }
+});
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>解释</h2>
+<h3><code>customRef</code> 详细解析</h3>
+<ol>
+<li><code>customRef</code> 接收一个工厂函数，该函数有两个参数：<code>track</code> 和 <code>trigger</code>。<code>track</code> 用于标记数据依赖，<code>trigger</code> 用于触发视图更新。</li>
+<li><code>get</code> 方法用于获取数据，并通过 <code>track()</code> 告诉 Vue 该数据需要被观察，一旦其值发生变化，视图需要更新。</li>
+<li><code>set</code> 方法用于修改数据。通过 <code>clearTimeout</code> 和 <code>setTimeout</code> 结合防抖逻辑，确保在用户停止输入一段时间后才触发更新。</li>
+</ol>
+<h3>防抖效果</h3>
+<ul>
+<li>每次用户输入时，会重置 <code>setTimeout</code>，只有在输入停止超过设定的时间（<code>delay</code>）后，数据才会真正更新。</li>
+<li>防止频繁更新，尤其在处理用户输入、搜索建议等场景中非常有用。</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong><code>customRef</code></strong> 允许开发者对响应式引用的 <code>get</code> 和 <code>set</code> 操作进行自定义，实现更细粒度的控制。</li>
+<li><strong>防抖效果</strong>：在用户输入过程中避免频繁更新，提升性能。</li>
+<li>适用于需要更复杂逻辑处理的响应式数据，如防抖、节流、异步操作等。</li>
+</ul>

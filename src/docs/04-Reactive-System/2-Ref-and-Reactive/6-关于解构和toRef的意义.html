@@ -1,0 +1,224 @@
+<h1>关于解构和toRef的意义的两个问题</h1>
+<blockquote>
+<p>之前提到 reactive 会将对象的所有嵌套属性也变为响应式。那为什么还要通过toRef来让其属性变成响应式的？</p>
+</blockquote>
+<p>让我们深入了解一下 <code>reactive</code> 和 <code>toRef</code> 之间的区别，以及它们各自的作用。</p>
+<h2>1. <strong><code>reactive</code> 的响应式机制</strong></h2>
+<p><code>reactive</code> 确实会将对象的所有嵌套属性变成响应式。它使用 <code>Proxy</code> 对象来实现深层次的响应式追踪。所以，对于一个深层嵌套的对象，<code>reactive</code> 会保证该对象的每一层属性都具有响应式能力。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> obj = <span class="hljs-title function_">reactive</span>({
+  <span class="hljs-attr">room</span>: {
+    <span class="hljs-attr">floor</span>: {
+      <span class="hljs-attr">dust</span>: <span class="hljs-number">1</span>
+    }
+  }
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let obj = reactive({
+  room: {
+    floor: {
+      dust: 1
+    }
+  }
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>obj</code> 是一个响应式对象，<code>obj.a</code>、<code>obj.a.b</code> 和 <code>obj.a.b.c</code> 都是响应式的。修改其中任何一个属性的值都会触发视图更新。</p>
+<h2>2. <strong><code>toRef</code> 的作用</strong></h2>
+<p>虽然 <code>reactive</code> 会使整个对象及其嵌套属性都变成响应式，但是它会返回一个“代理对象”（<code>Proxy</code>）。在某些场景下，你可能只想单独访问某个属性，并且希望该属性本身是一个独立的 <code>ref</code> 对象，这时就可以使用 <code>toRef</code>。</p>
+<h3>为什么需要 <code>toRef</code>？</h3>
+<ul>
+<li>
+<p><strong>解构时保持响应式</strong>：
+如果你解构一个 <code>reactive</code> 对象，解构出来的每个属性将不再是响应式的。为了保持解构出来的每个属性的响应式能力，可以使用 <code>toRefs</code> 或 <code>toRef</code>。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> person = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> });
+
+<span class="hljs-keyword">let</span> { name, age } = <span class="hljs-title function_">toRefs</span>(person);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let person = reactive({ name: &apos;张三&apos;, age: 18 });
+
+let { name, age } = toRefs(person);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>使用 <code>toRefs</code> 后，<code>name</code> 和 <code>age</code> 依然是 <code>ref</code>，而不是普通的值，这样它们仍然具有响应式。</p>
+</li>
+<li>
+<p><strong>单独控制响应式属性</strong>：
+如果你只需要从一个复杂的对象中提取某一个属性，并希望这个属性保持响应式，可以使用 <code>toRef</code>，而不需要将整个对象解构出来。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> person = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> });
+
+<span class="hljs-keyword">let</span> nameRef = <span class="hljs-title function_">toRef</span>(person, <span class="hljs-string">&#x27;name&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let person = reactive({ name: &apos;张三&apos;, age: 18 });
+
+let nameRef = toRef(person, &apos;name&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>通过 <code>toRef</code>，<code>nameRef</code> 会变成一个响应式的 <code>ref</code>，并且在修改时不需要使用 <code>.value</code> 来解包属性。</p>
+</li>
+</ul>
+<h2>3. <strong>总结：<code>reactive</code> 和 <code>toRef</code> 的关系</strong></h2>
+<ul>
+<li><strong><code>reactive</code></strong>：使整个对象（包括嵌套对象）都变得响应式。对于嵌套对象，修改任何层级的属性都会自动触发视图更新。</li>
+<li><strong><code>toRef</code></strong>：用于将响应式对象的单个属性提取为 <code>ref</code>，使得该属性可以在解构时或其他需要时独立作为响应式数据使用。</li>
+</ul>
+<h3>关键点：</h3>
+<ul>
+<li><strong>解构问题</strong>：如果你用解构方式从 <code>reactive</code> 对象中提取属性，属性就不再是响应式的。因此，使用 <code>toRefs</code> 或 <code>toRef</code> 可以确保即使在解构时，属性仍然保持响应式。</li>
+<li><strong>单独提取属性</strong>：有时候你不需要整个对象的响应式，或者你只关心对象中的某一个属性，这时使用 <code>toRef</code> 提取该属性会更方便。</li>
+</ul>
+<p>因此，<code>reactive</code> 本身虽然会使整个对象的嵌套属性响应式，但如果你希望从对象中提取单个属性并保持响应式，或者想在解构时保持响应式，<code>toRef</code> 就显得很有用了。</p>
+<hr>
+<blockquote>
+<p>解构是什么意思？举例说明</p>
+</blockquote>
+<p>以下为“解构”的概念的详细解释，并通过示例说明为什么在解构时需要特别注意响应式。</p>
+<h2><strong>解构是什么？</strong></h2>
+<p><strong>解构（Destructuring）</strong> 是一种 JavaScript 的语法糖，它允许我们从数组或对象中提取值，并将这些值赋给变量。常见的解构方式有两种：对象解构和数组解构。</p>
+<h3><strong>对象解构</strong></h3>
+<p>对象解构是通过花括号 <code>{}</code> 提取对象的属性，并为每个属性指定一个变量名。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">const</span> person = { <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> };
+
+<span class="hljs-comment">// 解构对象，提取 name 和 age 属性</span>
+<span class="hljs-keyword">let</span> { name, age } = person;
+
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(name);  <span class="hljs-comment">// 输出 &#x27;张三&#x27;</span>
+<span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(age);   <span class="hljs-comment">// 输出 18</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="const person = { name: &apos;张三&apos;, age: 18 };
+
+// 解构对象，提取 name 和 age 属性
+let { name, age } = person;
+
+console.log(name);  // 输出 &apos;张三&apos;
+console.log(age);   // 输出 18
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，<code>name</code> 和 <code>age</code> 就是从 <code>person</code> 对象中提取出来的属性。</p>
+<h2><strong>为什么解构会导致响应式失效？</strong></h2>
+<p>在 Vue 中，使用 <code>reactive</code> 创建的对象是响应式的，但当你使用对象解构时，解构出来的每个属性就 <strong>不再是响应式的</strong>，而是普通的 JavaScript 数据。因此，在解构时，需要特别注意属性的响应式问题。</p>
+<h3><strong>示例：解构后的响应式问题</strong></h3>
+<p>假设你有一个响应式对象：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { reactive } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">let</span> person = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> });
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive } from &apos;vue&apos;;
+
+let person = reactive({ name: &apos;张三&apos;, age: 18 });
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这里，<code>person</code> 是一个响应式对象，<code>name</code> 和 <code>age</code> 都是响应式的，修改它们会触发视图更新。</p>
+<h4>1. <strong>不使用 <code>toRefs</code> 的解构（失去响应式）</strong></h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> { name, age } = person;  <span class="hljs-comment">// 解构时失去了响应式</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let { name, age } = person;  // 解构时失去了响应式
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>虽然 <code>person</code> 是响应式的，但是 <code>name</code> 和 <code>age</code> 在这里 <strong>已经不再是响应式的</strong>，它们变成了普通的 JavaScript 数据。所以，修改 <code>name</code> 或 <code>age</code> 后，视图并不会更新。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js">name = <span class="hljs-string">&#x27;李四&#x27;</span>;  <span class="hljs-comment">// 直接修改不会触发视图更新</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="name = &apos;李四&apos;;  // 直接修改不会触发视图更新
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这种做法的风险在于，解构出来的属性无法触发视图更新，因为它们没有绑定 Vue 的响应式系统。</p>
+<h4>2. <strong>使用 <code>toRefs</code> 的解构（保持响应式）</strong></h4>
+<p>为了在解构时保持属性的响应式，我们可以使用 <code>toRefs</code> 或 <code>toRef</code>：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">import</span> { reactive, toRefs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">let</span> person = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">name</span>: <span class="hljs-string">&#x27;张三&#x27;</span>, <span class="hljs-attr">age</span>: <span class="hljs-number">18</span> });
+<span class="hljs-keyword">let</span> { name, age } = <span class="hljs-title function_">toRefs</span>(person);  <span class="hljs-comment">// 使用 toRefs 保持响应式</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { reactive, toRefs } from &apos;vue&apos;;
+
+let person = reactive({ name: &apos;张三&apos;, age: 18 });
+let { name, age } = toRefs(person);  // 使用 toRefs 保持响应式
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>通过 <code>toRefs</code> 解构后，<code>name</code> 和 <code>age</code> 仍然是 <code>ref</code> 类型，保持响应式特性，修改它们时会触发视图更新。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js">name.<span class="hljs-property">value</span> = <span class="hljs-string">&#x27;李四&#x27;</span>;  <span class="hljs-comment">// 修改时通过 .value 触发视图更新</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="name.value = &apos;李四&apos;;  // 修改时通过 .value 触发视图更新
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3><strong>解构和响应式的总结</strong></h3>
+<ul>
+<li><strong>解构会破坏响应式</strong>：如果你直接解构 <code>reactive</code> 对象的属性，解构出来的属性会失去响应式特性。</li>
+<li><strong><code>toRefs</code> 保持响应式</strong>：使用 <code>toRefs</code> 或 <code>toRef</code> 解构时，解构出来的属性仍然是 <code>ref</code> 类型，保持响应式，修改它们时会触发视图更新。</li>
+</ul>
+<h2><strong>为什么 <code>toRefs</code> 比 <code>toRef</code> 更常用？</strong></h2>
+<ul>
+<li><strong><code>toRefs</code></strong>：适用于需要从一个响应式对象中批量提取多个属性并保持它们的响应式。</li>
+<li><strong><code>toRef</code></strong>：适用于从响应式对象中只提取单个属性并保持该属性的响应式。</li>
+</ul>
+<h3><strong>示例总结</strong></h3>
+<h4>1. <strong>不使用 <code>toRefs</code> 的解构（失去响应式）</strong></h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> { name, age } = person;  <span class="hljs-comment">// 解构后，name 和 age 不再是响应式的</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let { name, age } = person;  // 解构后，name 和 age 不再是响应式的
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>2. <strong>使用 <code>toRefs</code> 的解构（保持响应式）</strong></h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> { name, age } = <span class="hljs-title function_">toRefs</span>(person);  <span class="hljs-comment">// 解构后，name 和 age 仍然是响应式的</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let { name, age } = toRefs(person);  // 解构后，name 和 age 仍然是响应式的
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>解构时需要注意，<strong>如果不使用 <code>toRefs</code>，解构出来的属性就不会是响应式的</strong>，而是普通的 JavaScript 值。为了保持属性的响应式，应该使用 <code>toRefs</code>。</p>

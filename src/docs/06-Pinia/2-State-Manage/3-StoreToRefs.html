@@ -1,0 +1,57 @@
+<h1>storeToRefs</h1>
+<p>在 Pinia 中，<code>storeToRefs</code> 是一个非常实用的工具，它可以将 <code>store</code> 中的状态转为 Vue 的 <code>ref</code> 对象，方便在模板中进行绑定和使用。这使得在组件中使用 <code>store</code> 状态时，能够更轻松地响应状态变化。</p>
+<h2>使用 <code>storeToRefs</code> 转换 <code>store</code> 数据</h2>
+<p>通过 <code>storeToRefs</code>，您可以将 Pinia <code>store</code> 中的状态转换成 <code>ref</code>，然后在模板中直接使用这些 <code>ref</code> 值，而无需使用 <code>.value</code> 语法。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;count&quot;&gt;
+    &lt;h2&gt;当前求和为：{{ sum }}&lt;/h2&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Count&quot;&gt;
+  import { useCountStore } from '@/store/count'
+  /* 引入 storeToRefs */
+  import { storeToRefs } from 'pinia'
+
+  /* 得到 countStore */
+  const countStore = useCountStore()
+  /* 使用 storeToRefs 转换 countStore，随后解构 */
+  const { sum } = storeToRefs(countStore)
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;count&quot;>
+    <h2>当前求和为：{{ sum }}</h2>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Count&quot;>
+  import { useCountStore } from &apos;@/store/count&apos;
+  /* 引入 storeToRefs */
+  import { storeToRefs } from &apos;pinia&apos;
+
+  /* 得到 countStore */
+  const countStore = useCountStore()
+  /* 使用 storeToRefs 转换 countStore，随后解构 */
+  const { sum } = storeToRefs(countStore)
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ol>
+<li><strong><code>storeToRefs</code> 的作用</strong>：它将 <code>countStore</code> 中的状态转为 <code>ref</code>，使得您可以在模板中直接使用它们。例如，<code>sum</code> 就变成了一个 <code>ref</code>，在模板中不需要 <code>.value</code>。</li>
+<li><strong>解构后的效果</strong>：解构 <code>storeToRefs(countStore)</code> 后，您可以直接使用 <code>sum</code>，而无需显式地访问 <code>sum.value</code>，使模板更简洁。</li>
+</ol>
+<h2>注意事项</h2>
+<ul>
+<li><code>storeToRefs</code> 仅转换 <code>store</code> 中的状态，而 Vue 的 <code>toRefs</code> 是用来转换 <code>reactive</code> 对象的。</li>
+<li>这种方式适用于当你希望直接将 <code>store</code> 的数据绑定到模板时，避免每次访问数据时都使用 <code>.value</code>。</li>
+</ul>
+<h2>小结</h2>
+<p><code>storeToRefs</code> 是在 Pinia 中非常方便的工具，它简化了模板中的数据访问，使得 Vue 组件中的状态使用更加流畅和自然。</p>

@@ -1,0 +1,270 @@
+<h1>Vue选项式API与组合式API的区别及组合式API的优势</h1>
+<p>Vue.js 在 Vue 2 中使用的是<strong>选项式API</strong>，而 Vue 3 引入了新的<strong>组合式API</strong>。两者在代码组织、灵活性和功能表现上存在显著差异。以下从语法、特性和实际使用场景的角度进行详细对比，并总结组合式API的优势。</p>
+<hr>
+<h2>选项式API（Vue 2）</h2>
+<p>选项式API通过组件的配置对象来定义组件逻辑，如 <code>data</code>、<code>methods</code>、<code>computed</code>、<code>watch</code> 等。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">count</span>: <span class="hljs-number">0</span>,
+    };
+  },
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-title function_">increment</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-variable language_">this</span>.<span class="hljs-property">count</span>++;
+    },
+  },
+  <span class="hljs-title function_">mounted</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Component mounted!&#x27;</span>);
+  },
+};
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="export default {
+  data() {
+    return {
+      count: 0,
+    };
+  },
+  methods: {
+    increment() {
+      this.count++;
+    },
+  },
+  mounted() {
+    console.log(&apos;Component mounted!&apos;);
+  },
+};
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ol>
+<li><strong>分区管理逻辑</strong>：组件逻辑基于选项（如 <code>data</code>、<code>methods</code>）分散在不同的配置块中。</li>
+<li><strong>清晰的组织结构</strong>：适合简单组件，逻辑职责分离明确。</li>
+<li><strong>可读性降低（复杂组件）</strong>：对于复杂组件，单个功能逻辑被拆分成多个部分，代码难以维护和理解。</li>
+</ol>
+<hr>
+<h2>组合式API（Vue 3）</h2>
+<p>组合式API通过引入 <code>setup</code> 函数，将逻辑组织在一个统一的作用域中，使用 Vue 的响应式特性（如 <code>ref</code> 和 <code>reactive</code>）来实现状态和行为。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { ref, onMounted } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> count = <span class="hljs-title function_">ref</span>(<span class="hljs-number">0</span>);
+
+    <span class="hljs-keyword">const</span> <span class="hljs-title function_">increment</span> = (<span class="hljs-params"></span>) =&gt; {
+      count.<span class="hljs-property">value</span>++;
+    };
+
+    <span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Component mounted!&#x27;</span>);
+    });
+
+    <span class="hljs-keyword">return</span> {
+      count,
+      increment,
+    };
+  },
+};
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { ref, onMounted } from &apos;vue&apos;;
+
+export default {
+  setup() {
+    const count = ref(0);
+
+    const increment = () => {
+      count.value++;
+    };
+
+    onMounted(() => {
+      console.log(&apos;Component mounted!&apos;);
+    });
+
+    return {
+      count,
+      increment,
+    };
+  },
+};
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>特点</h3>
+<ol>
+<li><strong>集中管理逻辑</strong>：与特定功能相关的逻辑可以集中在一起。</li>
+<li><strong>高灵活性</strong>：便于逻辑复用，通过自定义的组合函数（Composition Functions）实现跨组件共享逻辑。</li>
+<li><strong>类型推导更友好</strong>：配合 TypeScript，组合式API的类型推断更加直观和强大。</li>
+</ol>
+<hr>
+<h2>选项式API与组合式API的主要区别</h2>
+<table>
+<thead>
+<tr>
+<th>特性</th>
+<th>选项式API</th>
+<th>组合式API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>逻辑组织</strong></td>
+<td>按功能分散到 <code>data</code>、<code>methods</code> 等</td>
+<td>在 <code>setup</code> 中按逻辑功能集中管理</td>
+</tr>
+<tr>
+<td><strong>代码复用</strong></td>
+<td>使用混入（Mixins），但可能导致冲突</td>
+<td>通过组合函数，模块化且无冲突</td>
+</tr>
+<tr>
+<td><strong>类型支持</strong></td>
+<td>类型推导不直观</td>
+<td>更适合与 TypeScript 集成</td>
+</tr>
+<tr>
+<td><strong>复杂度管理</strong></td>
+<td>随组件复杂性增加可读性降低</td>
+<td>能够更好地组织复杂逻辑</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>响应式基于 <code>Object.defineProperty</code></td>
+<td>响应式基于 Proxy，性能提升明显</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2>组合式API的优势</h2>
+<h3>1. <strong>更好的逻辑复用</strong></h3>
+<ul>
+<li>通过组合函数（<code>Composition Functions</code>）抽取逻辑，不再依赖于 <code>Mixins</code>。</li>
+<li>解决了混入逻辑命名冲突的问题。</li>
+</ul>
+<h3>示例</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-comment">// 一个通用的计数器逻辑</span>
+<span class="hljs-keyword">import</span> { ref } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">useCounter</span>(<span class="hljs-params"></span>) {
+  <span class="hljs-keyword">const</span> count = <span class="hljs-title function_">ref</span>(<span class="hljs-number">0</span>);
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">increment</span> = (<span class="hljs-params"></span>) =&gt; count.<span class="hljs-property">value</span>++;
+  <span class="hljs-keyword">const</span> <span class="hljs-title function_">decrement</span> = (<span class="hljs-params"></span>) =&gt; count.<span class="hljs-property">value</span>--;
+
+  <span class="hljs-keyword">return</span> { count, increment, decrement };
+}
+
+<span class="hljs-comment">// 在组件中复用</span>
+<span class="hljs-keyword">import</span> { useCounter } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./useCounter&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> { count, increment, decrement } = <span class="hljs-title function_">useCounter</span>();
+    <span class="hljs-keyword">return</span> { count, increment, decrement };
+  },
+};
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 一个通用的计数器逻辑
+import { ref } from &apos;vue&apos;;
+
+export function useCounter() {
+  const count = ref(0);
+  const increment = () => count.value++;
+  const decrement = () => count.value--;
+
+  return { count, increment, decrement };
+}
+
+// 在组件中复用
+import { useCounter } from &apos;./useCounter&apos;;
+
+export default {
+  setup() {
+    const { count, increment, decrement } = useCounter();
+    return { count, increment, decrement };
+  },
+};
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>2. <strong>更好的逻辑聚合</strong></h3>
+<ul>
+<li>可以将相关逻辑（如状态、方法、生命周期钩子等）集中在一起，代码更加清晰。</li>
+</ul>
+<h3>示例</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { ref, watch, onMounted } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> count = <span class="hljs-title function_">ref</span>(<span class="hljs-number">0</span>);
+
+    <span class="hljs-comment">// Watcher</span>
+    <span class="hljs-title function_">watch</span>(count, <span class="hljs-function">(<span class="hljs-params">newVal, oldVal</span>) =&gt;</span> {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">`Count changed from <span class="hljs-subst">${oldVal}</span> to <span class="hljs-subst">${newVal}</span>`</span>);
+    });
+
+    <span class="hljs-comment">// Lifecycle</span>
+    <span class="hljs-title function_">onMounted</span>(<span class="hljs-function">() =&gt;</span> {
+      <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-string">&#x27;Mounted with count:&#x27;</span>, count.<span class="hljs-property">value</span>);
+    });
+
+    <span class="hljs-keyword">return</span> { count };
+  },
+};
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { ref, watch, onMounted } from &apos;vue&apos;;
+
+export default {
+  setup() {
+    const count = ref(0);
+
+    // Watcher
+    watch(count, (newVal, oldVal) => {
+      console.log(`Count changed from ${oldVal} to ${newVal}`);
+    });
+
+    // Lifecycle
+    onMounted(() => {
+      console.log(&apos;Mounted with count:&apos;, count.value);
+    });
+
+    return { count };
+  },
+};
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>3. <strong>性能提升</strong></h3>
+<ul>
+<li>Vue 3 使用 Proxy 实现响应式系统，相比 Vue 2 的 <code>Object.defineProperty</code> 性能更优。</li>
+<li>组合式API原生支持 tree-shaking，可减小打包体积。</li>
+</ul>
+<h3>4. <strong>类型推导与IDE支持更强</strong></h3>
+<ul>
+<li>利用 TypeScript，变量和函数的类型推导更加友好，代码在 IDE 中获得更好的提示和校验支持。</li>
+</ul>
+<h3>5. <strong>更强的扩展能力</strong></h3>
+<ul>
+<li>可以更方便地构建基于 Vue 的插件或功能模块。</li>
+<li>比如使用 Vue3 的 <code>provide/inject</code> 实现跨层级组件的逻辑共享。</li>
+</ul>
+<hr>
+<h2>总结</h2>
+<p>选项式API适合初学者和简单组件，结构直观清晰；而组合式API提供了更灵活的逻辑组织方式和更强的扩展性，适合复杂组件和大型项目。在 Vue 3 中，组合式API更体现了框架设计的现代化，建议在新项目中优先使用。</p>

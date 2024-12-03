@@ -1,0 +1,168 @@
+<h1>Vue 3 中标签的 <code>ref</code> 属性</h1>
+<h2>作用：用于注册模板引用</h2>
+<p>在 Vue 3 中，<code>ref</code> 是一个非常有用的功能，允许你在模板中标记某个元素或组件实例，从而可以在 JavaScript 代码中访问它。<code>ref</code> 主要有两种应用场景：一种是用于普通 <code>DOM</code> 标签，另一种是用于组件标签。</p>
+<h3>用在普通 <code>DOM</code> 标签上</h3>
+<p>当 <code>ref</code> 用在普通的 <code>DOM</code> 元素上时，它的作用是获取该 <code>DOM</code> 元素的引用。这样，你可以直接访问并操作该元素，例如修改其内容、样式或执行其他操作。</p>
+<h4>示例代码：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h1 ref=&quot;title1&quot;&gt;尚硅谷&lt;/h1&gt;
+    &lt;h2 ref=&quot;title2&quot;&gt;前端&lt;/h2&gt;
+    &lt;h3 ref=&quot;title3&quot;&gt;Vue&lt;/h3&gt;
+    &lt;input type=&quot;text&quot; ref=&quot;inpt&quot;&gt; &lt;br&gt;&lt;br&gt;
+    &lt;button @click=&quot;showLog&quot;&gt;点我打印内容&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup name=&quot;Person&quot;&gt;
+  import { ref } from 'vue'
+  
+  let title1 = ref()
+  let title2 = ref()
+  let title3 = ref()
+
+  function showLog(){
+    // 通过id获取元素
+    const t1 = document.getElementById('title1')
+    // 打印内容
+    console.log((t1 as HTMLElement).innerText)
+    console.log((&lt;HTMLElement&gt;t1).innerText)
+    console.log(t1?.innerText)
+    
+    /************************************/
+    
+    // 通过ref获取元素
+    console.log(title1.value)
+    console.log(title2.value)
+    console.log(title3.value)
+  }
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h1 ref=&quot;title1&quot;>尚硅谷</h1>
+    <h2 ref=&quot;title2&quot;>前端</h2>
+    <h3 ref=&quot;title3&quot;>Vue</h3>
+    <input type=&quot;text&quot; ref=&quot;inpt&quot;> <br><br>
+    <button @click=&quot;showLog&quot;>点我打印内容</button>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot; setup name=&quot;Person&quot;>
+  import { ref } from &apos;vue&apos;
+  
+  let title1 = ref()
+  let title2 = ref()
+  let title3 = ref()
+
+  function showLog(){
+    // 通过id获取元素
+    const t1 = document.getElementById(&apos;title1&apos;)
+    // 打印内容
+    console.log((t1 as HTMLElement).innerText)
+    console.log((<HTMLElement>t1).innerText)
+    console.log(t1?.innerText)
+    
+    /************************************/
+    
+    // 通过ref获取元素
+    console.log(title1.value)
+    console.log(title2.value)
+    console.log(title3.value)
+  }
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>解释：</h4>
+<ul>
+<li>在 <code>template</code> 部分，使用 <code>ref</code> 将 <code>h1</code>、<code>h2</code>、<code>h3</code> 和 <code>input</code> 元素分别标记为 <code>title1</code>、<code>title2</code>、<code>title3</code> 和 <code>inpt</code>。</li>
+<li>在 <code>script</code> 部分，使用 <code>ref()</code> 定义了这些元素的引用，并通过 <code>title1.value</code> 访问相应的 <code>DOM</code> 元素。</li>
+<li>在点击按钮时，调用 <code>showLog</code> 方法，通过 <code>ref</code> 和 <code>document.getElementById()</code> 获取元素并打印它们的内容。</li>
+</ul>
+<h3>用在组件标签上</h3>
+<p><code>ref</code> 也可以用在子组件标签上，它的作用是获取该子组件的实例。这使得父组件可以访问子组件的内部数据或方法。</p>
+<h4>示例代码：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;!-- 父组件App.vue --&gt;
+&lt;template&gt;
+  &lt;Person ref=&quot;ren&quot;/&gt;
+  &lt;button @click=&quot;test&quot;&gt;测试&lt;/button&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot; setup name=&quot;App&quot;&gt;
+  import Person from './components/Person.vue'
+  import { ref } from 'vue'
+
+  let ren = ref()
+
+  function test(){
+    console.log(ren.value.name)
+    console.log(ren.value.age)
+  }
+&lt;/script&gt;
+
+
+&lt;!-- 子组件Person.vue中要使用defineExpose暴露内容 --&gt;
+&lt;script lang=&quot;ts&quot; setup name=&quot;Person&quot;&gt;
+  import { ref, defineExpose } from 'vue'
+  // 数据
+  let name = ref('张三')
+  let age = ref(18)
+  /****************************/
+  /****************************/
+  // 使用defineExpose将组件中的数据交给外部
+  defineExpose({ name, age })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- 父组件App.vue -->
+<template>
+  <Person ref=&quot;ren&quot;/>
+  <button @click=&quot;test&quot;>测试</button>
+</template>
+
+<script lang=&quot;ts&quot; setup name=&quot;App&quot;>
+  import Person from &apos;./components/Person.vue&apos;
+  import { ref } from &apos;vue&apos;
+
+  let ren = ref()
+
+  function test(){
+    console.log(ren.value.name)
+    console.log(ren.value.age)
+  }
+</script>
+
+
+<!-- 子组件Person.vue中要使用defineExpose暴露内容 -->
+<script lang=&quot;ts&quot; setup name=&quot;Person&quot;>
+  import { ref, defineExpose } from &apos;vue&apos;
+  // 数据
+  let name = ref(&apos;张三&apos;)
+  let age = ref(18)
+  /****************************/
+  /****************************/
+  // 使用defineExpose将组件中的数据交给外部
+  defineExpose({ name, age })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>解释：</h4>
+<ul>
+<li>在父组件 <code>App.vue</code> 中，通过 <code>ref=&quot;ren&quot;</code> 获取子组件 <code>Person</code> 的实例，并通过 <code>ren.value</code> 访问子组件的数据。</li>
+<li>在子组件 <code>Person.vue</code> 中，通过 <code>defineExpose()</code> 将组件中的数据（如 <code>name</code> 和 <code>age</code>）暴露给外部，这样父组件就可以访问这些数据。</li>
+</ul>
+<h3>总结</h3>
+<ul>
+<li><code>ref</code> 用于在 Vue 模板中注册引用，可以帮助你直接访问 <code>DOM</code> 元素或组件实例。</li>
+<li>在普通 <code>DOM</code> 标签中，<code>ref</code> 使你能够操作该元素。</li>
+<li>在组件标签中，<code>ref</code> 允许父组件访问子组件的实例和数据，这对于组件间的交互非常有用。</li>
+</ul>

@@ -1,0 +1,124 @@
+<h1>网页浏览中的 <code>push</code> 和 <code>replace</code></h1>
+<p>在网页的浏览历史管理中，<code>push</code> 和 <code>replace</code> 都是用于操作浏览器的历史记录栈（History Stack）的方法。它们的作用类似，但在处理历史记录时有所不同。</p>
+<h2>1. <code>pushState</code> 和 <code>replaceState</code>（浏览器原生 API）</h2>
+<ul>
+<li>
+<p><strong><code>pushState</code></strong>:</p>
+<ul>
+<li><code>pushState</code> 会向浏览器的历史记录中添加一个新的记录。</li>
+<li>这意味着点击浏览器的“后退”按钮时，用户可以回到上一个状态。</li>
+<li>示例：你点击一个链接后，浏览器 URL 发生变化，但当前页面不重新加载，历史记录会被更新。</li>
+</ul>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js">history.<span class="hljs-title function_">pushState</span>(state, title, url);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="history.pushState(state, title, url);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>
+<p><strong><code>replaceState</code></strong>:</p>
+<ul>
+<li><code>replaceState</code> 会修改当前的历史记录，而不会创建新的记录。</li>
+<li>用户点击“后退”按钮时，不会返回到这个修改过的状态，而是会直接跳到修改前的状态。</li>
+<li>适用于替换当前的 URL，而不希望用户能后退回去。</li>
+</ul>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js">history.<span class="hljs-title function_">replaceState</span>(state, title, url);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="history.replaceState(state, title, url);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<h2>2. <code>router-link</code> 中的 <code>replace</code></h2>
+<p>在前端框架中（如 Vue.js 和 React Router），通常会使用类似 <code>router-link</code> 或 <code>Link</code> 组件来进行路由跳转。</p>
+<ul>
+<li>
+<p><strong><code>router-link</code> 默认行为（<code>push</code>）</strong>：</p>
+<ul>
+<li>默认情况下，<code>&lt;router-link&gt;</code> 会执行类似 <code>pushState</code> 的操作，即向历史记录栈中添加一个新的条目。</li>
+<li>例如，如果你点击某个链接，浏览器的历史记录会新增一条记录，用户可以通过点击浏览器的“后退”按钮返回到上一个页面。</li>
+</ul>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/new-page&quot;</span>&gt;</span>Go to New Page<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<router-link to=&quot;/new-page&quot;>Go to New Page</router-link>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>
+<p><strong><code>replace</code> 选项</strong>：</p>
+<ul>
+<li>当你在 <code>router-link</code> 上使用 <code>replace</code> 属性时，Vue Router 会调用类似 <code>replaceState</code> 的操作，替换当前历史记录中的条目，而不是添加新的条目。</li>
+<li>用户点击“后退”按钮时，不会回到这个跳转前的页面，而是直接跳过这个跳转，回到更早的页面。</li>
+</ul>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/new-page&quot;</span> <span class="hljs-attr">replace</span>&gt;</span>Go to New Page<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<router-link to=&quot;/new-page&quot; replace>Go to New Page</router-link>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<h2>它们的应用场景</h2>
+<h3>1. <code>push</code>（创建新的历史记录）</h3>
+<p><code>push</code> 通常用于用户希望能够后退到当前页面的情况。典型的应用场景包括：</p>
+<ul>
+<li><strong>常规页面导航</strong>：例如点击一个链接从一个页面跳转到另一个页面时，默认是使用 <code>push</code>，这样用户可以使用浏览器的“后退”按钮返回上一个页面。</li>
+<li><strong>分页系统</strong>：在多页内容中，每次加载新的一页时，都需要将新的 URL 添加到历史记录中，以便用户能够后退到前一页。</li>
+</ul>
+<h3>2. <code>replace</code>（替换当前历史记录）</h3>
+<p><code>replace</code> 则用于那些你希望用户无法回退的情况，或者页面跳转时不需要增加历史记录的场景。典型的应用场景包括：</p>
+<ul>
+<li>
+<p><strong>表单提交后跳转</strong>：如果用户提交了一个表单并跳转到另一个页面，你可能希望用户无法通过点击“后退”按钮返回到表单页面。使用 <code>replace</code> 让提交后的页面替代表单页面，防止用户回到表单页面。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">router-link</span> <span class="hljs-attr">to</span>=<span class="hljs-string">&quot;/submit-success&quot;</span> <span class="hljs-attr">replace</span>&gt;</span>Submit<span class="hljs-tag">&lt;/<span class="hljs-name">router-link</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<router-link to=&quot;/submit-success&quot; replace>Submit</router-link>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>
+<p><strong>重定向操作</strong>：当你希望用户在访问某些页面时自动跳转（如登录验证后跳转到主页），而不想让用户通过浏览器的“后退”按钮返回到之前的页面。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-variable language_">this</span>.<span class="hljs-property">$router</span>.<span class="hljs-title function_">replace</span>(<span class="hljs-string">&#x27;/home&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="this.$router.replace(&apos;/home&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong><code>push</code></strong>: 会向历史记录中添加一条新记录，允许用户通过浏览器的“后退”按钮返回。</li>
+<li><strong><code>replace</code></strong>: 会替换当前的历史记录，用户无法通过“后退”按钮返回到修改前的页面。</li>
+</ul>
+<p>在 Vue Router 中，如果你想避免用户回到某个页面（比如跳转后不想让用户再返回登录页面），可以使用 <code>replace</code> 属性或 <code>replace</code> 方法。</p>

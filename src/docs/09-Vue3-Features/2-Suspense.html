@@ -1,0 +1,120 @@
+<h1>【Suspense】</h1>
+<h2>什么是 Suspense？</h2>
+<p><code>Suspense</code> 是 Vue 3 中的一个内置组件，用于处理异步组件的加载状态。它使得在异步组件加载时，我们可以渲染一些额外的内容（如加载指示器），从而提升用户体验。当我们需要等待某些资源（例如组件、数据）加载时，<code>Suspense</code> 允许我们显示一个占位内容（例如加载提示），直到异步组件加载完毕后再渲染其实际内容。</p>
+<p>通过使用 <code>Suspense</code>，我们可以更加优雅地处理异步组件的加载，避免在等待期间出现空白屏幕或较差的用户体验。</p>
+<h2>使用步骤</h2>
+<h3>1. 异步引入组件</h3>
+<p>首先，使用 Vue 的 <code>defineAsyncComponent</code> 方法将组件异步加载。<code>defineAsyncComponent</code> 可以让你异步地加载组件，只有在组件需要时才会进行加载，从而优化性能。</p>
+<h3>2. 使用 <code>Suspense</code> 包裹异步组件</h3>
+<p><code>Suspense</code> 组件需要包裹异步组件，并且配置 <code>default</code> 和 <code>fallback</code> 插槽。<code>default</code> 插槽用于显示加载完毕后的内容，而 <code>fallback</code> 插槽用于显示加载过程中的占位内容（如加载提示）。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-tsx"><span class="hljs-keyword">import</span> { defineAsyncComponent, <span class="hljs-title class_">Suspense</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-comment">// 异步引入组件</span>
+<span class="hljs-keyword">const</span> <span class="hljs-title class_">Child</span> = <span class="hljs-title function_">defineAsyncComponent</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-keyword">import</span>(<span class="hljs-string">&#x27;./Child.vue&#x27;</span>));
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { defineAsyncComponent, Suspense } from &apos;vue&apos;;
+
+// 异步引入组件
+const Child = defineAsyncComponent(() => import(&apos;./Child.vue&apos;));
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;app&quot;&gt;
+    &lt;h3&gt;我是App组件&lt;/h3&gt;
+    &lt;!-- 使用 Suspense 包裹异步组件 --&gt;
+    &lt;Suspense&gt;
+      &lt;template v-slot:default&gt;
+        &lt;!-- 加载完成后渲染的组件 --&gt;
+        &lt;Child /&gt;
+      &lt;/template&gt;
+      &lt;template v-slot:fallback&gt;
+        &lt;!-- 加载过程中显示的内容 --&gt;
+        &lt;h3&gt;加载中.......&lt;/h3&gt;
+      &lt;/template&gt;
+    &lt;/Suspense&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;app&quot;>
+    <h3>我是App组件</h3>
+    <!-- 使用 Suspense 包裹异步组件 -->
+    <Suspense>
+      <template v-slot:default>
+        <!-- 加载完成后渲染的组件 -->
+        <Child />
+      </template>
+      <template v-slot:fallback>
+        <!-- 加载过程中显示的内容 -->
+        <h3>加载中.......</h3>
+      </template>
+    </Suspense>
+  </div>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>解释</h3>
+<ul>
+<li><strong><code>defineAsyncComponent</code></strong>：用于异步加载 <code>Child.vue</code> 组件。它返回一个 Promise，当组件需要时会自动加载。</li>
+<li><strong><code>&lt;Suspense&gt;</code></strong>：包裹异步组件的容器。它有两个插槽：
+<ul>
+<li><strong><code>default</code> 插槽</strong>：当异步组件加载完成后，这里的内容会被渲染。</li>
+<li><strong><code>fallback</code> 插槽</strong>：在异步组件加载过程中，这里的内容会被渲染，通常用于显示加载状态（如加载提示、动画等）。</li>
+</ul>
+</li>
+</ul>
+<h3>加载状态与错误处理</h3>
+<p><code>Suspense</code> 还可以与异步组件的错误处理结合使用。如果异步组件加载失败，可以通过 <code>onErrorCaptured</code> 处理错误，或者在 <code>fallback</code> 插槽中展示错误信息。</p>
+<p>例如：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;Suspense&gt;
+  &lt;template v-slot:default&gt;
+    &lt;Child /&gt;
+  &lt;/template&gt;
+  &lt;template v-slot:fallback&gt;
+    &lt;h3&gt;加载中.......&lt;/h3&gt;
+    &lt;!-- 可以在此显示加载错误或重试按钮 --&gt;
+  &lt;/template&gt;
+&lt;/Suspense&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<Suspense>
+  <template v-slot:default>
+    <Child />
+  </template>
+  <template v-slot:fallback>
+    <h3>加载中.......</h3>
+    <!-- 可以在此显示加载错误或重试按钮 -->
+  </template>
+</Suspense>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>优点</h3>
+<ul>
+<li><strong>提高用户体验</strong>：通过显示加载状态，用户在等待异步组件加载时不会看到空白或不友好的页面。</li>
+<li><strong>性能优化</strong>：异步加载组件可以按需加载，减少初始加载的资源大小，提高页面加载速度。</li>
+<li><strong>简化代码</strong>：<code>Suspense</code> 提供了一种简单的方法来处理异步组件的加载状态，不需要额外的手动管理。</li>
+</ul>
+<h2>使用场景</h2>
+<h3>1. 异步加载视图</h3>
+<p>当你有一些大的视图组件，或者视图依赖于网络请求返回的数据时，<code>Suspense</code> 可以用于包裹这些异步加载的内容，避免页面空白显示，并显示加载状态或动画。</p>
+<h3>2. 分块加载（Code Splitting）</h3>
+<p>使用 <code>Suspense</code> 配合 Webpack 或 Vite 的代码分割功能，按需加载组件，减少初始加载时间，提升性能。</p>
+<h3>3. 异步数据加载</h3>
+<p>除了异步加载组件，<code>Suspense</code> 也可以与异步数据加载结合使用，例如，等待 API 请求返回数据后再渲染页面内容。</p>
+<h2>总结</h2>
+<p><code>Suspense</code> 是 Vue 3 中的一个非常有用的特性，它提供了一种简洁的方式来处理异步组件的加载状态。通过 <code>Suspense</code>，你可以确保异步组件加载时显示合适的占位内容，避免用户看到空白页面，并提升应用的整体用户体验。</p>

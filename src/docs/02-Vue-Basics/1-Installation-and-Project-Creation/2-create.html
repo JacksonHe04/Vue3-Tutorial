@@ -1,0 +1,267 @@
+<h1>Vue 实例：<code>new Vue()</code> 和组件实例的创建</h1>
+<p>本文档将介绍 Vue 2 中的 <code>new Vue()</code> 方法及 Vue 组件实例的创建过程，并结合 Vue 3 + Vite 项目结构说明这些步骤一般出现的具体位置。</p>
+<hr>
+<h2>Vue 实例：<code>new Vue()</code></h2>
+<h3><strong>定义</strong></h3>
+<p><code>new Vue()</code> 是 Vue 2 中创建根实例的方法。根实例是 Vue 应用的入口，用于挂载整个应用并管理全局状态。</p>
+<h3><strong>语法</strong></h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">new</span> <span class="hljs-title class_">Vue</span>({
+  <span class="hljs-attr">el</span>: <span class="hljs-string">&#x27;#app&#x27;</span>,
+  <span class="hljs-attr">data</span>: {
+    <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;Hello Vue!&#x27;</span>
+  },
+  <span class="hljs-attr">methods</span>: {
+    <span class="hljs-title function_">greet</span>(<span class="hljs-params"></span>) {
+      <span class="hljs-title function_">alert</span>(<span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>);
+    }
+  },
+  <span class="hljs-attr">render</span>: <span class="hljs-function"><span class="hljs-params">h</span> =&gt;</span> <span class="hljs-title function_">h</span>(<span class="hljs-title class_">App</span>) <span class="hljs-comment">// 渲染根组件</span>
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="new Vue({
+  el: &apos;#app&apos;,
+  data: {
+    message: &apos;Hello Vue!&apos;
+  },
+  methods: {
+    greet() {
+      alert(this.message);
+    }
+  },
+  render: h => h(App) // 渲染根组件
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3><strong>主要参数</strong></h3>
+<ul>
+<li><strong><code>el</code></strong>：挂载点，用于指定 DOM 节点（选择器形式）。</li>
+<li><strong><code>data</code></strong>：用于定义根实例的响应式数据。</li>
+<li><strong><code>methods</code></strong>：定义可被绑定到事件的函数。</li>
+<li><strong><code>render</code></strong>：渲染函数，通常用来渲染根组件。</li>
+<li><strong>生命周期钩子</strong>：如 <code>created</code>、<code>mounted</code> 等，用于在不同阶段执行代码。</li>
+</ul>
+<hr>
+<h2>Vue 组件实例的创建</h2>
+<h3><strong>定义</strong></h3>
+<p>每个 Vue 组件也是一个 Vue 实例，用于管理自身的模板、数据和逻辑。</p>
+<h3><strong>创建组件的方式</strong></h3>
+<ol>
+<li>
+<p><strong>全局注册组件</strong></p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-title class_">Vue</span>.<span class="hljs-title function_">component</span>(<span class="hljs-string">&#x27;my-component&#x27;</span>, {
+  <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;div&gt;{{ message }}&lt;/div&gt;&#x27;</span>,
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;This is a component!&#x27;</span>
+    };
+  }
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="Vue.component(&apos;my-component&apos;, {
+  template: &apos;<div>{{ message }}</div>&apos;,
+  data() {
+    return {
+      message: &apos;This is a component!&apos;
+    };
+  }
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>这种方式将组件注册为全局可用。</p>
+</li>
+<li>
+<p><strong>局部注册组件</strong></p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">components</span>: {
+    <span class="hljs-title class_">MyComponent</span>
+  },
+  <span class="hljs-attr">template</span>: <span class="hljs-string">&#x27;&lt;MyComponent /&gt;&#x27;</span>
+};
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="export default {
+  components: {
+    MyComponent
+  },
+  template: &apos;<MyComponent />&apos;
+};
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>
+<p><strong>单文件组件 (SFC)</strong><br>
+使用 <code>.vue</code> 文件开发组件：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div&gt;{{ message }}&lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      message: 'This is a component!'
+    };
+  }
+};
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div>{{ message }}</div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: &apos;This is a component!&apos;
+    };
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ol>
+<hr>
+<h2>在 Vue 3 + Vite 项目中的实践</h2>
+<h3><strong>项目中的位置</strong></h3>
+<p>在 Vue 3 中，<code>new Vue()</code> 被 <code>createApp()</code> 取代。以下是相关的使用场景及位置：</p>
+<ol>
+<li>
+<p><strong>根实例创建</strong>
+在 <code>src/main.js</code> 或 <code>src/main.ts</code> 文件中：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>); <span class="hljs-comment">// 创建 Vue 应用实例</span>
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>); <span class="hljs-comment">// 挂载到指定 DOM 节点</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+
+const app = createApp(App); // 创建 Vue 应用实例
+app.mount(&apos;#app&apos;); // 挂载到指定 DOM 节点
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<ul>
+<li><strong><code>createApp</code></strong> 替代了 Vue 2 的 <code>new Vue()</code>，更适合模块化和扩展。</li>
+</ul>
+</li>
+<li>
+<p><strong>组件注册和调用</strong></p>
+<ul>
+<li>组件一般定义在 <code>src/components</code> 文件夹中。</li>
+<li>示例组件 <code>HelloWorld.vue</code> 文件路径：<code>src/components/HelloWorld.vue</code>。
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;h1&gt;{{ greeting }}&lt;/h1&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+export default {
+  data() {
+    return {
+      greeting: 'Welcome to Vue 3!'
+    };
+  }
+};
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <h1>{{ greeting }}</h1>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      greeting: &apos;Welcome to Vue 3!&apos;
+    };
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+<li>在 <code>App.vue</code> 或其他页面中使用：
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;HelloWorld /&gt;
+&lt;/template&gt;
+
+&lt;script&gt;
+import HelloWorld from './components/HelloWorld.vue';
+
+export default {
+  components: { HelloWorld }
+};
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <HelloWorld />
+</template>
+
+<script>
+import HelloWorld from &apos;./components/HelloWorld.vue&apos;;
+
+export default {
+  components: { HelloWorld }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>模块化设计</strong>
+在 Vite 项目中，组件实例化及根实例初始化分工明确：</p>
+<ul>
+<li><strong>组件开发</strong>：<code>src/components</code> 下开发并导出组件。</li>
+<li><strong>根实例初始化</strong>：<code>src/main.js</code>/<code>src/main.ts</code> 文件中挂载 Vue 应用并引入全局组件或插件。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>总结</h2>
+<ul>
+<li><strong>Vue 2</strong>：<code>new Vue()</code> 用于创建根实例，并提供全局状态、生命周期钩子和渲染功能。</li>
+<li><strong>Vue 3</strong>：<code>createApp()</code> 是新的实例创建方法，与 Vite 配合使用更模块化。</li>
+<li><strong>Vite 项目结构</strong>：
+<ul>
+<li>根实例配置在 <code>src/main.js</code> 中。</li>
+<li>组件开发在 <code>src/components</code> 文件夹中。</li>
+<li>根组件通常是 <code>src/App.vue</code>，通过 <code>main.js</code> 挂载到 DOM 节点。</li>
+</ul>
+</li>
+</ul>

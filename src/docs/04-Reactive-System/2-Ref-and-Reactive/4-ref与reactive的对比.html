@@ -1,0 +1,102 @@
+<h1>Vue 3 中 <code>ref</code> 与 <code>reactive</code> 的对比</h1>
+<h2>宏观角度的对比</h2>
+<ol>
+<li>
+<p><strong><code>ref</code> 用来定义：</strong></p>
+<ul>
+<li><strong>基本类型数据</strong>（如 <code>number</code>、<code>string</code> 等）。</li>
+<li><strong>对象类型数据</strong>（虽然 <code>reactive</code> 更适合处理对象类型数据，但 <code>ref</code> 同样能处理对象）。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>reactive</code> 用来定义：</strong></p>
+<ul>
+<li><strong>对象类型数据</strong>，特别是当你需要一个<strong>深层次</strong>响应式对象时。</li>
+</ul>
+</li>
+</ol>
+<h2>主要区别</h2>
+<ol>
+<li>
+<p><strong><code>ref</code> 需要使用 <code>.value</code>：</strong></p>
+<ul>
+<li><code>ref</code> 创建的响应式数据，必须通过 <code>.value</code> 来访问和修改它的值。即使是对象类型的数据也如此。</li>
+<li>在模板中，Vue 会自动解包 <code>.value</code>，但在 JavaScript 代码中访问时，你必须手动添加 <code>.value</code>。</li>
+<li>为了方便开发，可以使用 <code>Volar</code> 插件来自动补充 <code>.value</code>，避免手动写入。</li>
+</ul>
+</li>
+<li>
+<p><strong><code>reactive</code> 对象的重新分配问题：</strong></p>
+<ul>
+<li>使用 <code>reactive</code> 创建的响应式对象，是通过 <code>Proxy</code> 代理的。如果直接用 <code>Object.assign()</code> 或其他方法重新分配对象的内容，这会<strong>失去响应式</strong>，因为它会创建一个新的对象。</li>
+<li>如果需要替换 <code>reactive</code> 对象的内容，可以使用 <code>Object.assign</code> 或其他方法，但要注意这会影响响应式的行为。</li>
+<li>例如：
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> obj = <span class="hljs-title function_">reactive</span>({ <span class="hljs-attr">room</span>: <span class="hljs-number">1</span> });
+<span class="hljs-title class_">Object</span>.<span class="hljs-title function_">assign</span>(obj, { <span class="hljs-attr">b</span>: <span class="hljs-number">2</span> }); <span class="hljs-comment">// 这会失去响应式，obj变成了一个普通对象</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let obj = reactive({ room: 1 });
+Object.assign(obj, { b: 2 }); // 这会失去响应式，obj变成了一个普通对象
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+</li>
+</ol>
+<h2>使用原则</h2>
+<h3>1. <strong>基本类型的响应式数据，必须使用 <code>ref</code>：</strong></h3>
+<ul>
+<li>对于单纯的基本数据类型（如数字、字符串、布尔值等），应使用 <code>ref</code>。Vue 会自动处理其响应式。</li>
+</ul>
+<h3>2. <strong>对于简单的对象，<code>ref</code> 和 <code>reactive</code> 都可以：</strong></h3>
+<ul>
+<li>当你只需要一个平坦的（即层级不深的）对象，并且不需要深度响应式时，<code>ref</code> 和 <code>reactive</code> 都能胜任。</li>
+<li>在这种情况下，选择 <code>ref</code> 还是 <code>reactive</code> 取决于你的个人习惯或者代码风格。<code>ref</code> 可能会让你觉得稍微简洁，但 <code>reactive</code> 可以让你更自然地处理对象的深层次更新。</li>
+</ul>
+<h3>3. <strong>对于深层次对象，推荐使用 <code>reactive</code>：</strong></h3>
+<ul>
+<li>如果对象的嵌套层次较深，且你希望能够自动追踪每一层的变化，<code>reactive</code> 是更合适的选择。它会自动处理对象中每一层的属性响应式，而 <code>ref</code> 只能对引用本身进行响应式处理。</li>
+<li>例如，嵌套对象的属性更新：
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-keyword">let</span> obj = <span class="hljs-title function_">reactive</span>({
+  <span class="hljs-attr">room</span>: {
+    <span class="hljs-attr">floor</span>: {
+      <span class="hljs-attr">dust</span>: <span class="hljs-number">1</span>
+    }
+  }
+});
+
+obj.<span class="hljs-property">room</span>.<span class="hljs-property">floor</span>.<span class="hljs-property">dust</span> = <span class="hljs-number">2</span>; <span class="hljs-comment">// 这个修改会自动更新视图</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="let obj = reactive({
+  room: {
+    floor: {
+      dust: 1
+    }
+  }
+});
+
+obj.room.floor.dust = 2; // 这个修改会自动更新视图
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong><code>ref</code></strong> 适用于基本类型和对象类型数据，尤其是当你需要响应式的基本数据类型时（如数字、字符串等）。对于对象，<code>ref</code> 需要通过 <code>.value</code> 来访问。</li>
+<li><strong><code>reactive</code></strong> 更适用于深层次嵌套的对象数据，它自动处理每个层级的属性响应式。但如果你需要重新分配对象或替换对象，必须小心，因为它可能会丧失响应式。</li>
+<li><strong>使用原则：</strong>
+<ul>
+<li>基本类型数据：<code>ref</code>。</li>
+<li>简单对象：<code>ref</code> 或 <code>reactive</code>。</li>
+<li>深层嵌套对象：<code>reactive</code>。</li>
+</ul>
+</li>
+</ul>
+<p>在实际开发中，虽然 <code>ref</code> 更加通用，但 <code>reactive</code> 在处理复杂数据结构时更具优势，尤其是在需要深层次响应式时。</p>

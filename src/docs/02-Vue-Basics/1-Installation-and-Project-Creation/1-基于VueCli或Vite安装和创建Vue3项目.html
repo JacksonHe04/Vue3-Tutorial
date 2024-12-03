@@ -1,0 +1,152 @@
+<h1>安装和创建 Vue3 项目</h1>
+<h2>基于 Vue CLI 创建</h2>
+<p>点击查看<a href="https://cli.vuejs.org/zh/guide/creating-a-project.html#vue-create">官方文档</a>。</p>
+<blockquote>
+<p>备注：<code>vue-cli</code> 已处于维护模式，官方推荐基于 <code>Vite</code> 创建项目。</p>
+</blockquote>
+
+<div style="position: relative">
+	<pre><code class="hljs language-powershell"><span class="hljs-comment"># 查看 @vue/cli 版本，确保版本在 4.5.0 以上</span>
+vue <span class="hljs-literal">--version</span>
+
+<span class="hljs-comment"># 安装或者升级你的 @vue/cli</span>
+npm install <span class="hljs-literal">-g</span> @vue/<span class="hljs-built_in">cli</span>
+
+<span class="hljs-comment"># 执行创建命令</span>
+vue create vue_test
+
+<span class="hljs-comment"># 随后选择 3.x</span>
+<span class="hljs-comment"># Choose a version of Vue.js that you want to start the project with (Use arrow keys)</span>
+<span class="hljs-comment"># &gt; 3.x</span>
+<span class="hljs-comment">#   2.x</span>
+
+<span class="hljs-comment"># 启动项目</span>
+<span class="hljs-built_in">cd</span> vue_test
+npm run serve
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="# 查看 @vue/cli 版本，确保版本在 4.5.0 以上
+vue --version
+
+# 安装或者升级你的 @vue/cli
+npm install -g @vue/cli
+
+# 执行创建命令
+vue create vue_test
+
+# 随后选择 3.x
+# Choose a version of Vue.js that you want to start the project with (Use arrow keys)
+# > 3.x
+#   2.x
+
+# 启动项目
+cd vue_test
+npm run serve
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>基于 Vite 创建（推荐）</h2>
+<p><code>Vite</code> 是新一代前端构建工具，官网地址：<a href="https://vitejs.cn/">https://vitejs.cn</a>。<code>Vite</code> 的主要优势如下：</p>
+<ul>
+<li><strong>极速热重载</strong>（HMR），实现快速的服务启动。</li>
+<li>开箱即用支持 <code>TypeScript</code>、<code>JSX</code>、<code>CSS</code> 等。</li>
+<li>真正的按需编译，无需等待整个应用完成编译。</li>
+<li>构建性能与 <code>webpack</code> 对比显著优化。</li>
+</ul>
+<p>点击查看<a href="https://cn.vuejs.org/guide/quick-start.html#creating-a-vue-application">官方文档</a>。</p>
+<h3>创建项目的具体步骤</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-powershell"><span class="hljs-comment"># 1. 创建命令</span>
+npm create vue@latest
+
+<span class="hljs-comment"># 2. 配置项目</span>
+√ Project name: vue3_test          <span class="hljs-comment"># 配置项目名称</span>
+√ Add TypeScript?  Yes            <span class="hljs-comment"># 是否添加 TypeScript 支持</span>
+√ Add JSX Support?  No            <span class="hljs-comment"># 是否添加 JSX 支持</span>
+√ Add Vue Router?  No             <span class="hljs-comment"># 是否添加 Vue Router</span>
+√ Add Pinia?  No                  <span class="hljs-comment"># 是否添加 Pinia 状态管理</span>
+√ Add Vitest?  No                 <span class="hljs-comment"># 是否添加单元测试支持</span>
+√ Add an <span class="hljs-keyword">End</span><span class="hljs-literal">-to-End</span> Testing Solution?  No  <span class="hljs-comment"># 是否添加端到端测试</span>
+√ Add ESLint?  Yes                <span class="hljs-comment"># 是否添加 ESLint 语法检查</span>
+√ Add Prettier?  No               <span class="hljs-comment"># 是否添加 Prettier 格式化工具</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="# 1. 创建命令
+npm create vue@latest
+
+# 2. 配置项目
+√ Project name: vue3_test          # 配置项目名称
+√ Add TypeScript?  Yes            # 是否添加 TypeScript 支持
+√ Add JSX Support?  No            # 是否添加 JSX 支持
+√ Add Vue Router?  No             # 是否添加 Vue Router
+√ Add Pinia?  No                  # 是否添加 Pinia 状态管理
+√ Add Vitest?  No                 # 是否添加单元测试支持
+√ Add an End-to-End Testing Solution?  No  # 是否添加端到端测试
+√ Add ESLint?  Yes                # 是否添加 ESLint 语法检查
+√ Add Prettier?  No               # 是否添加 Prettier 格式化工具
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>自定义 App 组件</h2>
+<p>以下为一个简单的 <code>App</code> 组件示例：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;app&quot;&gt;
+    &lt;h1&gt;你好啊！&lt;/h1&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script lang=&quot;ts&quot;&gt;
+export default {
+  name: 'App', // 组件名
+};
+&lt;/script&gt;
+
+&lt;style&gt;
+.app {
+  background-color: #ddd;
+  box-shadow: 0 0 10px;
+  border-radius: 10px;
+  padding: 20px;
+}
+&lt;/style&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;app&quot;>
+    <h1>你好啊！</h1>
+  </div>
+</template>
+
+<script lang=&quot;ts&quot;>
+export default {
+  name: &apos;App&apos;, // 组件名
+};
+</script>
+
+<style>
+.app {
+  background-color: #ddd;
+  box-shadow: 0 0 10px;
+  border-radius: 10px;
+  padding: 20px;
+}
+</style>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<hr>
+<h2>总结</h2>
+<ul>
+<li><strong>入口文件</strong>：在 <code>Vite</code> 项目中，<code>index.html</code> 是项目的入口文件，位于项目根目录。</li>
+<li><strong>解析流程</strong>：加载 <code>index.html</code> 后，<code>Vite</code> 会解析 <code>&lt;script type=&quot;module&quot; src=&quot;xxx&quot;&gt;</code> 指向的 <code>JavaScript</code> 文件。</li>
+<li><strong>应用实例</strong>：在 <code>Vue3</code> 中，通过 <code>createApp</code> 函数创建一个应用实例。</li>
+</ul>
+<p>更多细节请参考官方文档或示例代码。</p>

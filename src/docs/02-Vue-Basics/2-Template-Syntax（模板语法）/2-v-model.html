@@ -1,0 +1,306 @@
+<h1>深入讲解 <code>v-model</code> 在 Vue 3 中的应用</h1>
+<p><code>v-model</code> 是 Vue 中用于双向数据绑定的指令，它可以将表单元素（如输入框、复选框、选择框等）与 Vue 实例中的数据进行绑定，并自动同步数据。随着 Vue 3 的发布，<code>v-model</code> 也迎来了一些新的特性和改进。本文将详细讲解 <code>v-model</code> 的基本用法、进阶应用及 Vue 3 中的新特性。</p>
+<hr>
+<h2>1. <code>v-model</code> 的基础用法</h2>
+<p><code>v-model</code> 实现的是双向数据绑定，意味着当表单输入值改变时，Vue 实例中的数据也会随之更新，反之亦然。</p>
+<h3>示例：基本用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;message&quot;</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>输入的内容：{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;&#x27;</span>
+    };
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div>
+    <input v-model=&quot;message&quot;>
+    <p>输入的内容：{{ message }}</p>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      message: &apos;&apos;
+    };
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在上述代码中：</p>
+<ul>
+<li>输入框的值与 <code>message</code> 变量绑定，用户输入时 <code>message</code> 会自动更新。</li>
+<li><code>{{ message }}</code> 用于显示当前 <code>message</code> 的值。</li>
+</ul>
+<hr>
+<h2>2. <code>v-model</code> 的工作原理</h2>
+<p>Vue 中的双向绑定实际上是通过事件监听与数据更新机制实现的。对于表单元素，<code>v-model</code> 会：</p>
+<ul>
+<li>监听元素的 <code>input</code> 或 <code>change</code> 事件。</li>
+<li>更新绑定的变量值。</li>
+</ul>
+<p><strong>对于不同表单元素，<code>v-model</code> 会自动处理事件和属性的绑定：</strong></p>
+<ul>
+<li>对于 <code>&lt;input&gt;</code>、<code>&lt;textarea&gt;</code> 和 <code>&lt;select&gt;</code>，<code>v-model</code> 默认会绑定 <code>value</code> 属性和 <code>input</code> 事件。</li>
+<li>对于 <code>&lt;input type=&quot;checkbox&quot;&gt;</code> 和 <code>&lt;input type=&quot;radio&quot;&gt;</code>，<code>v-model</code> 绑定的是 <code>checked</code> 属性和 <code>change</code> 事件。</li>
+</ul>
+<hr>
+<h2>3. <code>v-model</code> 的修饰符</h2>
+<p>Vue 提供了一些修饰符来定制 <code>v-model</code> 的行为，常见的有 <code>.lazy</code>、<code>.number</code> 和 <code>.trim</code>。</p>
+<h3><code>.lazy</code> 修饰符</h3>
+<p>默认情况下，<code>v-model</code> 会在 <code>input</code> 事件时同步数据。如果使用 <code>.lazy</code> 修饰符，数据将在 <code>change</code> 事件时更新，而不是 <code>input</code> 事件。这对于某些场景（如表单验证）非常有用。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.lazy</span>=<span class="hljs-string">&quot;message&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>输入的内容：{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input v-model.lazy=&quot;message&quot;>
+  <p>输入的内容：{{ message }}</p>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>此时，只有在输入框失去焦点或按下回车时，<code>message</code> 才会更新。</p>
+<h3><code>.number</code> 修饰符</h3>
+<p>该修饰符会自动将用户输入的内容转换为数字。例如，输入框中的内容为 <code>123</code>，则 Vue 会将其转换为数字 <code>123</code>。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.number</span>=<span class="hljs-string">&quot;age&quot;</span> <span class="hljs-attr">type</span>=<span class="hljs-string">&quot;number&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>年龄：{{ age }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input v-model.number=&quot;age&quot; type=&quot;number&quot;>
+  <p>年龄：{{ age }}</p>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3><code>.trim</code> 修饰符</h3>
+<p>该修饰符会去除用户输入字符串的前后空格。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">v-model.trim</span>=<span class="hljs-string">&quot;message&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>输入的内容：{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input v-model.trim=&quot;message&quot;>
+  <p>输入的内容：{{ message }}</p>
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>当用户输入 <code>&quot;  Hello  &quot;</code> 时，<code>message</code> 会被自动处理为 <code>&quot;Hello&quot;</code>。</p>
+<hr>
+<h2>4. 自定义组件中的 <code>v-model</code></h2>
+<p>在 Vue 3 中，<code>v-model</code> 不仅适用于原生表单元素，也可以在自定义组件中使用。为了在自定义组件中使用 <code>v-model</code>，需要在组件中通过 <code>modelValue</code> 属性与 <code>$emit</code> 事件来实现双向绑定。</p>
+<h3>示例：自定义组件中的 <code>v-model</code></h3>
+<h4>父组件：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">CustomInput</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;message&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">CustomInput</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>输入的内容：{{ message }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">CustomInput</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./CustomInput.vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">components</span>: {
+    <span class="hljs-title class_">CustomInput</span>
+  },
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">message</span>: <span class="hljs-string">&#x27;&#x27;</span>
+    };
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <CustomInput v-model=&quot;message&quot;></CustomInput>
+  <p>输入的内容：{{ message }}</p>
+</template>
+
+<script>
+import CustomInput from &apos;./CustomInput.vue&apos;;
+
+export default {
+  components: {
+    CustomInput
+  },
+  data() {
+    return {
+      message: &apos;&apos;
+    };
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>子组件（CustomInput.vue）：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">:value</span>=<span class="hljs-string">&quot;modelValue&quot;</span> @<span class="hljs-attr">input</span>=<span class="hljs-string">&quot;$emit(&#x27;update:modelValue&#x27;, $event)&quot;</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">modelValue</span>: <span class="hljs-title class_">String</span>
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input :value=&quot;modelValue&quot; @input=&quot;$emit(&apos;update:modelValue&apos;, $event)&quot;>
+</template>
+
+<script>
+export default {
+  props: {
+    modelValue: String
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在这个例子中，子组件通过 <code>value</code> 属性接收父组件传递的 <code>modelValue</code> 值，并在用户输入时触发 <code>input</code> 事件，将更新的值通过 <code>update:modelValue</code> 事件传递回父组件。</p>
+<hr>
+<h2>5. <code>v-model</code> 的多个绑定（Vue 3 特性）</h2>
+<p>Vue 3 引入了一个新的特性，可以在同一个组件中使用多个 <code>v-model</code> 绑定，并且每个绑定都可以有不同的属性名。</p>
+<h3>示例：多个 <code>v-model</code> 绑定</h3>
+<h4>父组件：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">CustomInput</span> <span class="hljs-attr">v-model:title</span>=<span class="hljs-string">&quot;title&quot;</span> <span class="hljs-attr">v-model:content</span>=<span class="hljs-string">&quot;content&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">CustomInput</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>标题：{{ title }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>内容：{{ content }}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">CustomInput</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./CustomInput.vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">components</span>: {
+    <span class="hljs-title class_">CustomInput</span>
+  },
+  <span class="hljs-title function_">data</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">title</span>: <span class="hljs-string">&#x27;初始标题&#x27;</span>,
+      <span class="hljs-attr">content</span>: <span class="hljs-string">&#x27;初始内容&#x27;</span>
+    };
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <CustomInput v-model:title=&quot;title&quot; v-model:content=&quot;content&quot;></CustomInput>
+  <p>标题：{{ title }}</p>
+  <p>内容：{{ content }}</p>
+</template>
+
+<script>
+import CustomInput from &apos;./CustomInput.vue&apos;;
+
+export default {
+  components: {
+    CustomInput
+  },
+  data() {
+    return {
+      title: &apos;初始标题&apos;,
+      content: &apos;初始内容&apos;
+    };
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h4>子组件（CustomInput.vue）：</h4>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">template</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">:value</span>=<span class="hljs-string">&quot;modelTitle&quot;</span> @<span class="hljs-attr">input</span>=<span class="hljs-string">&quot;$emit(&#x27;update:title&#x27;, $event)&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">textarea</span> <span class="hljs-attr">:value</span>=<span class="hljs-string">&quot;modelContent&quot;</span> @<span class="hljs-attr">input</span>=<span class="hljs-string">&quot;$emit(&#x27;update:content&#x27;, $event)&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">textarea</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">template</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">script</span>&gt;</span><span class="language-javascript">
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-attr">props</span>: {
+    <span class="hljs-attr">modelTitle</span>: <span class="hljs-title class_">String</span>,
+    <span class="hljs-attr">modelContent</span>: <span class="hljs-title class_">String</span>
+  }
+};
+</span><span class="hljs-tag">&lt;/<span class="hljs-name">script</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <input :value=&quot;modelTitle&quot; @input=&quot;$emit(&apos;update:title&apos;, $event)&quot;>
+  <textarea :value=&quot;modelContent&quot; @input=&quot;$emit(&apos;update:content&apos;, $event)&quot;></textarea>
+</template>
+
+<script>
+export default {
+  props: {
+    modelTitle: String,
+    modelContent: String
+  }
+};
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>通过这个特性，可以将多个数据属性与同一个子组件进行双向绑定，提供更细粒度的控制。</p>
+<hr>
+<h2>6. 总结</h2>
+<p><code>v-model</code> 是 Vue 中非常强大和常用的双向数据绑定工具。它使得表单元素的处理变得非常简单，尤其在需要与用户交互的情况下，自动处理数据更新和界面渲染。</p>
+<ul>
+<li><strong>基本用法</strong>：自动将表单元素与 Vue 实例中的数据进行绑定。</li>
+<li><strong>修饰符</strong>：可以使用 <code>.lazy</code>、<code>.number</code>、<code>.trim</code> 等修饰符来控制绑定行为。</li>
+<li><strong>自定义组件</strong>：在自定义组件中，可以使用 <code>modelValue</code> 和 <code>update:modelValue</code> 实现双向绑定。</li>
+<li><strong>Vue 3 新特性</strong>：支持多个 <code>v-model</code> 绑定，允许每个绑定使用不同的属性名。</li>
+</ul>
+<p>通过掌握 <code>v-model</code>，可以更加高效地处理用户输入和表单数据，提升开发效率。</p>

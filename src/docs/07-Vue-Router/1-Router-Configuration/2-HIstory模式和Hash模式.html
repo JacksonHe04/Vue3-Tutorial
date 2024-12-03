@@ -1,0 +1,72 @@
+<h1>HIstory模式和Hash模式</h1>
+<p>Vue Router 是 Vue.js 官方的路由管理器，用于在单页应用（SPA）中管理页面之间的导航。在 Vue Router 中，常用的路由模式有两种：<strong>history模式</strong> 和 <strong>hash模式</strong>。这两种模式主要有以下不同点：</p>
+<h2>1. <strong>Hash模式</strong></h2>
+<ul>
+<li><strong>工作原理</strong>：在 URL 中使用 <code>#</code> 符号，后面的部分表示路由状态。例如：<code>http://example.com/#/home</code>。</li>
+<li><strong>路由变更</strong>：改变 URL 中 <code>#</code> 后面的部分，不会触发页面重新加载。</li>
+<li><strong>浏览器支持</strong>：所有现代浏览器和旧版浏览器都支持 <code>#</code>，即使是没有配置服务器的情况下也能工作。</li>
+<li><strong>刷新页面时的行为</strong>：刷新页面时，浏览器只会加载整个页面，不会重新请求服务器，只是从 URL 中解析出路由。</li>
+</ul>
+<h3>优点：</h3>
+<ul>
+<li><strong>无需服务器配置</strong>：适用于没有服务器支持的静态页面，直接通过浏览器解析 URL 中的 <code>#</code>。</li>
+<li><strong>兼容性好</strong>：兼容所有浏览器和一些老旧浏览器。</li>
+</ul>
+<h3>缺点：</h3>
+<ul>
+<li><strong>不够美观</strong>：URL 中的 <code>#</code> 可能让用户感觉不够现代化，尤其是对于有很多页面的应用。</li>
+<li><strong>SEO 不友好</strong>：由于 URL 中的 <code>#</code> 后面内容不会被浏览器发送给服务器，爬虫无法识别和索引页面内容，导致 SEO（搜索引擎优化）差。</li>
+</ul>
+<h2>2. <strong>History模式</strong></h2>
+<ul>
+<li><strong>工作原理</strong>：直接利用 HTML5 的 History API（<code>pushState</code> 和 <code>replaceState</code>）来改变浏览器的 URL，无需刷新页面。例如：<code>http://example.com/home</code>。</li>
+<li><strong>路由变更</strong>：通过修改浏览器的历史记录栈来改变 URL，使其看起来像是一个普通的多页面应用。</li>
+<li><strong>浏览器支持</strong>：要求浏览器支持 HTML5 History API，现代浏览器普遍支持该 API。</li>
+<li><strong>刷新页面时的行为</strong>：刷新页面时，会通过服务器的配置请求对应的路由页面，加载页面后再由前端路由控制页面展示。</li>
+</ul>
+<h3>优点：</h3>
+<ul>
+<li><strong>URL 更美观</strong>：URL 中没有 <code>#</code>，看起来像传统的多页面应用，符合现代 Web 应用的标准。</li>
+<li><strong>SEO 友好</strong>：服务器可以处理这些路由，爬虫能够索引到这些页面内容，对 SEO 更有利。</li>
+</ul>
+<h3>缺点：</h3>
+<ul>
+<li><strong>需要服务器支持</strong>：需要后端配置，当用户直接访问某个页面的 URL（例如 <code>http://example.com/home</code>）时，服务器必须能够处理这个请求并返回相应的页面，否则会出现 404 错误。</li>
+<li><strong>兼容性问题</strong>：对于某些老旧浏览器，可能不支持 HTML5 History API。</li>
+</ul>
+<h2>3. <strong>二者的区别和选择</strong></h2>
+<h3>主要区别：</h3>
+<ul>
+<li><strong>URL 格式</strong>：
+<ul>
+<li><code>hash</code>：<code>http://example.com/#/home</code></li>
+<li><code>history</code>：<code>http://example.com/home</code></li>
+</ul>
+</li>
+<li><strong>刷新时的行为</strong>：
+<ul>
+<li><code>hash</code>：刷新时不会向服务器发送请求，直接由浏览器加载。</li>
+<li><code>history</code>：刷新时需要服务器支持，能正确响应到对应的页面。</li>
+</ul>
+</li>
+<li><strong>SEO 优化</strong>：
+<ul>
+<li><code>hash</code>：对 SEO 不友好。</li>
+<li><code>history</code>：更有利于 SEO。</li>
+</ul>
+</li>
+</ul>
+<h3>选择的依据：</h3>
+<ul>
+<li>
+<p><strong>前端项目</strong>：一般选择 <strong>history模式</strong>，因为前端项目通常是单页应用，页面需要根据不同的 URL 加载不同的内容，且需要考虑用户体验和 SEO。虽然 history 模式需要服务器的支持，但现代前后端分离的架构通常会做相应的配置，来确保服务器能正确响应不同的路由请求。</p>
+</li>
+<li>
+<p><strong>后台管理项目</strong>：一般选择 <strong>hash模式</strong>，因为后台管理系统更多的是一个单纯的 SPA，不太需要考虑 SEO，而且由于后台系统通常是在内部使用，部署环境中大多数情况下是不会有特殊的路由要求，也不太依赖于服务器配置。使用 <code>hash</code> 模式可以避免配置麻烦，兼容性更好，特别是在一些老旧浏览器环境中。</p>
+</li>
+</ul>
+<h2>总结</h2>
+<ul>
+<li><strong>Hash模式</strong>：简单，兼容性好，适用于不依赖服务器配置的场景，如一些简单的静态网站和后台管理系统。</li>
+<li><strong>History模式</strong>：更现代、美观且对 SEO 友好，适合对 URL 美观和 SEO 有要求的前端项目，前提是需要后端支持相应的路由。</li>
+</ul>

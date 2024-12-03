@@ -1,0 +1,148 @@
+<h1>Vue 3 中的 Pinia 状态管理：使用 <code>getters</code></h1>
+<h2>1. 概念</h2>
+<p>在使用 Pinia 进行状态管理时，有时我们需要从 <code>state</code> 中的原始数据中计算出新的值或处理后的数据，这时可以通过 <code>getters</code> 来进行配置。<code>getters</code> 类似于 Vuex 中的计算属性，它能够动态计算数据并返回结果，而不直接修改 <code>state</code>。</p>
+<h2>2. 追加 <code>getters</code> 配置</h2>
+<p>在 Pinia 中，<code>getters</code> 是存放计算状态的地方。通过 <code>getters</code>，你可以在 <code>state</code> 上进行运算或对数据进行格式化等操作，进而返回计算后的数据。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-comment">// 引入defineStore用于创建store</span>
+<span class="hljs-keyword">import</span> { defineStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-comment">// 定义并暴露一个store</span>
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> useCountStore = <span class="hljs-title function_">defineStore</span>(<span class="hljs-string">&#x27;count&#x27;</span>, {
+  <span class="hljs-comment">// 动作</span>
+  <span class="hljs-attr">actions</span>: {
+    <span class="hljs-comment">// 这里可以定义修改state的操作</span>
+  },
+  
+  <span class="hljs-comment">// 状态</span>
+  <span class="hljs-title function_">state</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">sum</span>: <span class="hljs-number">1</span>,
+      <span class="hljs-attr">school</span>: <span class="hljs-string">&#x27;atguigu&#x27;</span>
+    }
+  },
+  
+  <span class="hljs-comment">// 计算</span>
+  <span class="hljs-attr">getters</span>: {
+    <span class="hljs-comment">// bigSum getter：通过state中的sum计算出bigSum，返回sum乘以10</span>
+    <span class="hljs-attr">bigSum</span>: (state): <span class="hljs-function"><span class="hljs-params">number</span> =&gt;</span> state.<span class="hljs-property">sum</span> * <span class="hljs-number">10</span>,
+
+    <span class="hljs-comment">// upperSchool getter：将state中的school字符串转换为大写</span>
+    <span class="hljs-title function_">upperSchool</span>(): string {
+      <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">school</span>.<span class="hljs-title function_">toUpperCase</span>()
+    }
+  }
+})
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 引入defineStore用于创建store
+import { defineStore } from &apos;pinia&apos;
+
+// 定义并暴露一个store
+export const useCountStore = defineStore(&apos;count&apos;, {
+  // 动作
+  actions: {
+    // 这里可以定义修改state的操作
+  },
+  
+  // 状态
+  state() {
+    return {
+      sum: 1,
+      school: &apos;atguigu&apos;
+    }
+  },
+  
+  // 计算
+  getters: {
+    // bigSum getter：通过state中的sum计算出bigSum，返回sum乘以10
+    bigSum: (state): number => state.sum * 10,
+
+    // upperSchool getter：将state中的school字符串转换为大写
+    upperSchool(): string {
+      return this.school.toUpperCase()
+    }
+  }
+})
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>代码解释</h3>
+<ul>
+<li><code>state</code>：用于定义应用的状态数据，如 <code>sum</code> 和 <code>school</code>。</li>
+<li><code>getters</code>：
+<ul>
+<li><code>bigSum</code>：通过 <code>state.sum</code> 计算出 <code>bigSum</code>，它返回 <code>sum * 10</code> 的结果。</li>
+<li><code>upperSchool</code>：将 <code>state.school</code> 的值转换成大写并返回。</li>
+</ul>
+</li>
+</ul>
+<h2>3. 组件中读取数据</h2>
+<p>在 Vue 组件中，我们可以通过 Pinia 提供的 <code>storeToRefs</code> 将 store 中的数据转换为响应式引用，方便我们在模板中使用。</p>
+<h3>示例代码</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-js"><span class="hljs-comment">// 引入pinia store</span>
+<span class="hljs-keyword">import</span> { useCountStore } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./stores/countStore&#x27;</span>
+<span class="hljs-keyword">import</span> { storeToRefs } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;pinia&#x27;</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> {
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-comment">// 使用 Pinia store</span>
+    <span class="hljs-keyword">const</span> countStore = <span class="hljs-title function_">useCountStore</span>()
+
+    <span class="hljs-comment">// 获取 store 中的数据</span>
+    <span class="hljs-keyword">const</span> { increment, decrement } = countStore
+    <span class="hljs-keyword">let</span> { sum, school, bigSum, upperSchool } = <span class="hljs-title function_">storeToRefs</span>(countStore)
+
+    <span class="hljs-comment">// 返回数据和方法以便在模板中使用</span>
+    <span class="hljs-keyword">return</span> {
+      sum,
+      school,
+      bigSum,
+      upperSchool,
+      increment,
+      decrement
+    }
+  }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="// 引入pinia store
+import { useCountStore } from &apos;./stores/countStore&apos;
+import { storeToRefs } from &apos;pinia&apos;
+
+export default {
+  setup() {
+    // 使用 Pinia store
+    const countStore = useCountStore()
+
+    // 获取 store 中的数据
+    const { increment, decrement } = countStore
+    let { sum, school, bigSum, upperSchool } = storeToRefs(countStore)
+
+    // 返回数据和方法以便在模板中使用
+    return {
+      sum,
+      school,
+      bigSum,
+      upperSchool,
+      increment,
+      decrement
+    }
+  }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>代码解释</h3>
+<ul>
+<li>通过 <code>storeToRefs(countStore)</code> 获取 store 中的所有状态和计算属性，并将它们解构出来作为响应式数据。</li>
+<li><code>bigSum</code> 和 <code>upperSchool</code> 就是我们通过 <code>getters</code> 配置的计算属性，它们会根据 <code>state</code> 的变化动态更新。</li>
+</ul>
+<h2>总结</h2>
+<p><code>getters</code> 是用于计算 <code>state</code> 中数据的一个非常有用的特性，它能够帮助我们在不直接修改 <code>state</code> 的情况下，对数据进行加工处理。在 Pinia 中配置 <code>getters</code> 的方式非常简洁，且可以在组件中像普通属性一样方便地访问。</p>

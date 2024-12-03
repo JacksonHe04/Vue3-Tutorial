@@ -1,6 +1,5 @@
-<!-- src/views/MarkdownPage.vue -->
 <template>
-  <MarkDown :mdPath="mdPath" />
+  <MarkDown :htmlPath="htmlPath" />
 </template>
 
 <script setup>
@@ -9,16 +8,16 @@ import { useRoute } from "vue-router";
 import MarkDown from "@/components/MarkDown.vue";
 
 const route = useRoute();
-const mdPath = computed(() => {
+const htmlPath = computed(() => {
   if (route.params.folder && route.params.file) {
     // 检查是否存在第二个文件夹层级
     if (route.params.subFolder) {
-      return `${route.params.folder}/${route.params.subFolder}/${route.params.file}.md`;
+      return `${route.params.folder}/${route.params.subFolder}/${route.params.file}.html`;
     }
-    return `${route.params.folder}/${route.params.file}.md`;
+    return `${route.params.folder}/${route.params.file}.html`;
   } else if (route.params.folder) {
-    // 如果只有 folder 参数，返回 README.md
-    return `${route.params.folder}/README.md`;
+    // 如果只有 folder 参数，返回 index.html
+    return `${route.params.folder}/README.html`;
   }
   return "";
 });

@@ -1,0 +1,152 @@
+<h1><code>$attrs</code> 详解</h1>
+<h2>概述</h2>
+<p><code>$attrs</code> 是 Vue 3 中用于实现父组件向当前组件的传递属性的一种机制。它帮助实现<strong>父组件</strong>与<strong>子组件</strong>（甚至是跨层级的孙组件）之间的通信。特别是在子组件没有显式声明某些属性时，父组件传递的属性会被保存在 <code>$attrs</code> 中，方便子组件通过 <code>$attrs</code> 继续将这些属性传递给更深层次的子组件。</p>
+<h3>使用场景</h3>
+<ul>
+<li>当父组件需要向孙组件传递属性时，但子组件不需要或不关心这些属性时，可以利用 <code>$attrs</code> 来“自动转发”这些属性。</li>
+</ul>
+<h2>具体说明</h2>
+<p><code>$attrs</code> 是一个包含父组件传入的所有属性的对象。它包括：</p>
+<ul>
+<li>父组件传入的普通 HTML 特性（如 <code>id</code>, <code>class</code>）。</li>
+<li>绑定到子组件的属性和事件，但排除了子组件已经通过 <code>props</code> 声明的属性。</li>
+</ul>
+<h3>注意事项</h3>
+<ul>
+<li><code>$attrs</code> 会自动排除在子组件中通过 <code>props</code> 声明的属性，这些属性在子组件中已被“消费”，因此不会出现在 <code>$attrs</code> 中。</li>
+<li><code>$attrs</code> 主要用于将父组件传递的未被子组件声明的属性继续传递给下层组件。</li>
+</ul>
+<h2>示例</h2>
+<p>以下是一个具体示例，展示了如何通过 <code>$attrs</code> 实现父组件向孙组件的属性传递。</p>
+<h3>父组件</h3>
+<p>父组件通过 <code>v-bind</code> 向子组件传递了一些属性。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;father&quot;&gt;
+    &lt;h3&gt;父组件&lt;/h3&gt;
+    &lt;Child :a=&quot;a&quot; :b=&quot;b&quot; :c=&quot;c&quot; :d=&quot;d&quot; v-bind=&quot;{x:100, y:200}&quot; :updateA=&quot;updateA&quot;/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Father&quot;&gt;
+  import Child from './Child.vue'
+  import { ref } from &quot;vue&quot;;
+  
+  // 定义属性
+  let a = ref(1)
+  let b = ref(2)
+  let c = ref(3)
+  let d = ref(4)
+
+  // 更新属性的函数
+  function updateA(value){
+    a.value = value
+  }
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;father&quot;>
+    <h3>父组件</h3>
+    <Child :a=&quot;a&quot; :b=&quot;b&quot; :c=&quot;c&quot; :d=&quot;d&quot; v-bind=&quot;{x:100, y:200}&quot; :updateA=&quot;updateA&quot;/>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Father&quot;>
+  import Child from &apos;./Child.vue&apos;
+  import { ref } from &quot;vue&quot;;
+  
+  // 定义属性
+  let a = ref(1)
+  let b = ref(2)
+  let c = ref(3)
+  let d = ref(4)
+
+  // 更新属性的函数
+  function updateA(value){
+    a.value = value
+  }
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>子组件</h3>
+<p>子组件通过 <code>$attrs</code> 将接收到的属性转发给孙组件。此时，<code>$attrs</code> 会包含父组件传递给子组件但没有声明在 <code>props</code> 中的属性。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;child&quot;&gt;
+    &lt;h3&gt;子组件&lt;/h3&gt;
+    &lt;GrandChild v-bind=&quot;$attrs&quot;/&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;Child&quot;&gt;
+  import GrandChild from './GrandChild.vue'
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;child&quot;>
+    <h3>子组件</h3>
+    <GrandChild v-bind=&quot;$attrs&quot;/>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;Child&quot;>
+  import GrandChild from &apos;./GrandChild.vue&apos;
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>孙组件</h3>
+<p>孙组件通过 <code>defineProps</code> 显式声明它将接收到的属性，然后可以访问这些属性。通过 <code>$attrs</code> 转发的属性可以直接在孙组件中使用。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;grand-child&quot;&gt;
+    &lt;h3&gt;孙组件&lt;/h3&gt;
+    &lt;h4&gt;a：{{ a }}&lt;/h4&gt;
+    &lt;h4&gt;b：{{ b }}&lt;/h4&gt;
+    &lt;h4&gt;c：{{ c }}&lt;/h4&gt;
+    &lt;h4&gt;d：{{ d }}&lt;/h4&gt;
+    &lt;h4&gt;x：{{ x }}&lt;/h4&gt;
+    &lt;h4&gt;y：{{ y }}&lt;/h4&gt;
+    &lt;button @click=&quot;updateA(666)&quot;&gt;点我更新A&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;script setup lang=&quot;ts&quot; name=&quot;GrandChild&quot;&gt;
+  defineProps(['a', 'b', 'c', 'd', 'x', 'y', 'updateA'])
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;grand-child&quot;>
+    <h3>孙组件</h3>
+    <h4>a：{{ a }}</h4>
+    <h4>b：{{ b }}</h4>
+    <h4>c：{{ c }}</h4>
+    <h4>d：{{ d }}</h4>
+    <h4>x：{{ x }}</h4>
+    <h4>y：{{ y }}</h4>
+    <button @click=&quot;updateA(666)&quot;>点我更新A</button>
+  </div>
+</template>
+
+<script setup lang=&quot;ts&quot; name=&quot;GrandChild&quot;>
+  defineProps([&apos;a&apos;, &apos;b&apos;, &apos;c&apos;, &apos;d&apos;, &apos;x&apos;, &apos;y&apos;, &apos;updateA&apos;])
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>总结</h3>
+<ol>
+<li><code>$attrs</code> 用于获取父组件传递给当前组件但没有在 <code>props</code> 中声明的属性。</li>
+<li><code>$attrs</code> 能够将父组件的属性继续传递到子组件、孙组件等下层组件。</li>
+<li>这种机制非常有用，尤其是当你希望子组件不关心某些属性，仅作为中间层将其传递下去时。</li>
+</ol>

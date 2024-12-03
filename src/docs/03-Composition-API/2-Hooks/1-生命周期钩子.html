@@ -1,0 +1,204 @@
+<h1>Vue 3 生命周期钩子</h1>
+<p>在 <code>Vue</code> 中，组件实例会经历一系列初始化步骤。在这些步骤中，<code>Vue</code> 会在合适的时机自动调用一些特定的函数，这些函数允许开发者在特定的阶段运行自定义代码，这些函数统称为 <strong>生命周期钩子</strong>。</p>
+<h2>生命周期概念</h2>
+<p><code>Vue</code> 组件的生命周期大致分为四个阶段，每个阶段都有对应的生命周期钩子。生命周期的四个阶段分别是：</p>
+<ol>
+<li><strong>创建阶段</strong>：当组件实例化时，组件的状态和数据开始初始化。</li>
+<li><strong>挂载阶段</strong>：组件模板被渲染并挂载到 DOM 中。</li>
+<li><strong>更新阶段</strong>：组件的响应式数据变化时，会重新渲染组件。</li>
+<li><strong>销毁阶段</strong>：组件销毁时，进行清理操作。</li>
+</ol>
+<p>每个阶段通常会有两个钩子，一个在该阶段开始前触发，一个在该阶段结束后触发。</p>
+<h2>Vue 2 与 Vue 3 的生命周期钩子</h2>
+<h3>Vue 2 生命周期钩子</h3>
+<ul>
+<li>
+<p><strong>创建阶段</strong>：</p>
+<ul>
+<li><code>beforeCreate</code>：实例创建后，数据观测和事件配置之前。</li>
+<li><code>created</code>：实例创建后，数据已观测，事件已配置，但未挂载到 DOM。</li>
+</ul>
+</li>
+<li>
+<p><strong>挂载阶段</strong>：</p>
+<ul>
+<li><code>beforeMount</code>：挂载前，DOM 尚未更新。</li>
+<li><code>mounted</code>：挂载后，DOM 更新完成。</li>
+</ul>
+</li>
+<li>
+<p><strong>更新阶段</strong>：</p>
+<ul>
+<li><code>beforeUpdate</code>：数据变化后，DOM 更新前。</li>
+<li><code>updated</code>：DOM 更新后。</li>
+</ul>
+</li>
+<li>
+<p><strong>销毁阶段</strong>：</p>
+<ul>
+<li><code>beforeDestroy</code>：销毁前，实例仍然可用。</li>
+<li><code>destroyed</code>：销毁后，所有事件和数据观察已被移除。</li>
+</ul>
+</li>
+</ul>
+<h3>Vue 3 生命周期钩子</h3>
+<p>Vue 3 使用了 Composition API，并引入了一些新的生命周期钩子，结构上与 Vue 2 相似，但钩子的名称有所变化。</p>
+<ul>
+<li>
+<p><strong>创建阶段</strong>：</p>
+<ul>
+<li><code>setup</code>：组件创建时执行，是 Vue 3 中的主要入口，代替了 Vue 2 中的 <code>data</code>、<code>methods</code>、<code>computed</code> 等。</li>
+</ul>
+</li>
+<li>
+<p><strong>挂载阶段</strong>：</p>
+<ul>
+<li><code>onBeforeMount</code>：挂载前，DOM 尚未更新。</li>
+<li><code>onMounted</code>：挂载后，DOM 更新完成。</li>
+</ul>
+</li>
+<li>
+<p><strong>更新阶段</strong>：</p>
+<ul>
+<li><code>onBeforeUpdate</code>：数据变化后，DOM 更新前。</li>
+<li><code>onUpdated</code>：DOM 更新后。</li>
+</ul>
+</li>
+<li>
+<p><strong>卸载阶段</strong>：</p>
+<ul>
+<li><code>onBeforeUnmount</code>：组件销毁前，清理操作之前。</li>
+<li><code>onUnmounted</code>：组件销毁后，清理操作之后。</li>
+</ul>
+</li>
+</ul>
+<h2>常用生命周期钩子</h2>
+<ul>
+<li><strong><code>onMounted</code></strong>：组件挂载完毕时执行。</li>
+<li><strong><code>onUpdated</code></strong>：组件更新完毕时执行。</li>
+<li><strong><code>onBeforeUnmount</code></strong>：组件卸载之前执行。</li>
+</ul>
+<h2>示例代码</h2>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;template&gt;
+  &lt;div class=&quot;person&quot;&gt;
+    &lt;h2&gt;当前求和为：{{ sum }}&lt;/h2&gt;
+    &lt;button @click=&quot;changeSum&quot;&gt;点我sum+1&lt;/button&gt;
+  &lt;/div&gt;
+&lt;/template&gt;
+
+&lt;!-- vue3写法 --&gt;
+&lt;script lang=&quot;ts&quot; setup name=&quot;Person&quot;&gt;
+  import { 
+    ref, 
+    onBeforeMount, 
+    onMounted, 
+    onBeforeUpdate, 
+    onUpdated, 
+    onBeforeUnmount, 
+    onUnmounted 
+  } from 'vue'
+
+  // 数据
+  let sum = ref(0)
+  
+  // 方法
+  function changeSum() {
+    sum.value += 1
+  }
+  
+  console.log('setup')
+
+  // 生命周期钩子
+  onBeforeMount(() =&gt; {
+    console.log('挂载之前')
+  })
+
+  onMounted(() =&gt; {
+    console.log('挂载完毕')
+  })
+
+  onBeforeUpdate(() =&gt; {
+    console.log('更新之前')
+  })
+
+  onUpdated(() =&gt; {
+    console.log('更新完毕')
+  })
+
+  onBeforeUnmount(() =&gt; {
+    console.log('卸载之前')
+  })
+
+  onUnmounted(() =&gt; {
+    console.log('卸载完毕')
+  })
+&lt;/script&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<template>
+  <div class=&quot;person&quot;>
+    <h2>当前求和为：{{ sum }}</h2>
+    <button @click=&quot;changeSum&quot;>点我sum+1</button>
+  </div>
+</template>
+
+<!-- vue3写法 -->
+<script lang=&quot;ts&quot; setup name=&quot;Person&quot;>
+  import { 
+    ref, 
+    onBeforeMount, 
+    onMounted, 
+    onBeforeUpdate, 
+    onUpdated, 
+    onBeforeUnmount, 
+    onUnmounted 
+  } from &apos;vue&apos;
+
+  // 数据
+  let sum = ref(0)
+  
+  // 方法
+  function changeSum() {
+    sum.value += 1
+  }
+  
+  console.log(&apos;setup&apos;)
+
+  // 生命周期钩子
+  onBeforeMount(() => {
+    console.log(&apos;挂载之前&apos;)
+  })
+
+  onMounted(() => {
+    console.log(&apos;挂载完毕&apos;)
+  })
+
+  onBeforeUpdate(() => {
+    console.log(&apos;更新之前&apos;)
+  })
+
+  onUpdated(() => {
+    console.log(&apos;更新完毕&apos;)
+  })
+
+  onBeforeUnmount(() => {
+    console.log(&apos;卸载之前&apos;)
+  })
+
+  onUnmounted(() => {
+    console.log(&apos;卸载完毕&apos;)
+  })
+</script>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>代码解释：</h3>
+<ol>
+<li><strong><code>setup</code></strong>：在 Vue 3 中，<code>setup</code> 是组件的创建函数，所有响应式数据和生命周期钩子都在这里定义。</li>
+<li><strong><code>ref</code></strong>：用于创建响应式数据，这里用于管理 <code>sum</code> 值。</li>
+<li><strong>生命周期钩子</strong>：使用 <code>onBeforeMount</code>、<code>onMounted</code> 等钩子，分别在不同的生命周期阶段执行对应的操作。</li>
+</ol>
+<p>通过这些生命周期钩子，开发者可以在组件的不同生命周期阶段插入自定义逻辑，使得组件的创建、挂载、更新和销毁过程更加灵活。</p>

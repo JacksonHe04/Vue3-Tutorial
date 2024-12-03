@@ -1,0 +1,311 @@
+<h1>【其他】</h1>
+<h2>1. 过渡类名的修改</h2>
+<p>在 Vue 3 中，过渡效果的类名有所变化，原本的 <code>v-enter</code> 和 <code>v-leave</code> 类名被替换为更加明确的 <code>v-enter-from</code> 和 <code>v-leave-from</code>。</p>
+<h3>变化前</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">transition</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;fade&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;show&quot;</span>&gt;</span>内容<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">transition</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<transition name=&quot;fade&quot;>
+  <div v-if=&quot;show&quot;>内容</div>
+</transition>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 2.x 中，过渡类名默认是 <code>v-enter</code>、<code>v-enter-active</code>、<code>v-leave</code> 等。</p>
+<h3>变化后</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">transition</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;fade&quot;</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;show&quot;</span>&gt;</span>内容<span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">transition</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<transition name=&quot;fade&quot;>
+  <div v-if=&quot;show&quot;>内容</div>
+</transition>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 3 中，过渡类名从以下四个类别变成了更加明确的：</p>
+<ul>
+<li><strong><code>v-enter-from</code></strong>：在元素进入时，应用于元素刚开始进入的阶段。</li>
+<li><strong><code>v-enter-active</code></strong>：进入过程中的过渡状态。</li>
+<li><strong><code>v-leave-from</code></strong>：在元素离开时，应用于元素刚开始离开的阶段。</li>
+<li><strong><code>v-leave-active</code></strong>：离开过程中的过渡状态。</li>
+</ul>
+<p>这些修改使得过渡状态更加清晰，帮助开发者更好地理解每个阶段的过渡效果。</p>
+<h2>2. <code>keyCode</code> 作为 <code>v-on</code> 修饰符的支持</h2>
+<p>Vue 3 现在支持 <code>keyCode</code> 作为 <code>v-on</code> 修饰符的一部分，允许开发者直接在模板中使用键盘按键的 <code>keyCode</code> 来绑定事件。</p>
+<h3>示例</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">button</span> @<span class="hljs-attr">keydown</span>=<span class="hljs-string">&quot;handleKeyDown&quot;</span> <span class="hljs-attr">v-on:keydown.13</span>=<span class="hljs-string">&quot;handleEnter&quot;</span>&gt;</span>
+  按下 Enter 键
+<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<button @keydown=&quot;handleKeyDown&quot; v-on:keydown.13=&quot;handleEnter&quot;>
+  按下 Enter 键
+</button>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 2.x 中，我们使用 <code>@keydown.enter</code> 来监听按键事件，但在 Vue 3 中，可以直接使用 <code>v-on:keydown.13</code> 来指定 <code>Enter</code> 键的 <code>keyCode</code>（13）。这提供了更细粒度的键盘事件控制。</p>
+<h2>3. <code>v-model</code> 指令在组件上的使用重新设计</h2>
+<p>在 Vue 3 中，<code>v-model</code> 指令的使用方式做了重新设计，取代了原本 <code>v-bind.sync</code> 的使用方式。</p>
+<h3>变化前</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Vue 2.x 中 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">child-component</span> <span class="hljs-attr">:value</span>=<span class="hljs-string">&quot;value&quot;</span> @<span class="hljs-attr">input</span>=<span class="hljs-string">&quot;updateValue&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child-component</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- Vue 2.x 中 -->
+<child-component :value=&quot;value&quot; @input=&quot;updateValue&quot;></child-component>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 3 中，我们可以通过 <code>v-model</code> 直接实现双向绑定：</p>
+<h3>变化后</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-comment">&lt;!-- Vue 3 中 --&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">child-component</span> <span class="hljs-attr">v-model</span>=<span class="hljs-string">&quot;value&quot;</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">child-component</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<!-- Vue 3 中 -->
+<child-component v-model=&quot;value&quot;></child-component>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在组件内部，<code>v-model</code> 绑定的默认值是 <code>modelValue</code>（可以通过 <code>modelValue</code> prop 接收并通过 <code>update:modelValue</code> 事件更新）。这种设计让双向数据绑定变得更加直观和简洁。</p>
+<h3>组件内的实现</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-vue">&lt;script setup&gt;
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits(['update:modelValue']);
+&lt;/script&gt;
+
+&lt;template&gt;
+  &lt;input :value=&quot;modelValue&quot; @input=&quot;$emit('update:modelValue', $event)&quot; /&gt;
+&lt;/template&gt;
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<script setup>
+defineProps({
+  modelValue: {
+    type: String,
+    required: true
+  }
+});
+defineEmits([&apos;update:modelValue&apos;]);
+</script>
+
+<template>
+  <input :value=&quot;modelValue&quot; @input=&quot;$emit(&apos;update:modelValue&apos;, $event)&quot; />
+</template>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>4. <code>v-if</code> 和 <code>v-for</code> 在同一个元素身上使用时的优先级发生变化</h2>
+<p>在 Vue 3 中，<code>v-if</code> 和 <code>v-for</code> 在同一元素上使用时，<code>v-for</code> 的优先级比 <code>v-if</code> 高。这意味着在 Vue 2.x 中，<code>v-if</code> 的优先级更高，而在 Vue 3 中，<code>v-for</code> 会先进行遍历，然后才会判断 <code>v-if</code>。</p>
+<h3>变化前（Vue 2.x）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in items&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;item.isVisible&quot;</span>&gt;</span>{{ item.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<ul>
+  <li v-for=&quot;item in items&quot; v-if=&quot;item.isVisible&quot;>{{ item.name }}</li>
+</ul>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 2.x 中，<code>v-if</code> 会先执行，只有符合条件的元素才会进入到 <code>v-for</code> 循环中。</p>
+<h3>变化后（Vue 3）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span> <span class="hljs-attr">v-for</span>=<span class="hljs-string">&quot;item in items&quot;</span> <span class="hljs-attr">v-if</span>=<span class="hljs-string">&quot;item.isVisible&quot;</span>&gt;</span>{{ item.name }}<span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="<ul>
+  <li v-for=&quot;item in items&quot; v-if=&quot;item.isVisible&quot;>{{ item.name }}</li>
+</ul>
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<p>在 Vue 3 中，<code>v-for</code> 会先遍历所有数据，然后在遍历过程中判断每个元素是否符合 <code>v-if</code> 条件。</p>
+<h2>5. 移除了 <code>$on</code>、<code>$off</code> 和 <code>$once</code> 实例方法</h2>
+<p>在 Vue 3 中，<code>$on</code>、<code>$off</code> 和 <code>$once</code> 这些事件相关的方法已被移除。Vue 3 推出了更灵活的事件系统，依赖于 <code>emit</code> 和 <code>on</code>（通常使用 Composition API 来代替原有的事件系统）。</p>
+<h3>变化前（Vue 2.x）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-variable language_">this</span>.$on(<span class="hljs-string">&#x27;customEvent&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">handleCustomEvent</span>);
+<span class="hljs-variable language_">this</span>.$off(<span class="hljs-string">&#x27;customEvent&#x27;</span>);
+<span class="hljs-variable language_">this</span>.$once(<span class="hljs-string">&#x27;customEvent&#x27;</span>, <span class="hljs-variable language_">this</span>.<span class="hljs-property">handleOnceEvent</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="this.$on(&apos;customEvent&apos;, this.handleCustomEvent);
+this.$off(&apos;customEvent&apos;);
+this.$once(&apos;customEvent&apos;, this.handleOnceEvent);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>变化后（Vue 3）</h3>
+<p>Vue 3 更加推荐使用 Vue 3 提供的 <code>emit</code> 和 <code>on</code> 来处理事件，并使用 Composition API 中的 <code>reactive</code> 和 <code>ref</code> 来进行状态管理和事件监听。</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { defineComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineComponent</span>({
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> emit = <span class="hljs-title function_">defineEmits</span>();
+    <span class="hljs-comment">// 使用 emit 触发事件</span>
+    <span class="hljs-title function_">emit</span>(<span class="hljs-string">&#x27;customEvent&#x27;</span>, data);
+  }
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { defineComponent } from &apos;vue&apos;;
+
+export default defineComponent({
+  setup() {
+    const emit = defineEmits();
+    // 使用 emit 触发事件
+    emit(&apos;customEvent&apos;, data);
+  }
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>6. 移除了过滤器 <code>filter</code></h2>
+<p>Vue 3 移除了 <code>filter</code> 过滤器功能。在 Vue 2.x 中，我们可以使用 <code>filter</code> 对数据进行格式化或修改。而在 Vue 3 中，推荐使用计算属性或方法来替代过滤器功能。</p>
+<h3>变化前（Vue 2.x）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html">{{ message | capitalize }}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="{{ message | capitalize }}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>变化后（Vue 3）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-attr">computed</span>: {
+  <span class="hljs-title function_">capitalizedMessage</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>.<span class="hljs-title function_">toUpperCase</span>();
+  }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="computed: {
+  capitalizedMessage() {
+    return this.message.toUpperCase();
+  }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>替代方案</h3>
+<p>使用计算属性或方法来代替原本 <code>filter</code> 的功能：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-html">{{ capitalizedMessage }}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="{{ capitalizedMessage }}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-attr">computed</span>: {
+  <span class="hljs-title function_">capitalizedMessage</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">return</span> <span class="hljs-variable language_">this</span>.<span class="hljs-property">message</span>.<span class="hljs-title function_">toUpperCase</span>();
+  }
+}
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="computed: {
+  capitalizedMessage() {
+    return this.message.toUpperCase();
+  }
+}
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>7. 移除了 <code>$children</code> 实例属性</h2>
+<p>在 Vue 3 中，<code>$children</code> 实例属性被移除。以前，我们可以通过 <code>$children</code> 访问组件的子组件，这种做法可能导致不清晰的组件层级关系，Vue 3 推出了更清晰的 Composition API 来进行组件间的通信。</p>
+<h3>变化前（Vue 2.x）</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-variable language_">this</span>.<span class="hljs-property">$children</span>.<span class="hljs-title function_">forEach</span>(<span class="hljs-function"><span class="hljs-params">child</span> =&gt;</span> {
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(child);
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="this.$children.forEach(child => {
+  console.log(child);
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>变化后（Vue 3）</h3>
+<p>现在推荐使用 <code>provide</code> 和 <code>inject</code> 或者 <code>ref</code> 来在组件之间传递和访问数据：</p>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { ref, defineComponent, provide, inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-title function_">defineComponent</span>({
+  <span class="hljs-title function_">setup</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">const</span> childValue = <span class="hljs-title function_">ref</span>(<span class="hljs-string">&#x27;子组件的值&#x27;</span>);
+    <span class="hljs-title function_">provide</span>(<span class="hljs-string">&#x27;childValue&#x27;</span>, childValue);
+  }
+});
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { ref, defineComponent, provide, inject } from &apos;vue&apos;;
+
+export default defineComponent({
+  setup() {
+    const childValue = ref(&apos;子组件的值&apos;);
+    provide(&apos;childValue&apos;, childValue);
+  }
+});
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h2>总结</h2>
+<p>Vue 3 引入了一些重要的变更和优化，包括更清晰的过渡类名、更灵活的 <code>v-model</code> 使用、更简化的事件系统以及移除了一些不再推荐的功能。通过这些变动，Vue 3 提供了更加清晰和一致的 API 设计，提升了开发者的使用体验，同时推动了组件化和 Composition API 的使用。</p>

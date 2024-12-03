@@ -1,0 +1,231 @@
+<h1>【全局 API 转移到应用对象】</h1>
+<p>在 Vue 3 中，许多原本挂载在 Vue 根实例上的全局 API 被转移到了应用实例对象上。应用实例对象是通过 <code>createApp()</code> 方法创建的，并且它封装了 Vue 应用的全局配置和全局方法。在 Vue 3 中，应用实例对象提供了更多的控制和灵活性，方便我们在更高层级管理应用。</p>
+<p>以下是 Vue 3 中一些常用的全局 API 和它们如何转移到应用实例对象的详细介绍：</p>
+<h2>1. <code>app.component</code></h2>
+<h3>作用</h3>
+<p><code>app.component</code> 用于全局注册组件。通过该 API，我们可以在整个应用中注册全局组件，使其可以在任何地方使用。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">MyComponent</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./components/MyComponent.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 注册全局组件</span>
+app.<span class="hljs-title function_">component</span>(<span class="hljs-string">&#x27;MyComponent&#x27;</span>, <span class="hljs-title class_">MyComponent</span>);
+
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+import MyComponent from &apos;./components/MyComponent.vue&apos;;
+
+const app = createApp(App);
+
+// 注册全局组件
+app.component(&apos;MyComponent&apos;, MyComponent);
+
+app.mount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.component</code> 接受两个参数，第一个是组件名（通常是 PascalCase），第二个是组件的定义（可以是一个组件对象、组件构造函数等）。</li>
+<li>注册后的组件可以在整个应用的模板中使用，无需再次导入。</li>
+</ul>
+<h2>2. <code>app.config</code></h2>
+<h3>作用</h3>
+<p><code>app.config</code> 用于配置应用的一些全局选项，如 <code>globalProperties</code> 和 <code>devtools</code> 等。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 配置全局属性</span>
+app.<span class="hljs-property">config</span>.<span class="hljs-property">globalProperties</span>.<span class="hljs-property">$myGlobalProperty</span> = <span class="hljs-string">&#x27;Global Property&#x27;</span>;
+
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+
+const app = createApp(App);
+
+// 配置全局属性
+app.config.globalProperties.$myGlobalProperty = &apos;Global Property&apos;;
+
+app.mount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.config</code> 是一个包含应用配置选项的对象。</li>
+<li><code>globalProperties</code> 可以让你设置全局可访问的属性，在应用中的任何组件内都可以通过 <code>this.$myGlobalProperty</code> 来访问。</li>
+</ul>
+<h2>3. <code>app.directive</code></h2>
+<h3>作用</h3>
+<p><code>app.directive</code> 用于注册全局自定义指令。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 注册全局自定义指令</span>
+app.<span class="hljs-title function_">directive</span>(<span class="hljs-string">&#x27;focus&#x27;</span>, {
+  <span class="hljs-title function_">mounted</span>(<span class="hljs-params">el</span>) {
+    el.<span class="hljs-title function_">focus</span>();
+  }
+});
+
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+
+const app = createApp(App);
+
+// 注册全局自定义指令
+app.directive(&apos;focus&apos;, {
+  mounted(el) {
+    el.focus();
+  }
+});
+
+app.mount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.directive</code> 接受两个参数，第一个是指令名称，第二个是指令对象。你可以定义 <code>mounted</code>、<code>updated</code> 等生命周期钩子。</li>
+<li>注册后的自定义指令可以在应用中的任何组件模板中使用。</li>
+</ul>
+<h2>4. <code>app.mount</code></h2>
+<h3>作用</h3>
+<p><code>app.mount</code> 用于将应用挂载到指定的 DOM 元素上。它是应用的启动方法。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 挂载应用</span>
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+
+const app = createApp(App);
+
+// 挂载应用
+app.mount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.mount</code> 接受一个 DOM 选择器或实际 DOM 元素，用于指定应用挂载的容器。</li>
+<li>应用挂载后，整个应用将由 Vue 管理，所有的组件和模板都会被渲染到指定的 DOM 元素中。</li>
+</ul>
+<h2>5. <code>app.unmount</code></h2>
+<h3>作用</h3>
+<p><code>app.unmount</code> 用于卸载应用。这通常用于动态卸载某个 Vue 应用，释放资源。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 挂载应用</span>
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+
+<span class="hljs-comment">// 在某个时刻卸载应用</span>
+app.<span class="hljs-title function_">unmount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+
+const app = createApp(App);
+
+// 挂载应用
+app.mount(&apos;#app&apos;);
+
+// 在某个时刻卸载应用
+app.unmount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.unmount</code> 可以在任何时候调用，用于卸载 Vue 应用。</li>
+<li>一旦调用 <code>unmount</code>，Vue 会停止管理该容器内的所有组件，组件的生命周期钩子也会被触发。</li>
+</ul>
+<h2>6. <code>app.use</code></h2>
+<h3>作用</h3>
+<p><code>app.use</code> 用于插件的安装。通过这个方法，可以向应用添加插件或功能扩展。</p>
+<h3>用法</h3>
+
+<div style="position: relative">
+	<pre><code class="hljs language-javascript"><span class="hljs-keyword">import</span> { createApp } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">App</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./App.vue&#x27;</span>;
+<span class="hljs-keyword">import</span> <span class="hljs-title class_">SomePlugin</span> <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./plugins/SomePlugin&#x27;</span>;
+
+<span class="hljs-keyword">const</span> app = <span class="hljs-title function_">createApp</span>(<span class="hljs-title class_">App</span>);
+
+<span class="hljs-comment">// 使用插件</span>
+app.<span class="hljs-title function_">use</span>(<span class="hljs-title class_">SomePlugin</span>);
+
+app.<span class="hljs-title function_">mount</span>(<span class="hljs-string">&#x27;#app&#x27;</span>);
+</code></pre>
+
+	<button class="markdown-it-code-copy " data-clipboard-text="import { createApp } from &apos;vue&apos;;
+import App from &apos;./App.vue&apos;;
+import SomePlugin from &apos;./plugins/SomePlugin&apos;;
+
+const app = createApp(App);
+
+// 使用插件
+app.use(SomePlugin);
+
+app.mount(&apos;#app&apos;);
+" style="position: absolute; top: 7.5px; right: 6px; cursor: pointer; outline: none;" title="Copy">
+		<span style="font-size: 21px; opacity: 0.4;" class="mdi mdi-content-copy"></span>
+	</button>
+</div>
+<h3>说明</h3>
+<ul>
+<li><code>app.use</code> 可以接收一个插件，插件必须暴露一个 <code>install</code> 方法。</li>
+<li>插件可以向应用提供额外的功能，例如全局组件、指令、配置选项等。</li>
+</ul>
+<h2>总结</h2>
+<p>在 Vue 3 中，所有的全局 API 都已转移到应用实例对象上。这样做的好处是：</p>
+<ul>
+<li>更加清晰和灵活的 API 设计。</li>
+<li>使得应用的配置、插件使用和全局资源管理都集中在应用实例对象上。</li>
+<li>提高了代码的可维护性，避免了全局变量或方法的冲突。</li>
+</ul>
+<p>通过使用 <code>createApp()</code> 创建应用实例并调用相应的 API，可以方便地管理 Vue 应用的生命周期、配置、插件等。</p>

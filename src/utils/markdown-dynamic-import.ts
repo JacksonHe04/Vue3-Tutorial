@@ -27,16 +27,15 @@ function markdownDynamicImport(): Plugin {
     },
     async resolveId(id) {
       if (id.endsWith('.md')) {
-        const filePath = path.resolve(__dirname, 'src/docs', id); // 使用正确的路径
+        const filePath = path.resolve(__dirname, '../src/docs', id); // 调整路径解析
         if (fs.existsSync(filePath)) {
-          return id;
+          return filePath;
         }
       }
     },
-
     async load(id) {
       if (id.endsWith('.md')) {
-        const filePath = path.resolve(__dirname, 'src/docs', id); // 使用正确的路径
+        const filePath = path.resolve(__dirname, '../src/docs', id); // 调整路径解析
         const content = fs.readFileSync(filePath, 'utf-8');
         return content;
       }
