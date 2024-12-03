@@ -22,7 +22,7 @@
     <footer class="footer">
       <p>
         &copy; 2024 Vue3-Tutorial By
-        <a href="https://github.com/JacksonHe04">JacksonHe</a>
+        <a href="https://github.com/JacksonHe04">Jackson-He</a>
       </p>
     </footer>
   </div>

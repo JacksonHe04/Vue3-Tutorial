@@ -1,56 +1,29 @@
+// vite.config.ts
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import vueDevTools from "vite-plugin-vue-devtools";
 import VueSetupExtend from "vite-plugin-vue-setup-extend";
 import { resolve } from "path";
-import path from "path";
-import fs from "fs";
-import markdownIt from "markdown-it";
-import markdownItHighlightjs from "markdown-it-highlightjs";
-import markdownItCodeCopy from "markdown-it-code-copy";
+import markdownDynamicImport from "./src/utils/markdown-dynamic-import";
+import buildMdToHtml from "./src/utils/build-md-to-html"; // 引入新的插件
 
 export default defineConfig({
   plugins: [
     vue(),
     vueDevTools(),
     VueSetupExtend(),
-    {
-      name: "markdown-loader",
-      transform(src, id) {
-        if (id.endsWith(".md")) {
-          // // 获取当前Markdown文件所在的文件夹路径
-          // const currentFolderPath = id.split("/").slice(0, -1).join("/");
-          //
-          // // 替换相对路径链接为绝对路径链接
-          // src = src.replace(
-          //   /\[([^\]]+)\]\((\.\/[^\)]+)\)/g,
-          //   (match, title, relativePath) => {
-          //     const absolutePath = `${currentFolderPath}/${relativePath.slice(2)}`;
-          //     return `[${title}](${absolutePath})`;
-          //   },
-          // );
-
-          // 使用markdown-it进行解析
-          const md = markdownIt()
-            .use(markdownItHighlightjs) // 高亮插件
-            .use(markdownItCodeCopy, {
-              buttonText: "复制", // 自定义按钮文本
-            }); // 复制代码插件
-
-          const content = md.render(src); // 渲染md文件内容
-          return {
-            code: `export default ${JSON.stringify(content)}`, // 导出md内容
-            map: null, // 不需要source map
-          };
-        }
-      },
-    },
+    markdownDynamicImport(),
+    buildMdToHtml(),
   ],
   resolve: {
     alias: [
       {
         find: "@",
         replacement: resolve(__dirname, "src"),
+      },
+      {
+        find: 'docs',
+        replacement: resolve(__dirname, 'docs'), // 确保你设置了正确的路径别名
       },
     ],
   },
@@ -61,4 +34,16 @@ export default defineConfig({
       },
     },
   },
+  build: {
+
+    rollupOptions: {
+      output: {
+        entryFileNames: `[name].js`,
+        chunkFileNames: `[name].js`,
+        assetFileNames: `[name].[ext]`,
+      },
+    },
+  },
 });
+
+console.log("Vite config loaded");

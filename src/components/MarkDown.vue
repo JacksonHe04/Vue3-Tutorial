@@ -1,6 +1,9 @@
+<!--src/components/MarkDown.vue-->
 <template>
-  <div class="markdown-content" v-html="mdContent"></div>
+  <div class="markdown-content" v-if="mdContent" v-html="mdContent"></div>
+  <div v-else>加载中...</div>
 </template>
+
 
 <script setup>
 import { ref, watchEffect, onMounted } from 'vue';
@@ -19,7 +22,12 @@ const router = useRouter();
 watchEffect(async () => {
   if (props.mdPath) {
     try {
-      const response = await import(`../../docs/${props.mdPath}`);
+      console.log('props.mdPath:', props.mdPath);
+      // 去掉 .md 后缀
+      const pathWithoutExtension = props.mdPath.replace(/\.md$/, '');
+      console.log('pathWithoutExtension:', pathWithoutExtension);
+      // const response = await import(`../docs/${pathWithoutExtension}.md`);
+      const response = await import(`../docs/${props.mdPath}`);
       mdContent.value = response.default;
     } catch (error) {
       console.error('Failed to load Markdown file:', error);

@@ -6,5 +6,5 @@
 </template>
 
 <script setup>
-import MarkDown from '@/utils/MarkDown.vue';
+import MarkDown from '@/components/MarkDown.vue';
 </script>

@@ -6,7 +6,7 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import MarkDown from "@/utils/MarkDown.vue";
+import MarkDown from "@/components/MarkDown.vue";
 
 const route = useRoute();
 const mdPath = computed(() => {
