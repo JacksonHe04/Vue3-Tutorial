@@ -94,6 +94,11 @@ const navs = [
   },
 ];
 
+// 使用 map 方法更新路径
+navs.forEach(item => {
+  item.path = `${item.path}README.md`;
+});
+
 const isActive = (path) => {
   return route.path.includes(path);
 };

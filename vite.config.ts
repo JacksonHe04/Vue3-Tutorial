@@ -15,7 +15,7 @@ export default defineConfig({
     markdownDynamicImport(),
     // buildMdToHtml(),
   ],
-  base: '/Vue3-Tutorial/',
+  // base: '/Vue3-Tutorial/',
   resolve: {
     alias: [
       {
