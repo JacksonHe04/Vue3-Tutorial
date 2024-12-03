@@ -21,7 +21,7 @@ watchEffect(async () => {
   if (props.htmlPath) {
     try {
       console.log('props.htmlPath:', props.htmlPath);
-      const response = await fetch(`/src/docs/${props.htmlPath}`);
+      const response = await fetch(`/docs/${props.htmlPath}`);
       if (!response.ok) {
         throw new Error(`Failed to load HTML file: ${response.statusText}`);
       }

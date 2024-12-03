@@ -7,7 +7,7 @@ import {
 } from "vue-router";
 
 import Home from "@/views/Home/index.vue";
-import MarkdownPage from "@/views/MarkdownPage.vue";
+import MarkdownPage from "@/components/MarkdownPage.vue";
 const router = createRouter({
   // 路由模式
   history: createWebHistory(),
