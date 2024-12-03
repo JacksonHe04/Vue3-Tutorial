@@ -13,10 +13,10 @@
        "paths": {
          "@/*": ["src/*"]
        },
-       "typeRoots": ["./node_modules/@types"],
+       "typeRoots": ["./node_modules/@types", "./types"],
        "skipLibCheck": true,
        "allowSyntheticDefaultImports": true
      },
-     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
+     "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue", "src/declarations.d.ts", "vite.config.ts"]
    }
    

@@ -108,6 +108,7 @@ const navs = [
 .header h1 {
   color: $vue;
   margin: 0;
+  font-family: Arial;
 }
 
 .header nav {

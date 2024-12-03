@@ -5,6 +5,7 @@ import WatchRefObj from "@/components/03/3-3-WatchRefObj.vue";
 import WatchReactiveObj from "@/components/03/3-4-WatchReactiveObj.vue";
 import WatchProperty from "@/components/03/3-5-WatchProperty.vue";
 import MultipleData from "@/components/03/3-6-MultipleData.vue";
+import MarkDown from "@/views/03/MarkDown.vue";
 </script>
 
 <template>
@@ -16,10 +17,10 @@ import MultipleData from "@/components/03/3-6-MultipleData.vue";
     <WatchProperty />
     <MultipleData />
   </div>
+  <MarkDown />
 </template>
 
 <style lang="scss">
-
 .container {
   display: flex;
   justify-content: space-around; /* 或者使用 space-between, center 等根据需求调整 */

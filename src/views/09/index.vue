@@ -1,11 +1,9 @@
-<script setup lang="ts">
-
-</script>
-
 <template>
-
+  <div>
+    <MarkDown :mdPath="'09-Test-Debug/README.md'" />
+  </div>
 </template>
 
-<style scoped>
-
-</style>
+<script setup>
+import MarkDown from '@/utils/MarkDown.vue';
+</script>

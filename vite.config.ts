@@ -5,7 +5,7 @@ import VueSetupExtend from "vite-plugin-vue-setup-extend";
 import { resolve } from "path";
 import path from 'path';
 import fs from 'fs';
-import markdownIt from 'markdown-it';
+import markdownIt from "markdown-it";
 import markdownItHighlightjs from 'markdown-it-highlightjs';
 import markdownItCodeCopy from 'markdown-it-code-copy';
 

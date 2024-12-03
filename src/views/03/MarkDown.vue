@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MarkDown :mdPath="'07-Vue-Router/README.md'" />
+    <MarkDown :mdPath="'03-Composition-API/README.md'" />
   </div>
 </template>
 
