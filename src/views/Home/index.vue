@@ -1,5 +1,5 @@
 <template>
-    <MarkDown :mdPath = "`Nav.md`" />
+    <MarkDown :htmlPath = "`Nav.html`" />
 </template>
 
 <script setup>

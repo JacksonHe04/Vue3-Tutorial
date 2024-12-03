@@ -6,8 +6,8 @@ import {
   NavigationGuardNext,
 } from "vue-router";
 
-import Home from "@/views/Home/index.vue";
 import MarkdownPage from "@/components/MarkdownPage.vue";
+import NotFound from "@/views/404/index.vue";
 const router = createRouter({
   // 路由模式
   history: createWebHistory(),
@@ -122,15 +122,22 @@ const router = createRouter({
           name: "NestedMarkdownPage",
           component: MarkdownPage,
         },
+        {
+          path: "/:pathMatch(.*)*", // 匹配所有未定义的路径
+          name: "404",
+          component: NotFound,
+        },
       ],
     },
   ],
 });
 
-router.beforeEach((to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-  const mdPattern = /\.md$/;
+const mdPattern = /\.md$/;
+
+router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
   if (mdPattern.test(to.path)) {
     const newPath = to.path.replace(mdPattern, '.html');
+    await new Promise(resolve => setTimeout(resolve, 0)); // 确保异步操作完成
     next(newPath);
   } else {
     next();
