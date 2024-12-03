@@ -7,8 +7,8 @@ import markdownItCodeCopy from 'markdown-it-code-copy';
 
 async function buildMdToHtml() {
   const __dirname = path.dirname(new URL(import.meta.url).pathname);
-  const docsDir = path.resolve(__dirname, '../docs');
-  const outputDir = path.resolve(__dirname, '../../dist/docs');
+  const docsDir = path.resolve(__dirname, '../../docs');
+  const outputDir = path.resolve(__dirname, '../../public/docs');
 
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir, { recursive: true });

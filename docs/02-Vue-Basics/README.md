@@ -9,7 +9,7 @@
 - [基于 Vue CLI 或 Vite 安装和创建 Vue 3 项目](./1-Installation-and-Project-Creation/1-基于VueCli或Vite安装和创建Vue3项目.md)  
   讲解如何使用 Vue CLI 或 Vite 来初始化 Vue 3 项目，配置开发环境。
 
-- [创建项目文件](./1-Installation-and-Project-Creation/2-create.md)
+- [创建项目文件](./1-Installation-and-Project-Creation/2-create.html)
   
   介绍如何手动创建 Vue 3 项目的基础文件结构，并进行初步配置。
 

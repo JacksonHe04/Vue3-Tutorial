@@ -13,7 +13,6 @@ export default defineConfig({
     vueDevTools(),
     VueSetupExtend(),
     markdownDynamicImport(),
-    // buildMdToHtml(),
   ],
   // base: '/Vue3-Tutorial/',
   resolve: {
