@@ -24,6 +24,9 @@ jobs:
       - name: Build project
         run: npm run build
 
+      - name: Ensure dist directory exists
+        run: mkdir -p dist
+
       - name: Checkout gh-pages branch
         run: |
           git fetch origin gh-pages
