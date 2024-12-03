@@ -21,14 +21,14 @@
     },
     data(){
       return {
-        a:100,
-        c:this.name,
+        room:100,
+        dust:this.name,
         d:900,
         age:90
       }
     },
     methods:{
-      b(){
+      floor(){
         console.log('b')
       }
     },

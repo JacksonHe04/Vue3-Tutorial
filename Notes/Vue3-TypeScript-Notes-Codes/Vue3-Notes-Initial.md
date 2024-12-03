@@ -376,7 +376,9 @@ export default defineConfig({
 - **语法：**`let 响应式对象= reactive(源对象)`。
 - **返回值：**一个`Proxy`的实例对象，简称：响应式对象。
 - **注意点：**`reactive`定义的响应式数据是“深层次”的。
+
 ```vue
+
 <template>
   <div class="person">
     <h2>汽车信息：一台{{ car.brand }}汽车，价值{{ car.price }}万</h2>
@@ -392,41 +394,45 @@ export default defineConfig({
 </template>
 
 <script lang="ts" setup name="Person">
-import { reactive } from 'vue'
+  import {reactive} from 'vue'
 
-// 数据
-let car = reactive({ brand: '奔驰', price: 100 })
-let games = reactive([
-  { id: 'ahsgdyfa01', name: '英雄联盟' },
-  { id: 'ahsgdyfa02', name: '王者荣耀' },
-  { id: 'ahsgdyfa03', name: '原神' }
-])
-let obj = reactive({
-  a:{
-    b:{
-      c:{
-        d:666
+  // 数据
+  let car = reactive({brand: '奔驰', price: 100})
+  let games = reactive([
+    {id: 'ahsgdyfa01', name: '英雄联盟'},
+    {id: 'ahsgdyfa02', name: '王者荣耀'},
+    {id: 'ahsgdyfa03', name: '原神'}
+  ])
+  let obj = reactive({
+    room: {
+      floor: {
+        dust: {
+          d: 666
+        }
       }
     }
-  }
-})
+  })
 
-function changeCarPrice() {
-  car.price += 10
-}
-function changeFirstGame() {
-  games[0].name = '流星蝴蝶剑'
-}
-function test(){
-  obj.a.b.c.d = 999
-}
+  function changeCarPrice() {
+    car.price += 10
+  }
+
+  function changeFirstGame() {
+    games[0].name = '流星蝴蝶剑'
+  }
+
+  function test() {
+    obj.room.floor.dust.d = 999
+  }
 </script>
 ```
 ## 3.5. 【ref 创建：对象类型的响应式数据】
 
 - 其实`ref`接收的数据可以是：**基本类型**、**对象类型**。
 - 若`ref`接收的是对象类型，内部其实也是调用了`reactive`函数。
+
 ```vue
+
 <template>
   <div class="person">
     <h2>汽车信息：一台{{ car.brand }}汽车，价值{{ car.price }}万</h2>
@@ -442,36 +448,38 @@ function test(){
 </template>
 
 <script lang="ts" setup name="Person">
-import { ref } from 'vue'
+  import {ref} from 'vue'
 
-// 数据
-let car = ref({ brand: '奔驰', price: 100 })
-let games = ref([
-  { id: 'ahsgdyfa01', name: '英雄联盟' },
-  { id: 'ahsgdyfa02', name: '王者荣耀' },
-  { id: 'ahsgdyfa03', name: '原神' }
-])
-let obj = ref({
-  a:{
-    b:{
-      c:{
-        d:666
+  // 数据
+  let car = ref({brand: '奔驰', price: 100})
+  let games = ref([
+    {id: 'ahsgdyfa01', name: '英雄联盟'},
+    {id: 'ahsgdyfa02', name: '王者荣耀'},
+    {id: 'ahsgdyfa03', name: '原神'}
+  ])
+  let obj = ref({
+    room: {
+      floor: {
+        dust: {
+          d: 666
+        }
       }
     }
+  })
+
+  console.log(car)
+
+  function changeCarPrice() {
+    car.value.price += 10
   }
-})
 
-console.log(car)
+  function changeFirstGame() {
+    games.value[0].name = '流星蝴蝶剑'
+  }
 
-function changeCarPrice() {
-  car.value.price += 10
-}
-function changeFirstGame() {
-  games.value[0].name = '流星蝴蝶剑'
-}
-function test(){
-  obj.value.a.b.c.d = 999
-}
+  function test() {
+    obj.value.room.floor.dust.d = 999
+  }
 </script>
 ```
 ## 3.6. 【ref 对比 reactive】
@@ -672,7 +680,9 @@ function test(){
 ```
 ### *  情况三
 监视`reactive`定义的【对象类型】数据，且默认开启了深度监视。
+
 ```vue
+
 <template>
   <div class="person">
     <h1>情况三：监视【reactive】定义的【对象类型】数据</h1>
@@ -688,39 +698,43 @@ function test(){
 </template>
 
 <script lang="ts" setup name="Person">
-  import {reactive,watch} from 'vue'
+  import {reactive, watch} from 'vue'
   // 数据
   let person = reactive({
-    name:'张三',
-    age:18
+    name: '张三',
+    age: 18
   })
   let obj = reactive({
-    a:{
-      b:{
-        c:666
+    room: {
+      floor: {
+        dust: 666
       }
     }
   })
+
   // 方法
-  function changeName(){
+  function changeName() {
     person.name += '~'
   }
-  function changeAge(){
+
+  function changeAge() {
     person.age += 1
   }
-  function changePerson(){
-    Object.assign(person,{name:'李四',age:80})
+
+  function changePerson() {
+    Object.assign(person, {name: '李四', age: 80})
   }
-  function test(){
-    obj.a.b.c = 888
+
+  function test() {
+    obj.room.floor.c = 888
   }
 
   // 监视，情况三：监视【reactive】定义的【对象类型】数据，且默认是开启深度监视的
-  watch(person,(newValue,oldValue)=>{
-    console.log('person变化了',newValue,oldValue)
+  watch(person, (newValue, oldValue) => {
+    console.log('person变化了', newValue, oldValue)
   })
-  watch(obj,(newValue,oldValue)=>{
-    console.log('Obj变化了',newValue,oldValue)
+  watch(obj, (newValue, oldValue) => {
+    console.log('Obj变化了', newValue, oldValue)
   })
 </script>
 ```

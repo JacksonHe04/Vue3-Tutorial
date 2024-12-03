@@ -9,7 +9,7 @@
     </ul>
     <button @click="changeFirstGame">修改第一个游戏的名字</button>
     <hr>
-    <h2>测试：{{obj.a.b.c}}</h2>
+    <h2>测试：{{ obj.room.floor.dust }}</h2>
     <button @click="changeObj">测试</button>
   </div>
 </template>
@@ -25,9 +25,9 @@
     {id:'aysdytfsatr03',name:'三国志'}
   ])
   let obj = reactive({
-    a:{
-      b:{
-        c:666
+    room:{
+      floor:{
+        dust:666
       }
     }
   })
@@ -44,7 +44,7 @@
     games[0].name = '流星蝴蝶剑'
   }
   function changeObj(){
-    obj.a.b.c = 999
+    obj.room.floor.dust = 999
   }
 
 </script>

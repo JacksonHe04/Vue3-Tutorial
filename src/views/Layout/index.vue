@@ -5,7 +5,13 @@
         <h1>Vue3 Tutorial</h1>
       </RouterLink>
       <nav>
-        <RouterLink v-for="item in navs" :key="item.path" :to="item.path" class="nav-link">
+        <RouterLink
+          v-for="item in navs"
+          :key="item.path"
+          :to="item.path"
+          class="nav-link"
+          :class="{ 'router-link-active': isActive(item.path) }"
+        >
           {{ item.meta.title }}
         </RouterLink>
       </nav>
@@ -14,80 +20,83 @@
       <RouterView />
     </main>
     <footer class="footer">
-      <p>&copy; 2024 Vue3-Tutorial By <a href="https://github.com/JacksonHe04">JacksonHe</a></p>
+      <p>
+        &copy; 2024 Vue3-Tutorial By
+        <a href="https://github.com/JacksonHe04">JacksonHe</a>
+      </p>
     </footer>
   </div>
 </template>
 
-<script setup lang="js">
+<script setup lang="ts">
+import { useRoute } from "vue-router";
+const route = useRoute();
 const navs = [
   {
-    path: "/",
-    meta: {
-      title: "首页",
-    },
-  },
-  {
-    path: "/01",
+    path: "/01-Overview/",
     meta: {
       title: "总览",
     },
   },
   {
-    path: "/02",
+    path: "/02-Vue-Basics/",
     meta: {
       title: "Vue基础",
     },
   },
   {
-    path: "/03",
+    path: "/03-Composition-API/",
     meta: {
       title: "组合式API",
     },
   },
   {
-    path: "/04",
+    path: "/04-Reactive-System/",
     meta: {
       title: "响应式系统",
     },
   },
   {
-    path: "/05",
+    path: "/05-Component-Communication/",
     meta: {
       title: "组件通信",
     },
   },
   {
-    path: "/06",
+    path: "/06-Pinia/",
     meta: {
       title: "Pinia",
     },
   },
   {
-    path: "/07",
+    path: "/07-Vue-Router/",
     meta: {
       title: "Vue Router",
     },
   },
   {
-    path: "/08",
+    path: "/08-Other-APIs/",
+    meta: {
+      title: "Vue APIs",
+    },
+  },
+  {
+    path: "/09-Vue3-Features/",
     meta: {
       title: "Vue3新特性",
     },
   },
   {
-    path: "/09",
-    meta: {
-      title: "测试与调试",
-    },
-  },
-  {
-    path: "/10",
+    path: "/10-Build-Optimization/",
     meta: {
       title: "构建与优化",
     },
-  }
-]
+  },
+];
+
+const isActive = (path) => {
+  return route.path.includes(path);
+};
 </script>
 
 <style scoped lang="scss">
@@ -125,7 +134,7 @@ const navs = [
 }
 
 .header nav a:not(:first-child)::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -1rem; // 调整竖线的位置以适应新的间距
   top: 50%;
@@ -135,13 +144,11 @@ const navs = [
   background-color: #ccc; // 灰色竖分割线
 }
 
-
-
 .header nav a:hover {
   color: $vue; /* Vue green */
 }
 
-.header nav a.router-link-exact-active {
+.header nav a.router-link-active {
   color: #42b983; /* Vue green */
 }
 

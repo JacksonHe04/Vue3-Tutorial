@@ -7,7 +7,7 @@
     <button @click="changeAge">修改年龄</button>
     <button @click="changePerson">修改整个人</button>
     <hr>
-    <h2>测试：{{obj.a.b.c}}</h2>
+    <h2>测试：{{ obj.room.floor.dust }}</h2>
     <button @click="test">修改obj.a.b.c</button>
   </div>
 </template>
@@ -20,9 +20,9 @@
     age:18
   })
   let obj = reactive({
-    a:{
-      b:{
-        c:666
+    room:{
+      floor:{
+        dust:666
       }
     }
   })
@@ -37,7 +37,7 @@
     Object.assign(person,{name:'李四',age:80})
   }
   function test(){
-    obj.a.b.c = 888
+    obj.room.floor.dust = 888
   }
 
   // 监视，情况三：监视【reactive】定义的【对象类型】数据，且默认是开启深度监视的

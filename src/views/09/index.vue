@@ -1,6 +1,6 @@
 <template>
   <div>
-    <MarkDown :mdPath="'09-Test-Debug/README.md'" />
+    <MarkDown :mdPath="'08-Other-APIs/README.md'" />
   </div>
 </template>
 
